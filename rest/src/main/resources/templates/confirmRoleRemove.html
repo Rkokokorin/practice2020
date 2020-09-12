@@ -1,0 +1,5 @@
+<div th:fragment="confirm" xmlns:th="http://www.w3.org/1999/xhtml">
+    <form method="POST" th:action="@{/admin/role/remove(id=${id}, force=true)}">
+        <button type="submit" name="action" value="remove">Удалить</button>
+    </form>
+</div>

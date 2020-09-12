@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
+    <h:body>
+        <div >
+                <h2 class="profile-nav-title">#{i18n['itc.profile.title']}</h2>
+                <ul class="profile-navigation">
+                    <li>
+                        <h:outputLink  value="/account" styleClass="nav-link account" >
+                            <h:outputText
+                                    styleClass="nav-icon"
+                                    value="#{profileNavBean.profileSvgIcon}" escape="false"/>
+                            <h:outputText styleClass="label" value="#{i18n['itc.nav.profile']}"/>
+                        </h:outputLink>
+                    </li>
+                    <li>
+                        <h:outputLink  value="/orders" styleClass="nav-link orders">
+                            <h:outputText
+                                    styleClass="nav-icon"
+                                    value="#{profileNavBean.ordersSvgIcon}" escape="false"/>
+                            <h:outputText styleClass="label" value="#{i18n['itc.nav.orders']}"/>
+                        </h:outputLink>
+                    </li>
+                    <li>
+                        <h:outputLink  value="/favorite" styleClass="nav-link favorite">
+                            <h:outputText
+                                    styleClass="nav-icon"
+                                    value="#{profileNavBean.favoriteSvgIcon}" escape="false"/>
+                            <h:outputText styleClass="label" value="#{i18n['itc.nav.favorites']}"/>
+                        </h:outputLink>
+                    </li>
+                    <li class="#{profileNavBean.admin ? '' : 'not-rendered'}">
+                        <h:outputLink rendered="#{profileNavBean.admin}" value="/admin-panel"
+                                      styleClass="nav-link admin-panel">
+                            <h:outputText
+                                    styleClass="nav-icon"
+                                    value="#{profileNavBean.adminPanelSvgIcon}" escape="false"/>
+                            <h:outputText  styleClass="label" value="#{i18n['itc.nav.administation']}"/>
+                        </h:outputLink>
+                    </li>
+                </ul>
+                <script>
+                    var path = window.location.href;
+                    var page = path.split("/").pop();
+                    page = page.split("?", 1).pop();
+                    document.querySelector(".profile-navigation ."+ page).className += " selected";
+
+                </script>
+        </div>
+    </h:body>
+</f:view>

@@ -1,0 +1,25 @@
+/* 
+    Styles for liferay portlet decorators
+*/
+
+.portlet-decorate {
+    .portlet-content {
+        
+    }
+}
+
+.portlet-borderless {
+    .portlet-content {
+        padding: 0;
+    }
+}
+
+.portlet-barebone {
+    .portlet-content {
+        padding: 0;
+        
+        .portlet-title-text {
+            display: none;
+        }
+    }
+}

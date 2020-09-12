@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
+
+    <h:body>
+        <!--@elvariable id="comparisonList" type="com.tuneit.itc.ComparisonList"-->
+
+        <p:outputPanel id="comparisonContainer">
+            <p:outputPanel rendered="#{comparisonList.signedIn and !(comparisonList.foundResults == null or comparisonList.foundResults.isEmpty())}">
+                <h:form id="tabViewForm">
+                    <p:tabView value="#{comparisonList.comparisonCategories}" var="cat" dynamic="false" scrollable="true"
+                               activeIndex="#{comparisonList.activeTabIndex}" styleClass="comparison-tabs">
+                        <p:ajax event="tabChange" process="@this" listener="#{comparisonList.selectCategory}" update="@parent"/>
+                        <p:tab title="#{cat.category.name} - #{cat.count}" titleStyleClass="comparison-tab-title">
+                            <div class='white-gray-table-row'>
+                                <ui:repeat value="#{comparisonList.selectedCategoryProducts}" var="prod">
+                                    <div class="product-main-info">
+                                        <img src="#{comparisonList.getProductImageUrl(prod)}" alt="#{i18n['itc.comparison.image-alt']}"/>
+                                        <p:commandButton styleClass="remove-icon"
+                                                         title="#{i18n['itc.comparison.remove-from-comparison']}"
+                                                         icon="fa fa-trash-alt"
+                                                         action="#{comparisonList.removeProductFromComparison(prod)}"
+                                                         process="@this" update=":comparisonContainer"/>
+                                        <h:outputLink  value="#{comparisonList.openProduct(prod)}">
+                                            <div>#{prod.nomenclatureType.name} #{prod.name}</div>
+                                        </h:outputLink>
+                                    </div>
+                                </ui:repeat>
+                            </div>
+                            <h3 class="comparison-products-table-features"><h:outputText value="#{i18n['itc.comparison.characteristics']}"/></h3>
+                            <ui:repeat value="#{comparisonList.selectedProductFeatureNames}" var="featName" varStatus="index">
+                                <div>
+                                    <div class="feature-name">#{featName}</div>
+                                    <div class='feature-values-container white-gray-table-row  #{index.index % 2 == 0 ? "": "gray-cell"}'>
+                                        <ui:repeat value="#{comparisonList.getFeaturesForSelectedProductsByFeatureName(featName)}"
+                                                   var="feat">
+                                            <h:outputText  class="feature-value"
+                                                           value="#{feat == null ? i18n['itc.comparison.feature-no-data'] : feat.value}"/>
+                                        </ui:repeat>
+                                    </div>
+                                </div>
+                            </ui:repeat>
+                            <p:outputPanel rendered="#{empty comparisonList.selectedProductFeatureNames}">
+                                <h:outputText value="#{i18n['itc.comparison.products-have-no-features']}"/>
+                            </p:outputPanel>
+                        </p:tab>
+                    </p:tabView>
+                </h:form>
+            </p:outputPanel>
+            <p:outputPanel rendered="#{comparisonList.foundResults == null or comparisonList.foundResults.isEmpty()}">
+                <p:staticMessage severity="info" detail="${i18n['itc.comparison.no-comparisons-found']}"/>
+            </p:outputPanel>
+        </p:outputPanel>
+    </h:body>
+</f:view>

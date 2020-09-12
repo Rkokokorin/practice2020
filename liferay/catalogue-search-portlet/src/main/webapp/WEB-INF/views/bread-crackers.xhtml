@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:portlet="http://java.sun.com/portlet_2_0"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+        <h:outputScript library="js" name="main.js"/>
+    </h:head>
+    <h:body>
+        <p:outputPanel class="product-breadcrumbs">
+            <h:outputLink
+                rendered="#{breadCrackersBean.catalogueBaseUrl ne null}"
+                value="#{breadCrackersBean.catalogueBaseUrl}"
+                styleClass="bc-link"
+                >
+                <h:outputText value="#{i18n['itc.catalogue']}"/>
+            </h:outputLink>
+
+            <h:outputLink rendered="#{breadCrackersBean.categoryUrl ne null and
+                                        not breadCrackersBean.categoryUrlHidden}"
+                          value="#{breadCrackersBean.categoryUrl}">
+                › #{breadCrackersBean.categoryName}
+            </h:outputLink>
+            <h:outputText rendered="#{breadCrackersBean.categoryUrl ne null and
+                                        breadCrackersBean.categoryUrlHidden}"
+                          value=" › #{breadCrackersBean.categoryName}"/>
+
+            <h:outputLink rendered="#{breadCrackersBean.subcategoryUrl ne null and
+                                        not breadCrackersBean.subcategoryUrlHidden}"
+                          value="#{breadCrackersBean.subcategoryUrl}">
+                › #{breadCrackersBean.subcategoryName}
+            </h:outputLink>
+            <h:outputText rendered="#{breadCrackersBean.subcategoryUrl ne null and
+                                        breadCrackersBean.subcategoryUrlHidden}"
+                          value=" › #{breadCrackersBean.subcategoryName}"/>
+
+            <h:outputLink
+                rendered="#{breadCrackersBean.productUrl ne null}"
+                value="#{breadCrackersBean.productUrl}"
+                >
+                › #{breadCrackersBean.productCode}
+            </h:outputLink>
+        </p:outputPanel>
+    </h:body>
+</f:view>

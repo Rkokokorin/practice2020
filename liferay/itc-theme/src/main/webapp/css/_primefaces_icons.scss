@@ -1,0 +1,85 @@
+@import "font_awesome";
+.itc-theme {
+  .ui-icon {
+    @extend .fa;
+    text-indent: 0;
+  }
+
+  .ui-icon-close {
+    @extend .fa-times-circle;
+  }
+
+  .ui-chips-token-icon {
+    @extend .fa;
+    @extend .fa-times-circle;
+  }
+
+  .ui-chips-token-icon {
+    text-indent: 0;
+  }
+
+  .ui-icon-triangle-1-s {
+    @extend .fa-caret-down;
+  }
+
+  .ui-icon-triangle-1-n {
+    @extend .fa-caret-up;
+  }
+
+  .ui-icon-carat-2-n-s {
+    @extend .fa-sort;
+
+    &.ui-icon-triangle-1-n {
+      @extend .fa-caret-up;
+    }
+
+    &.ui-icon-triangle-1-s {
+      @extend .fa-caret-down;
+    }
+  }
+
+  .ui-icon-circle-triangle-s {
+    @extend .fa-angle-down;
+  }
+
+  .ui-icon-circle-triangle-e {
+    @extend .fa-angle-right;
+  }
+
+  .ui-icon-arrow-1-e {
+    @extend .fa-angle-right;
+  }
+
+  .ui-icon-arrowstop-1-e {
+    @extend .fa-angle-double-right;
+  }
+
+  .ui-icon-arrow-1-w {
+    @extend .fa-angle-left;
+  }
+
+  .ui-icon-arrowstop-1-w {
+    @extend .fa-angle-double-left;
+  }
+
+  .ui-icon-check {
+    @extend .fa-check;
+  }
+
+  .ui-icon-closethick {
+    @extend .fa-times;
+  }
+
+  .ui-icon-plusthick {
+    @extend .fa-plus;
+  }
+
+  .ui-icon-carat-1-e {
+    @extend .fa-caret-right;
+  }
+
+  .ui-icon-carat-1-w {
+    @extend .fa-caret-left;
+  }
+}
+

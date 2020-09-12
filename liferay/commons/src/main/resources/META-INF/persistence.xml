@@ -1,0 +1,26 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+    <!-- Define persistence unit -->
+    <persistence-unit name="feedback">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.tuneit.itc.commons.model.Feedback</class>
+        <class>com.tuneit.itc.commons.model.cart.CartPosition</class>
+        <class>com.tuneit.itc.commons.model.cart.Cart</class>
+        <class>com.tuneit.itc.commons.model.cart.PartnerCartSequence</class>
+        <class>com.tuneit.itc.commons.model.cart.CurrentCart</class>
+        <class>com.tuneit.itc.commons.model.PortletPreference</class>
+        <class>com.tuneit.itc.commons.model.OrganizationRegistrationClaim</class>
+        <class>com.tuneit.itc.commons.model.FavoriteProduct</class>
+        <class>com.tuneit.itc.commons.model.ComparisonProduct</class>
+        <class>com.tuneit.itc.commons.model.ContractorSyntheticId</class>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <properties>
+            <!-- database connection -->
+            <property name="hibernate.connection.datasource" value="java:jboss/datasources/LiferayDS"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect"/>
+            <property name="hibernate.archive.autodetection" value="class, hbm"/>
+        </properties>
+    </persistence-unit>
+</persistence>

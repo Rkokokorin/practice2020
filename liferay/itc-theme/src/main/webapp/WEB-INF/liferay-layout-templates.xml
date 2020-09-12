@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE layout-templates PUBLIC "-//Liferay//DTD Layout Templates 7.2.0//EN" "http://www.liferay.com/dtd/liferay-layout-templates_7_2_0.dtd">
+
+<layout-templates>
+    <custom>
+        <layout-template id="single-column-custom" name="Custom single column">
+            <template-path>/layouts/single-column.ftl</template-path>
+            <thumbnail-path>/layouts/single-column.png</thumbnail-path>
+        </layout-template>
+        <layout-template id="single-column-with-header" name="Single column with header">
+            <template-path>/layouts/single-column-with-header.ftl</template-path>
+            <thumbnail-path>/layouts/single-column-with-header.png</thumbnail-path>
+        </layout-template>
+        <layout-template id="two-column" name="Two column (2:10)">
+            <template-path>/layouts/two-column.ftl</template-path>
+            <thumbnail-path>/layouts/two-column.png</thumbnail-path>
+        </layout-template>
+    </custom>
+</layout-templates>

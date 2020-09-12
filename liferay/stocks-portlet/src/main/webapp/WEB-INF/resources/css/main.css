@@ -1,0 +1,142 @@
+.owl-carousel.stocks-container {
+    z-index: 0;
+}
+.owl-carousel.stocks-container .owl-stage{
+    display: flex;
+
+}
+#stocks-slider {
+    margin-left: 20px;
+    margin-right: 20px;
+    position: relative;
+    box-sizing: border-box;
+}
+.container header a{
+}
+.stock-title {
+    margin: 2rem 0;
+    text-align: center;
+}
+.stocks-container a, .stocks-container a:hover, .stocks-container a:visited {
+    text-decoration:none;
+    color: inherit;
+    margin-bottom: 1rem;
+}
+.stocks-container a:hover {
+    background: rgb(249, 249, 249);
+}
+#stocks-slider .owl-carousel .stocks-container {
+}
+.stocks-container .fa.fa-angle-right, .stocks-container .fa.fa-angle-left {
+    position:absolute;
+    top: calc(50% - 20px);
+    font-weight: 900 !important;
+    font-family: "Font Awesome 5 Free" !important;
+    width: 25px;
+    height: 40px;
+    opacity: 0.8;
+    color: #444 !important;
+    background-color: rgba(214, 214, 214, 0.933) !important;
+}
+.stock-item {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0.5rem;
+    padding: 0.5rem;
+    background-color: #fff;
+    border-radius: 3%;
+    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+    height: calc(100% - 2rem);
+    position: relative;
+    border: 1px solid #ddd;
+}
+.stocks-container .fa.fa-angle-left {
+    left: -2rem;
+}
+.stocks-container .fa.fa-angle-right {
+    right: -2rem;
+}
+.stock-image {
+    height: 6rem;
+    margin: 0.5rem;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+.stock-item h5, .stock-item div {
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    padding-top: 0.5rem;
+}
+.stock-item .left-align {
+    align-self: flex-start;
+
+}
+.stock-item .right-align {
+    align-self: flex-end;
+
+}
+.stock-item .price-icons-block {
+    display: flex;
+    color: #3561a6;
+    font-size: 1.4rem;
+    justify-content: space-between;
+    align-items: center;
+}
+.stock-item .price-icons-block .fa-ruble-sign {
+    font-size: 1.2rem;
+}
+.stock-item .icons {
+    display: flex;
+
+}
+.stock-item .icons img:first-child {
+    margin-right: 0.8rem;
+
+}
+.stock-item .manufacturer {
+    color: #a9a9a9;
+    font-size: 0.7rem;
+}
+.stock-item .price {
+    font-size: 1.4rem;
+}
+.stock-item .price-not-found {
+    font-size: 0.8rem;
+}
+.stock-item .product-name {
+    color: #a9a9a9;
+    text-decoration: underline;
+    text-decoration-color:  #a9a9a9;
+    padding-bottom: 1rem;
+}
+.stock-item .stock-value {
+    border-radius: 10px;
+    background-color: #da2130;
+    color: #ffffff;
+    text-transform: lowercase;
+    padding: 0.4rem 0.6rem;
+}
+
+.stock-item .price-shader {
+    margin: 0;
+    border-radius: inherit;
+}
+
+.container header {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0.5rem;
+    align-items: baseline;
+}
+
+.container header h1 {
+    font-size: 1.75rem;
+    border-bottom: solid lightgray 1px;
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+.edit-icon-container {
+    text-align: right;
+}

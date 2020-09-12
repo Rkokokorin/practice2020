@@ -1,0 +1,12 @@
+#IntelliJ IDEA
+*.iml
+**/.idea/
+
+#Maven
+**/target/
+
+#Plain java
+*.class
+
+# NetBeans
+**/nb-configuration.xml

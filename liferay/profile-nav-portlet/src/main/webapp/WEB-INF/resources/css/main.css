@@ -1,0 +1,51 @@
+.profile-nav-portlet {
+    margin-top: 1.5rem;
+}
+.profile-nav-title {
+    margin-bottom: 1.5rem;
+}
+.profile-navigation {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.profile-navigation .nav-icon {
+    margin-right: 1.1875rem;
+}
+.profile-navigation .label {
+    padding-left: 0;
+    padding-right: 0;
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid rgb(53, 97, 166);
+    font-weight: normal;
+}
+
+.profile-navigation .nav-link.selected {
+    color: #131313;
+    background: #F7F7F7;
+
+}
+
+.profile-navigation .nav-link.selected .label {
+    border: none;
+}
+
+.profile-navigation .nav-link.selected svg path {
+    fill: #131313;
+}
+.profile-navigation .nav-link:hover {
+    color: #131313;
+    background: #F7F7F7;
+}
+.profile-navigation .nav-link:hover .label{
+    border-bottom: 1px solid #131313;
+}
+.profile-navigation .nav-link:hover svg path {
+    fill: #131313;
+}
+.profile-navigation li.not-rendered {
+    display: none;
+}

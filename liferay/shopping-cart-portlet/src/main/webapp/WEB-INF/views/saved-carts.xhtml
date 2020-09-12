@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
+    <h:body>
+        <ui:include src="/WEB-INF/views/navigation.xhtml"/>
+        <p:importEnum type="com.tuneit.itc.cart.CartsListBean$ViewMode" var="mode"/>
+        <p:outputPanel rendered="#{savedCartsBean.cartsListBean.hasViewAccess}">
+            <script type="text/javascript">
+                Liferay.on('updateCurrency', function () {
+                    try {
+                        updateSavedCartsCurrency();
+                    } catch (e) {
+
+                    }
+                });
+            </script>
+            <h:form styleClass="saved-carts-list-form carts-list-form">
+                <div class="custom-shader price-shader">
+                    <div class="shader-loader"></div>
+                </div>
+                <p:remoteCommand actionListener="#{savedCartsBean.cartsListBean.updateCurrency}" process="@this" update="@form"
+                                 name="updateSavedCartsCurrency" onstart="$('.saved-carts-list-form .price-shader').show();"
+                                 oncomplete="$('.saved-carts-list-form .price-shader').hide();"/>
+                <p:dataTable value="#{savedCartsBean.cartsListBean.infoCarts}" var="cart" styleClass="saved-carts-list">
+                    <ui:include src="/WEB-INF/views/cart-list-row.xhtml">
+                        <ui:param name="cart" value="#{cart}"/>
+                    </ui:include>
+                </p:dataTable>
+            </h:form>
+        </p:outputPanel>
+        <p:outputPanel styleClass="row">
+            <div class="col-md-12 align-right middle-label">
+                <div class="btn-group">
+                    <p:outputPanel class="btn-group-item">
+                        <p:button styleClass="btn btn-danger" value="#{i18n['itc.cart.go-to-deleted']}" outcome="#{views.deleted}"/>
+                    </p:outputPanel>
+                </div>
+            </div>
+        </p:outputPanel>
+    </h:body>
+</f:view>

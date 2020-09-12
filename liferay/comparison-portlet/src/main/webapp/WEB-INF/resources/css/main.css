@@ -1,0 +1,78 @@
+.comparison-tabs {
+
+}
+
+.comparison-tabs .white-gray-table-row {
+    border-bottom: 1px solid #b9c2cc;
+    padding: 1rem 0rem;
+    display: flex;
+}
+.comparison-tabs.ui-tabs.ui-tabs-top>ul.ui-tabs-nav  {
+    display: flex;
+    background-color: #E5E5E5;
+    border-radius: 50px;
+    padding: 0;
+    overflow-x: hidden;
+}
+.comparison-tabs .comparison-products-table-features {
+    margin: 2rem 0;
+}
+.comparison-tabs .comparison-products-table-features {
+    padding: 2rem 0;
+}
+.comparison-tabs ul.ui-tabs-nav > li.comparison-tab-title {
+    margin:0;
+    top: 0;
+    border-radius: 50px;
+}
+
+.comparison-tabs ul.ui-tabs-nav > li.comparison-tab-title a{
+    color: #A9A9A9;
+    text-decoration: none;
+}
+.comparison-tabs ul.ui-tabs-nav > li.comparison-tab-title.ui-tabs-selected a,
+.comparison-tabs ul.ui-tabs-nav > li.comparison-tab-title.ui-tabs-selected a:hover{
+    color: #ffffff;
+}
+
+.comparison-tabs  .product-main-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    width: 10rem;
+}
+.comparison-tabs .ui-tabs-navscroller {
+    margin-right: 18px;
+    margin-left: 18px;
+    padding: 0;
+}
+.comparison-tabs  .product-main-info .remove-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: red;
+    background-color: rgba(0,0,0,0.3);
+}
+.comparison-tabs  .product-main-info img{
+    max-height: 10rem;
+    max-width: 10rem;
+}
+.comparison-tabs ul .comparison-tab-title.ui-tabs-selected {
+    background-color: rgba(218, 34, 48, 0.9);
+}
+.comparison-tabs ul .comparison-tab-title:hover {
+    background-color: rgba(218, 34, 48, 0.9);
+}
+.feature-name {
+    color: gray;
+    padding: 0.5rem 0;
+}
+.feature-value {
+    width: 10rem;
+    display: inline-block;
+    color: #404040;
+}
+
+.feature-values-container {
+}

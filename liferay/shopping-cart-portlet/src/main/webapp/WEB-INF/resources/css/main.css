@@ -1,0 +1,201 @@
+.edit-icon-container {
+    text-align: right;
+}
+
+.profile-label {
+    width: 110px;
+    display: inline-block;
+}
+
+.profile-section-label {
+    font-size: 1.1em;
+}
+
+.center-container {
+    display: flex;
+    justify-content: center;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.middle-label {
+    font-size: 1.1em;
+}
+
+.big-label {
+    font-size: 1.2em
+}
+
+.shopping-cart-portlet .amount-column .form-control {
+    width: 80px;
+}
+
+.shopping-cart-portlet .amount-column {
+    width: 100px;
+}
+
+.shopping-cart-portlet .total-column {
+    min-width: 90px;
+    position: relative;
+}
+
+.shopping-cart-portlet .total-column .price-shader {
+    margin: 0;
+}
+
+.shopping-cart-portlet .cart-table .ui-column-title {
+   font-size: 0.85rem;
+}
+
+.colleague-subtable-header {
+    font-weight: bold;
+}
+
+.cart-id-col {
+    width: 5%;
+}
+
+.cart-name-col {
+    width: 30%;
+}
+
+.cart-products-col {
+    width: 35%;
+}
+
+.cart-positions-col {
+    width: 5%;
+}
+
+.cart-total-col {
+    width: 5%;
+}
+
+.cart-cost-col {
+    width: 10%;
+}
+
+.cart-creation-col {
+    width: 10%;
+}
+
+.shopping-cart-portlet .carts-list-form {
+    position: relative;
+}
+
+.shopping-cart-portlet .carts-list-form .price-shader {
+    margin: 0;
+}
+
+
+.shopping-cart-portlet .shopping-cart-nav .navbar-nav {
+  display: flex;
+  background:
+  #E5E5E5;
+  border-radius: 10rem;
+}
+.shopping-cart-portlet .shopping-cart-nav .navbar-nav .nav-link {
+  display: inline-block;
+  margin: 0;
+  color:
+  #777;
+  font-weight: normal;
+  border-radius: 10rem;
+  vertical-align: middle;
+  text-align: center;
+  transition: color 0.2s ease-in, background-color 0.2s ease-in;
+  padding: 0 2rem;
+  line-height: 2.5rem;
+}
+.shopping-cart-portlet .shopping-cart-nav .navbar-nav .nav-link:hover {
+    text-decoration: none;
+    background: #A9A9A9; /*#DF212E;*/
+    color: #fff;
+}
+
+.shopping-cart-portlet .shopping-cart-nav .navbar-nav .nav-link.active {
+    text-decoration: none;
+    background: #DF212E;
+    color: #fff;
+}
+
+.shopping-cart-portlet h1 {
+    font-size: 2rem;
+    font-family: "Exo 2";
+    margin-bottom: 2rem;
+}
+
+.itc-theme .ui-datatable table tr, 
+.itc-theme .ui-datatable table td {
+  border-bottom: 1px solid #DDD;
+}
+.itc-theme .ui-datatable table th {
+  background: #EEE;
+  vertical-align: top;
+}
+.itc-theme .ui-datatable table tr:nth-child(2n) td {
+    background: #F7F7F7;
+}
+.itc-theme .ui-datatable table td a {
+  color: #474747;
+  font-size: 0.9rem;
+}
+
+.itc-theme .ui-selectonemenu {
+  border: 1px solid #DDD;
+  border-radius: 4px;
+  background: #FFF;
+  font-size: 0.9rem;
+}
+
+.itc-theme .ui-selectonemenu .ui-selectonemenu-trigger {
+  background: #FFF;
+  color: #3561a6;
+}
+
+.shopping-cart-portlet .ui-datatable .ui-button.btn-danger {
+  background: #E5E5E5;
+  color: #777;
+  border: 1px solid #E5E5E5;
+  border-radius: 4px;
+}
+
+.order-creation-dlg {
+    max-width: 400px;
+}
+
+.order-creation-dlg.ui-dialog .ui-dialog-content {
+    overflow: hidden;
+}
+
+.shopping-cart-portlet .second-vendor-code {
+    display: block;
+}
+
+.shopping-cart-portlet .pickup-warning {
+    font-size: 0.8rem;
+}
+
+.bom-search-header .file-upload div > span {
+    color: #FFF;
+    background-color: #6c757d;
+    border-color: #6c757d;
+    overflow: hidden;
+    border-radius: 3px;
+    font-size: 1rem;
+    display: inline-block;
+    padding: .375rem .75rem;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-right: 0.5em;
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet name="main.css"/>
+    </h:head>
+
+    <h:body>
+        <div class="categories-portlet">
+            <h2>#{i18n['categories.list.header']}</h2>
+            <ui:repeat value="#{categoriesListViewBean.categories}" var="category">
+                <div class="category-section">
+                    <a href="#{categoriesListViewBean.catalogueBaseUrl}?#{categoriesListViewBean.categoryParamName}=#{category.id}">
+                        <h5
+                                class="category-name">#{category.name} (${category.associatedProducts})</h5></a>
+                    <p:separator/>
+                    <div class="items-container">
+                        <ul class="items-list">
+                            <ui:repeat value="#{category.categoryItems}" var="item">
+                                <li>
+                                    <a href="#{categoriesListViewBean.catalogueBaseUrl}?#{categoriesListViewBean.categoryParamName}=#{category.id}&amp;#{categoriesListViewBean.subcategoryParamName}=#{item.id}">#{item.name} (${item.associatedProducts})</a>
+                                </li>
+                            </ui:repeat>
+                        </ul>
+
+                    </div>
+                </div>
+            </ui:repeat>
+        </div>
+
+    </h:body>
+</f:view>

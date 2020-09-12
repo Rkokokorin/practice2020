@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
+    <h:body>
+        <ui:include src="/WEB-INF/views/navigation.xhtml"/>
+        <h:form>
+            <p:outputPanel rendered="#{cloneCartBean.hasCloneAccess}">
+                <script type="text/javascript">
+                    function inplaceHandler(inplaceWidgetVar, event) {
+                        if (event.keyCode === 13) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            PF(inplaceWidgetVar).save();
+                            return false;
+                        }
+                    }
+                </script>
+                <p:outputPanel styleClass="form-group">
+                    <p:outputLabel value="#{i18n['itc.cart.cart-name']}"/>
+                    <p:inplace editor="true" id="cartName" widgetVar="nameInputInplace">
+                        <f:facet name="output">
+                            <p:inputText readonly="true" value="#{cloneCartBean.cartName}"
+                                         styleClass="form-control" onclick="PF('nameInputInplace').show();PF('nameInput').jq.select();"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText styleClass="form-control" value="#{cloneCartBean.cartName}" widgetVar="nameInput"
+                                         onkeypress="return inplaceHandler('nameInputInplace', event);"/>
+                        </f:facet>
+                    </p:inplace>
+                </p:outputPanel>
+                <p:dataTable var="order" value="#{cloneCartBean.orders}" rendered="#{not empty cloneCartBean.orders}" selection="#{cloneCartBean.selectedOrders}"
+                             rowKey="#{order.original.id}">
+                    <p:column selectionMode="multiple"/>
+                    <p:column headerText="#{i18n['itc.cart.view.name']}">
+                        <h:outputText rendered="#{order.hasProduct}" value="#{order.name}"/>
+                        <h:outputText rendered="#{not order.hasProduct}" value="#{order.original.productDescription}"/>
+                    </p:column>
+                    <p:column headerText="#{i18n['itc.cart.view.manufacturer']}">
+                        <h:outputText rendered="#{order.hasProduct}" value="#{order.vendor}"/>
+                        <h:outputText rendered="#{not order.hasProduct}" value="N/A"/>
+                    </p:column>
+                    <p:column headerText="#{i18n['itc.cart.view.article']}">
+                        <h:panelGroup rendered="#{order.hasProduct}">
+                            <h:outputText rendered="#{order.hasProduct}" value="#{order.vcode}"/>
+                            <h:outputText styleClass="second-vendor-code text-muted" value="(#{order.secondVcode})"
+                                          rendered="#{order.secondVcode ne null and not order.secondVcode.blank}"/>
+                        </h:panelGroup>
+                        <h:outputText rendered="#{not order.hasProduct}" value="N/A"/>
+                    </p:column>
+                    <p:column headerText="#{i18n['itc.cart.view.amount']}">
+                        <h:outputText value="#{order.amount}"/>
+                    </p:column>
+                </p:dataTable>
+                <p:messages/>
+                <div class="row">
+                    <div class="col-md-12 align-right middle-label">
+                        <div class="btn-group">
+                            <h:panelGroup layout="block" styleClass="btn-group-item" rendered="#{cloneCartBean.selectedCart ne null and not cloneCartBean.wasCloned}">
+                                <p:commandButton value="#{i18n['itc.cart.clone-btn']}" styleClass="btn btn-primary"
+                                                 action="#{cloneCartBean.cloneCart}" process="@form" update="@form"/>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel rendered="#{not cloneCartBean.hasCloneAccess}">
+                <div class="alert alert-danger" role="alert">
+                    <h:outputText value="#{i18n['itc.cart.clone.has-no-access']}"/>
+                </div>
+            </p:outputPanel>
+        </h:form>
+    </h:body>
+</f:view>

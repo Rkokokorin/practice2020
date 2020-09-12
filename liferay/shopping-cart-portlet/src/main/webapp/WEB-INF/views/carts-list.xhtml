@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <!--@elvariable id="infoCarts" type="java.util.List<com.tuneit.itc.cart.model.CartWithProductsInfo>"-->
+
+    <ui:include src="/WEB-INF/views/navigation.xhtml"/>
+    <p:importEnum type="com.tuneit.itc.cart.CartsListBean$ViewMode" var="mode"/>
+        <h:form>
+            <p:dataTable value="#{infoCarts}" var="cart">
+                <ui:include src="/WEB-INF/views/cart-list-row.xhtml">
+                    <ui:param name="cart" value="#{cart}"/>
+                </ui:include>
+            </p:dataTable>
+        </h:form>
+</f:view>

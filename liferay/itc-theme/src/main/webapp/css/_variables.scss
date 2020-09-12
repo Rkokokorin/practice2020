@@ -1,0 +1,28 @@
+$default-font-family: Roboto, sans-serif;
+$default-font-size: 16px;
+$default-font-color: #0F0F0F;
+
+// COLORS
+$corporate-blue: #3561a6; // #0B5892;
+$corporate-red: #DF212E;  // #d8202d;
+$dark-blue: #2f5592;
+
+$font-gray-color: #4d4d4d;
+
+$background-gray-color: #F7F7F7;
+
+// TOPBAR
+$topbar-color: #fff;
+$topbar-font-color: #666;
+
+// NAVIGATION
+$navigation-gradient-from: $corporate-blue;
+$navigation-gradient-to: $corporate-red;
+$navigation-font-color: #fff;
+$navigation-color: linear-gradient(90deg, $dark-blue 10%, #d8202d 90%);
+
+// FOOTER
+$footer-gradient-from: $corporate-red;
+$footer-gradient-to: $corporate-blue;
+
+$light-gray-color: #F3F5F7;

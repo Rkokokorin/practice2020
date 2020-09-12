@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Добавить пользователя</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>Создание пользователя:</h1>
+
+<form th:action="@{/admin/addUser}"
+      th:object="${userForm}" method="POST">
+    Имя пользователя (является регистрозависимым):
+    <input type="text" th:field="${userForm.username}" />
+    <br/>
+    Активен:
+    <input type="checkbox"
+           th:field="${userForm.enabled}"/>
+    <br/>
+    Роли:
+    <table border="1">
+        <tr>
+            <th>Имя</th>
+            <th>Активна</th>
+            <th>Выбрана</th>
+        </tr>
+        <tr th:each="wrapper, itemStat : ${userForm.rolesWrappers}">
+            <input hidden th:name="|rolesWrappers[${itemStat.index}].id|" th:value="${wrapper.getId()}"/>
+            <input hidden th:name="|rolesWrappers[${itemStat.index}].name|" th:value="${wrapper.getName()}"/>
+            <input hidden th:name="|rolesWrappers[${itemStat.index}].enabled|" th:value="${wrapper.getEnabled()}"/>
+            <td th:utext="${wrapper.name}">...</td>
+            <td><input type="checkbox" name="active" th:disabled="true" th:checked="${wrapper.enabled}"/></td>
+            <td><input type="checkbox" name="active" th:field="*{rolesWrappers[__${itemStat.index}__].selected}"
+                       th:checked="${wrapper.selected}"/></td>
+        </tr>
+    </table>
+    <br/>
+    <input type="hidden" th:field="${userForm.id}"/>
+    <button type="submit" name="action" value="save">Сохранить</button>
+    <button type="submit" name="action" value="cancel">Отменить</button>
+</form>
+
+<br/>
+
+<!-- Check if errorMessage is not null and not empty -->
+
+<div th:if="${errorMessage}" th:utext="${errorMessage}"
+     style="color:red;font-style:italic;">
+    ...
+</div>
+
+</body>
+</html>

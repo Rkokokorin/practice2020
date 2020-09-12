@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Список сервисов</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>Список сервисов</h1>
+<a href="/admin/addRoute">Добавить сервис</a>
+<br/>
+<a href="/admin/users">К списку пользователей</a>
+<br/>
+<a href="/admin/roles">К списку ролей</a>
+<br/>
+<a href="/logout">Выйти</a>
+<br/><br/>
+<div>
+
+    <div th:if="${errorMessage}" th:utext="${errorMessage}"
+         style="color:red;font-style:italic;">
+        ...
+    </div>
+    <div th:if="${errorMessage}" th:include="confirmRouteRemove :: confirm"></div>
+
+    <table border="1">
+        <tr>
+            <th>Внешний URL</th>
+            <th>Внутренний полный URL</th>
+            <th>Активен</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr th:each="route : ${routes}">
+            <td th:utext="${route.path}">...</td>
+            <td th:utext="${route.outcomeUrl}">...</td>
+            <td><input type="checkbox" name="active" th:disabled="true" th:checked="${route.enabled}"/></td>
+            <td><a th:href="@{'/admin/route/edit/' + ${route.uuid}}">Изменить</a></td>
+
+            <td>
+                <form method="POST" th:action="@{/admin/route/remove(uuid=${route.uuid}, force=false)}">
+                    <button type="submit" name="action" value="remove">Удалить</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+<h1>Пользователь API:</h1>
+<p><span th:utext="${username==null}?'Не задано':${username}"></span></p>
+<a th:href="(${username == null}) ? 'addAPIUser' : '/admin/api/user/edit/'+(${username})">Изменить</a>
+
+<h1>Конфигурация сервиса API:</h1>
+<p>HTTP заголовок для авторизации пользователя: <strong><span th:utext="${authHeader}"></span></strong></p>
+
+<p>Авторизация внешних пользователей активна: <input type="checkbox" name="authActive" th:disabled="true" th:checked="${authEnabled}"/></p>
+<a th:href="@{'/admin/settings/edit'}">Изменить</a>
+</body>
+</html>

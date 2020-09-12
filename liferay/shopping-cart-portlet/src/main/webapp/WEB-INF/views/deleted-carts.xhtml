@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
+    <h:body>
+        <ui:include src="/WEB-INF/views/navigation.xhtml"/>
+        <p:importEnum type="com.tuneit.itc.cart.CartsListBean$ViewMode" var="mode"/>
+        <p:outputPanel rendered="#{cartsListBean.hasViewAccess}">
+            <script type="text/javascript">
+                Liferay.on('updateCurrency', function () {
+                    try {
+                        updateDeletedCartsCurrency();
+                    } catch (e) {
+
+                    }
+                });
+            </script>
+            <h:form styleClass="carts-list-form">
+                <div class="custom-shader price-shader">
+                    <div class="shader-loader"></div>
+                </div>
+                <p:remoteCommand actionListener="#{deletedCartsBean.cartsListBean.updateCurrency}" process="@this" update="@form"
+                                 name="updateDeletedCartsCurrency" onstart="$('.carts-list-form .price-shader').show();"
+                                 oncomplete="$('.carts-list-form .price-shader').hide();"/>
+                <p:dataTable value="#{deletedCartsBean.cartsListBean.infoCarts}" var="cart">
+                    <ui:include src="/WEB-INF/views/cart-list-row.xhtml">
+                        <ui:param name="cart" value="#{cart}"/>
+                    </ui:include>
+                </p:dataTable>
+            </h:form>
+        </p:outputPanel>
+    </h:body>
+</f:view>

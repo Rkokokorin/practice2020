@@ -1,0 +1,368 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
+    <h:body>
+        <!--@elvariable id="cartBean" type="com.tuneit.itc.cart.CartLoaderBean"-->
+        <h1><h:outputText value="#{i18n['itc.cart.title']}"/> </h1>
+        <ui:include src="/WEB-INF/views/navigation.xhtml"/>
+        <script type="text/javascript">
+          function inplaceHandler(inplaceWidgetVar, event) {
+            if (event.keyCode === 13) {
+              event.preventDefault();
+              event.stopPropagation();
+              PF(inplaceWidgetVar).save();
+              return false;
+            }
+          }
+
+          Liferay.on('updateCurrency', function () {
+            try {
+              updateCartViewCurrency();
+            } catch (e) {
+
+            }
+          });
+          Liferay.on('updateWarehouse', function () {
+            try {
+              updateCartViewCurrency();
+            } catch (e) {
+
+            }
+          })
+        </script>
+        <p:outputPanel rendered="#{cartBean.currentCart ne null and cartBean.editable and cartBean.viewAccess}">
+            <script type="text/javascript">
+                function checkStatusAndUpdateCart() {
+                    let cartUpdateStatus = $('[id$="cartUpdateStatus"]');
+                    if (!cartUpdateStatus) {
+                        clearInterval(cartTimer);
+                        return;
+                    }
+                    if (!cartUpdateStatus[0]) {
+                        clearInterval(cartTimer);
+                        return;
+                    }
+                    if ('true' === cartUpdateStatus[0].value) {
+                        updateCartRemoteCommand();
+                    }
+                }
+
+                function fupdateCartStatus() {
+                    updateCartStatusRemoteCommand();
+                }
+
+                var cartTimer = setInterval(fupdateCartStatus, 1000);
+            </script>
+        </p:outputPanel>
+        <h:form id="mainForm">
+            <p:remoteCommand actionListener="#{cartBean.updateCurrency()}" onstart="$('.price-shader').show();"
+                             name="updateCartViewCurrency" oncomplete="$('.price-shader').hide();"
+                             update="mainForm:cartTable mainForm:cartTotalContainer" process="@this"/>
+            <p:outputPanel rendered="#{cartBean.currentCart ne null and cartBean.viewAccess}" id="cartPanel">
+                <p:inputText type="hidden" id="cartUpdateStatus"
+                             widgetVar="cartUpdateStatusVar"
+                             value="#{cartBean.cartUpdateStatus}"
+                />
+                <p:remoteCommand name="updateCartStatusRemoteCommand"
+                                 update="cartUpdateStatus"
+                                 process="@this" onerror="clearInterval(cartTimer);"
+                                 onsuccess="checkStatusAndUpdateCart();"
+                                 action="#{cartBean.reloadCart()}"/>
+                <p:remoteCommand name="updateCartRemoteCommand"
+                                 update="@form"
+                                 process="@this"
+                                 action="#{cartBean.reloadCart()}"/>
+                <div>
+                    <div class="align-center">
+                        <strong><h:outputText styleClass="big-label "
+                                              value="#{i18n['itc.cart.cart-no']}#{cartBean.currentCart.contractorCode.toUpperCase()}-#{cartBean.currentCart.contractorLocalCartId}"/></strong>
+                    </div>
+                    <p:outputPanel styleClass="form-group">
+                        <p:outputLabel value="#{i18n['itc.cart.cart-name']}"/>
+                        <p:inplace editor="true" id="cartName" widgetVar="nameInputInplace"
+                                   rendered="#{cartBean.owner}">
+                            <f:facet name="output">
+                                <p:inputText readonly="true" value="#{cartBean.currentCart.cartName}"
+                                             styleClass="form-control"
+                                             onclick="PF('nameInputInplace').show();PF('nameInput').jq.select();"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText styleClass="form-control" value="#{cartBean.currentCart.cartName}"
+                                             widgetVar="nameInput"
+                                             onkeypress="return inplaceHandler('nameInputInplace', event);"/>
+                            </f:facet>
+                            <p:ajax event="save" listener="#{cartBean.updateName()}"
+                                    oncomplete="PF('nameInputInplace').hide()" update="@this"/>
+                        </p:inplace>
+                        <h:outputText rendered="#{not cartBean.owner}" value="#{cartBean.currentCart.cartName}"
+                                      styleClass="form-control"/>
+                    </p:outputPanel>
+                    <p:separator/>
+                    <div class="row">
+                        <div class="col-md-12 align-right middle-label">
+                            <p:outputLabel value="#{i18n['itc.cart.delivery-option']}"/>
+                            <div class="btn-group">
+                                <p:outputPanel class="btn-group-item" rendered="#{cartBean.editable}">
+                                    <p:commandButton styleClass="btn btn-primary" value="#{i18n['itc.cart.delivery-option-fastest']}" action="#{cartBean.selectFastestOffers}"
+                                                     process="@this" update="@form"/>
+                                </p:outputPanel>
+                                <p:outputPanel class="btn-group-item"
+                                               rendered="#{cartBean.editable}">
+                                    <p:commandButton styleClass="btn btn-primary" value="#{i18n['itc.cart.delivery-option-cheapest']}" action="#{cartBean.selectCheapestOffers}" process="@this" update="@form"/>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                    </div>
+                    <p:dataTable styleClass="cart-table" value="#{cartBean.orders}" var="prod" rowKey="#{prod.original.id}" rowIndexVar="idx"
+                                 id="cartTable"
+                                 filteredValue="#{cartBean.filteredOrders}">
+                        <p:column styleClass="align-left" headerText="#{i18n['itc.cart.view.article']}"
+                                  filterMatchMode="contains" filterBy="#{prod.vcode}" sortBy="#{prod.vcode}">
+                            <h:panelGroup id="articleContainer">
+                                <h:outputLink rendered="#{prod.hasProduct}" value="#{cartBean.redirectUrl(prod)}">
+                                    <h:outputText value="#{prod.vcode}"/>
+                                    <h:outputText styleClass="second-vendor-code text-muted" value="(#{prod.secondVcode})"
+                                                  rendered="#{prod.secondVcode ne null and not prod.secondVcode.blank}"/>
+                                </h:outputLink>
+                                <h:outputText rendered="#{not prod.hasProduct}" value="N/A"/>
+                            </h:panelGroup>
+                        </p:column>
+                        <p:column styleClass="align-center" headerText="#{i18n['itc.cart.view.image']}">
+                            <h:panelGroup id="imageContainer">
+                                <h:outputLink rendered="#{prod.hasProduct}" value="#{cartBean.redirectUrl(prod)}">
+                                    <img src="#{prod.imageUrl}" class="cart-product-image" alt="#{prod.name}"/>
+                                </h:outputLink>
+                                <h:outputText rendered="#{not prod.hasProduct}" value="N/A"/>
+                            </h:panelGroup>
+                        </p:column>
+                        <p:column styleClass="align-left" headerText="#{i18n['itc.cart.view.name']}"
+                                  filterBy="#{prod.displayName}" filterMatchMode="contains" sortBy="#{prod.displayName}">
+                            <h:panelGroup id="nameContainer">
+                                <h:outputLink rendered="#{prod.hasProduct}" value="#{cartBean.redirectUrl(prod)}">
+                                    <h:outputText value="#{prod.displayName}"/>
+                                </h:outputLink>
+                                <h:outputText rendered="#{not prod.hasProduct}"
+                                              value="#{prod.original.productDescription}"/>
+                            </h:panelGroup>
+                        </p:column>
+                        <p:column styleClass="align-left" headerText="#{i18n['itc.cart.view.manufacturer']}"
+                                  filterBy="#{prod.vendor}" filterMatchMode="contains" sortBy="#{prod.vendor}">
+                            <h:panelGroup id="vendorContainer">
+                                <h:outputLink rendered="#{prod.hasProduct}" value="#{cartBean.redirectUrl(prod)}">
+                                    <h:outputText value="#{prod.vendor}"/>
+                                </h:outputLink>
+                                <h:outputText rendered="#{not prod.hasProduct}" value="N/A"/>
+                            </h:panelGroup>
+                        </p:column>
+                        <p:column styleClass="align-left" headerText="#{i18n['itc.cart.view.packaging']}">
+                            <h:panelGroup id="packagingContainer">
+                                <h:outputLink rendered="#{prod.hasProduct}" value="#{cartBean.redirectUrl(prod)}">
+                                    <h:outputText rendered="#{prod.displayBasePacking()}" styleClass="product-info-value" value="1 #{prod.selectedOffer.packingUnit.name} = #{prod.selectedOffer.packingUnit.multiplier} #{prod.selectedOffer.packingUnit.basePackingUnit.name}"/>
+                                    <h:outputText rendered="#{!prod.displayBasePacking()}" styleClass="product-info-value" value="#{prod.selectedOffer.packingUnit.multiplier} #{prod.selectedOffer.packingUnit.basePackingUnit.name}"/>
+                                </h:outputLink>
+                                <h:outputText rendered="#{not prod.hasProduct}" value="N/A"/>
+                            </h:panelGroup>
+                        </p:column>
+                        <p:column styleClass="offer-column" rendered="#{cartBean.editable}"
+                                  headerText="#{i18n['itc.cart.offer-label']} #{cartBean.hasAllSpecialPrice()?i18n['itc.cart.offer-special-price-label']:''}">
+                            <h:panelGroup id="offerWrapper">
+                                <h:outputText value="N/A" rendered="#{not prod.hasProduct}"/>
+                                <h:outputText value="#{i18n['itc.cart.offer-not-found']}"
+                                              rendered="#{prod.hasProduct and empty prod.salesOffer.salesOffers}"/>
+                                <p:selectOneMenu value="#{prod.selectedOffer}"
+                                                 converter="#{cartLoaderBean.offerConverter}"
+                                                 autoWidth="false"
+                                                 rendered="#{prod.hasProduct and not empty prod.salesOffer.salesOffers}">
+                                    <p:ajax process="@this" onstart="$('.price-shader-#{idx}').show();"
+                                            listener="#{cartBean.updateSelectedOffer(prod)}"
+                                            update="@form:cartTable:@row(#{idx}) @form:cartTotalContainer"/>
+                                    <f:selectItem itemLabel="#{i18n['itc.cart.no-offer-selected']}" itemValue="#{null}"/>
+                                    <f:selectItems value="#{prod.salesOffer.salesOffers}" var="offer"
+                                                   itemLabel="#{offer.daysDuration} #{wordNumEnder.getEnding(offer.daysDuration,cartBean.daysWords)} — #{offer.minimalOrder} #{offer.packingUnit.name} — #{cartBean.convertStocksAmount(offer)} — #{cartBean.convertCurrency(offer.price)} #{cartBean.preferredCurrency.sign} #{cartBean.hasSpecialPrice(offer)?cartBean.renderSpecialPrice(offer):''}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                        </p:column>
+                        <p:column styleClass="amount-column" headerText="#{i18n['itc.cart.view.amount']}">
+                            <h:panelGroup id="amountContainer">
+                                <h:outputText value="#{prod.amount}" rendered="#{not cartBean.editable}"/>
+                                <p:spinner rendered="#{cartBean.editable}" styleClass="itc-spinner" value="#{prod.amount}" stepFactor="#{prod.selectedOffer.multiplicity}">
+                                    <p:ajax process="@this" update="@form:cartTable:@row(#{idx})" onstart="$('.price-shader-#{idx}').show();"
+                                        partialSubmit="true" listener="#{cartBean.updateAmount(prod)}" delay="100"/>
+                                </p:spinner>
+                            </h:panelGroup>
+                        </p:column>
+
+                        <p:column styleClass="align-right total-column" headerText="#{i18n['itc.cart.view.total']}"
+                                  sortBy="#{prod.totalPrice}" id="totalPriceColumn">
+                            <h:panelGroup id="totalContainer" layout="block">
+                                <div class="custom-shader price-shader price-shader-#{idx}">
+                                    <div class="shader-loader"></div>
+                                </div>
+                                <h:outputText
+                                        value="#{cartBean.convertCurrency(prod.totalPrice)} #{cartBean.preferredCurrency.sign}"/>
+                            </h:panelGroup>
+                        </p:column>
+                        <p:column rendered="#{cartBean.editable}" styleClass="align-right">
+                            <h:panelGroup id="removeContainer">
+                                <p:commandButton styleClass="btn btn-danger"
+                                                 action="#{cartBean.removeItem(prod)}" process="@this" update="@form"
+                                                 icon="fa fa-trash-alt">
+                                    <p:confirm header="#{i18n['itc.cart.item.remove-confirm-header']}"
+                                               message="#{i18n['itc.cart.item.remove-confirm-msg']}"/>
+                                </p:commandButton>
+                            </h:panelGroup>
+                        </p:column>
+                    </p:dataTable>
+                    <p:confirmDialog global="true">
+                        <p:commandButton value="#{i18n['itc.cart.confirm-yes']}" type="button"
+                                         styleClass="ui-confirmdialog-yes btn btn-danger"
+                                         icon="fa fa-check"/>
+                        <p:commandButton value="#{i18n['itc.cart.confirm-no']}" type="button"
+                                         styleClass="ui-confirmdialog-no btn btn-secondary"
+                                         icon="fa fa-times"/>
+                    </p:confirmDialog>
+                    <div class="row">
+                        <div class="col-md-12 align-right middle-label">
+                            <h:panelGroup id="cartTotalContainer" layout="block" style="margin: 1rem 0;">
+                                <strong style="display: inline-block;">
+                                    <h:outputText value="#{i18n['itc.cart.total']} "/>
+                                    <h:outputText rendered="#{cartBean.maxDays ne null}"
+                                                  value="#{cartBean.maxDays} #{wordNumEnder.getEnding(cartBean.maxDays,cartBean.daysWords)} "/>
+                                    <h:outputText
+                                            value="#{cartBean.convertCurrency(cartBean.totalPrice)}* #{cartBean.preferredCurrency.sign}"/>
+                                </strong>
+                                <div class="pickup-warning">
+                                    <h:outputText value="#{i18n['itc.cart.pickup-warning']} "/>
+                                </div>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 align-right middle-label">
+                            <div class="btn-group">
+                                <ui:fragment
+                                        rendered="#{cartBean.currentCart.current and cartBean.currentCart.ownerId eq liferay.user.userId}">
+                                    <div class="btn-group-item">
+                                        <p:commandButton value="#{i18n['itc.cart.remove-btn']}"
+                                                         styleClass="btn btn-danger" update=":mainForm"
+                                                         action="#{cartBean.deleteCart}">
+                                            <p:confirm header="#{i18n['itc.cart.remove.confirm-header']}"
+                                                       message="#{i18n['itc.cart.remove.confirm-message']}"/>
+                                        </p:commandButton>
+                                    </div>
+                                    <div class="btn-group-item">
+                                        <p:commandButton value="#{i18n['itc.cart.save-btn']}"
+                                                         styleClass="btn btn-secondary" update=":mainForm"
+                                                         action="#{cartBean.saveCart}"/>
+                                    </div>
+                                </ui:fragment>
+                                <p:outputPanel class="btn-group-item" rendered="#{not cartBean.currentCart.current}">
+                                    <p:button styleClass="btn btn-secondary"
+                                              value="#{cartBean.currentCart.ownerId eq liferay.user.userId ? i18n['itc.cart.clone-cart'] : i18n['itc.cart.clone-colleague-cart']}"
+                                              outcome="#{views.clone}">
+                                        <f:param name="#{requestParams.cartIdParam}"
+                                                 value="#{cartBean.currentCart.id}"/>
+                                    </p:button>
+                                </p:outputPanel>
+                                <p:outputPanel class="btn-group-item"
+                                               rendered="#{cartBean.currentCart.current and cartBean.currentCart.ownerId eq liferay.user.userId}">
+                                    <p:commandButton value="#{i18n['itc.cart.create-order']}"
+                                                     actionListener="#{cartLoaderBean.checkOffersForAllRows}"
+                                                     update="@widgetVar(orderCreationDlg)"
+                                                     styleClass="btn btn-primary" oncomplete="PF('orderCreationDlg').show();"/>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel rendered="#{(cartBean.contractorEmployee or cartBean.salesManager) and cartBean.currentCart eq null}">
+                <div class="row">
+                    <div class="alert alert-info" role="alert">
+                        <h:outputText value="#{i18n['itc.cart.empty-cart']}"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:outputPanel rendered="#{!(cartBean.contractorEmployee or cartBean.salesManager)}">
+                <div class="row">
+                    <div class="alert alert-info" role="alert">
+                        <h:outputText value="#{i18n['itc.cart.is-not-an-employee']}"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+            <p:growl id="growl" widgetVar="notifications"/>
+        </h:form>
+        <p:dialog modal="true" widgetVar="orderCreationDlg" styleClass="order-creation-dlg" style="overflow: hidden;">
+            <div class="custom-shader order-shader">
+                <div class="shader-loader"></div>
+            </div>
+            <p:messages/>
+            <h:form enctype="multipart/form-data">
+                <div class="form-group">
+                    <p:outputLabel value="#{i18n['itc.cart.comments']}" for="comments"/>
+                    <p:inputTextarea id="comments" styleClass="form-control" value="#{cartBean.orderComment}"/>
+                </div>
+
+                <p:selectBooleanCheckbox style="display: block" value="#{cartBean.wantDiscount}" itemLabel="#{i18n['itc.cart.want-discount']}">
+                    <p:ajax update="@form"/>
+                </p:selectBooleanCheckbox>
+                <p:outputPanel rendered="#{cartBean.wantDiscount}">
+                    <p:outputLabel value="#{i18n['itc.cart.discount-comments']}" for="comments"/>
+                    <p:inputTextarea styleClass="form-control" value="#{cartBean.discountComment}"/>
+                    <p:fileUpload label="#{i18n['itc.cart.upload']}" styleClass="file-upload"
+                                  fileUploadListener="#{cartBean.upload}" update="@form"
+                                  requiredMessage="#{i18n['itc.bom.select-file']}" sizeLimit="10485760"
+                                  skinSimple="true" multiple="true"
+                                  uploadLabel="#{i18n['itc.cart.upload-comment']}"
+                                  cancelLabel="#{i18n['itc.cart.cancel-comment']}"
+                                  invalidFileMessage="#{i18n['itc.bom.invalid-file-format']}"/>
+                </p:outputPanel>
+
+                <p:commandButton value="#{i18n['itc.cart.create-order']}" styleClass="btn btn-primary mt-2" action="#{cartBean.createOrder}"
+                                 update="@widgetVar(cartActionDialog) @widgetVar(notifications)" onstart="$('.order-shader').show();"
+                                 oncomplete="$('.order-shader').hide();"
+                                 onsuccess="PF('orderCreationDlg').hide();"/>
+            </h:form>
+        </p:dialog>
+        <p:dialog visible="#{cartLoaderBean.actionNeeded}" modal="true" closable="false" widgetVar="cartActionDialog"
+                  resizable="false" draggable="false">
+            <h:form>
+                <h:outputText value="#{i18n['itc.cart.order-created']}"/>
+                <br/>
+                <ui:repeat value="#{cartBean.createdOrders}" var="order">
+                    <h:panelGroup>
+                        <h:outputText value="#{i18n['itc.cart.order-no']}#{order.orderNumber} #{i18n['itc.cart.order-date']} #{cartLoaderBean.formatDate(order.orderDate)}"/>
+                        <br/>
+                    </h:panelGroup>
+                </ui:repeat>
+                <div class="btn-group">
+                    <div class="btn-group-item">
+                        <p:commandButton value="#{i18n['itc.cart.save-btn']}" styleClass="btn btn-secondary"
+                                         rendered="#{not cartBean.savingCompleted}"
+                                         action="#{cartBean.saveCart}" update="@widgetVar(cartActionDialog) @widgetVar(notifications)"/>
+                    </div>
+                    <div class="btn-group-item">
+                        <h:outputLink styleClass="btn btn-secondary" value="#{cartBean.profileLink}">
+                            <h:outputText value="#{i18n['itc.cart.go-to-profile']}"/>
+                        </h:outputLink>
+                    </div>
+                    <div class="btn-group-item">
+                        <h:outputLink styleClass="btn btn-primary" value="#{cartBean.catalogueLink}">
+                            <h:outputText value="#{i18n['itc.cart.continue-shopping']}"/>
+                        </h:outputLink>
+                    </div>
+                </div>
+            </h:form>
+
+        </p:dialog>
+        <h:outputScript library="fileupload" name="fileupload.js" target="body"/>
+    </h:body>
+</f:view>

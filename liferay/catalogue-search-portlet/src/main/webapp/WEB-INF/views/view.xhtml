@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:portlet="http://java.sun.com/portlet_2_0"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+        <h:outputScript library="js" name="main.js"/>
+    </h:head>
+    <f:metadata>
+        <f:viewAction type="preRenderView" action="#{cataloguePrerenderBean.checkProductSelected()}"/>
+    </f:metadata>
+    <h:body>
+        <ui:remove>
+            <ui:include src="/WEB-INF/views/bread-crackers.xhtml"/>
+        </ui:remove>
+        <script type="text/javascript">
+            function refreshPrices() {
+                if ($('.price-container.loading').length > 0) {
+                    loadPrices();
+                }
+            }
+            Liferay.on('updateCurrency', function () {
+                try {
+                    searchUpdateCurrency();
+                } catch (e) {
+
+                }
+            });
+            Liferay.on('updateWarehouse', function () {
+                try {
+                    searchUpdateWarehouse();
+                } catch (e) {
+
+                }
+            });
+            function onSearchStart() {
+                $('.search-results-table').hide();
+            }
+        </script>
+        <h:form id="catalogueForm" styleClass="catalogue-form">
+            <portlet:namespace var="portnamesapace"/>
+            <p:remoteCommand actionListener="#{viewBean.loadPrices}" name="loadPrices" process="@this"
+                             update="@(.price-container.loading)" onstart="$('.price-container.loading .custom-shader').show();"/>
+            <p:remoteCommand actionListener="#{viewBean.updateCurrency}" name="searchUpdateCurrency" process="@this"
+                             update="@(.price-container)" onstart="$('.price-container .custom-shader').show();"/>
+            <p:remoteCommand actionListener="#{viewBean.updateWarehouse}" name="searchUpdateWarehouse" process="@this"
+                             oncomplete="pushCatalogueHistory('#{portnamesapace}'+':catalogueForm');" update="@form"
+            />
+            <style type="text/css">
+                .catalogue-cat-selector {
+                    width: 430px;
+                    margin-bottom: 0.4rem;
+                }
+
+                .itc-theme .ui-selectonemenu-panel {
+                    max-width: 430px;
+                }
+
+                .itc-theme .ui-selectonemenu-panel .ui-selectonemenu-list-item {
+                    white-space: normal;
+                }
+                .price-column {
+                    position: relative;
+                }
+                .price-container.loading .price-value {
+                    display: none;
+                }
+            </style>
+            <p:outputPanel styleClass="row search-inputs">
+                <p:blockUI widgetVar="blockSearch" styleClass="search-panel-shader"
+                           block="@parent" trigger="searchButton,visibleSearchButton">
+                    <div class="custom-shader search-result-shader">
+                        <div class="shader-loader"></div>
+                    </div>
+                </p:blockUI>
+                <div class="col-md-12">
+                    <div class="form-group flex-column">
+                        <h2 class="catalogue-header"><h:outputText value="#{i18n['itc.catalogue.title']}"/></h2>
+                        <p:outputPanel id="searchPanel" class="form-group form-row">
+                            <div class="col-sm-12 col-lg-6">
+                                <div class="input-group" style="flex: 1; margin-right: 1rem;">
+                                    <p:inputText id="searchInput" value="#{viewBean.filters.searchQuery}" styleClass="form-control"
+                                                 placeholder="#{i18n['itc.catalogue.search-among-results']}"/>
+                                    <div class="input-group-append">
+                                        <p:defaultCommand target="searchButton" scope="searchPanel"/>
+                                        <p:commandButton id="searchButton" process="@this catalogueForm:searchPanel" update="@form"
+                                                         styleClass="ui-helper-hidden"
+                                                         actionListener="#{viewBean.resetProductTable}"
+                                                         onstart="onSearchStart();"
+                                                         oncomplete="pushCatalogueHistory('#{portnamesapace}'+':catalogueForm');refreshPrices();"
+                                        />
+                                        <p:commandLink id="visibleSearchButton" process="@this catalogueForm:searchPanel" update="@form"
+                                                       styleClass="search-button"
+                                                       actionListener="#{viewBean.resetProductTable}"
+                                                       onstart="onSearchStart();"
+                                                       oncomplete="pushCatalogueHistory('#{portnamesapace}'+':catalogueForm');refreshPrices();"
+                                        >
+                                            <span class="search-label"><h:outputText value="#{i18n['itc.catalogue.search']}"/></span>
+                                            <svg class="lexicon-icon lexicon-icon-search" focusable="false" role="presentation"
+                                                 viewBox="0 0 512 512">
+                                                <path class="lexicon-icon-outline"
+                                                      d="M503.254 467.861l-133.645-133.645c27.671-35.13 44.344-79.327 44.344-127.415 0-113.784-92.578-206.362-206.362-206.362s-206.362 92.578-206.362 206.362 92.578 206.362 206.362 206.362c47.268 0 90.735-16.146 125.572-42.969l133.851 133.851c5.002 5.002 11.554 7.488 18.106 7.488s13.104-2.486 18.106-7.488c10.004-10.003 10.004-26.209 0.029-36.183zM52.446 206.801c0-85.558 69.616-155.173 155.173-155.173s155.174 69.616 155.174 155.173-69.616 155.173-155.173 155.173-155.173-69.616-155.173-155.173z"></path>
+                                            </svg>
+                                            <span class="loader"></span>
+                                        </p:commandLink>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-6">
+                                <p:selectBooleanCheckbox value="#{viewBean.filters.partNumberSearch}"
+                                                         itemLabel="#{i18n['itc.catalogue.search-by-part-number']}"/>
+                            </div>
+                        </p:outputPanel>
+                        <div class="form-row">
+                            <div class="col-sm-12 col-lg-6">
+                                <p:autoComplete id="categorySelector" dropdown="true" 
+                                                value="#{viewBean.selectedCategory}" 
+                                                var="cat" itemLabel="#{cat.name}" itemValue="#{cat}"
+                                                completeMethod="#{viewBean.completeCategory}" 
+                                                converter="#{viewBean.categoryConverter}"
+                                                styleClass="catalogue-cat-selector"
+                                                placeholder="#{i18n['itc.catalogue.category.autocomplete.name']}"
+                                                emptyMessage="#{i18n['itc.catalogue.category.autocomplete.empty']}">
+                                    <p:ajax update="@form" listener="#{viewBean.selectCategory}" event="itemSelect"
+                                            onstart="onSearchStart(); PF('blockSearch').show()"
+                                            oncomplete="pushCatalogueHistory('#{portnamesapace}'+':catalogueForm');refreshPrices(); PF('blockSearch').hide()"/>
+                                </p:autoComplete>
+                                <p:commandLink title="#{i18n['itc.catalogue.category.reset']}"
+                                               value="" styleClass="catalogue-cat-reset">
+                                    <p:ajax update="@form" listener="#{viewBean.resetCategory}" event="click"
+                                            onstart="onSearchStart(); PF('blockSearch').show()"
+                                            oncomplete="pushCatalogueHistory('#{portnamesapace}'+':catalogueForm');refreshPrices(); PF('blockSearch').hide()"/>
+                                </p:commandLink>
+                            </div>
+                            <div class="col-sm-12 col-lg-6">
+                                <p:outputPanel rendered="#{viewBean.selectedCategory ne null}">
+                                    <p:autoComplete id="subcatSelect" dropdown="true" 
+                                                    value="#{viewBean.selectedSubcategory}" 
+                                                    var="subcat" itemLabel="#{subcat.name}" itemValue="#{subcat}"
+                                                    completeMethod="#{viewBean.completeSubcategory}" 
+                                                    converter="#{viewBean.categoryItemConverter}"
+                                                    styleClass="catalogue-cat-selector"
+                                                    placeholder="#{i18n['itc.catalogue.subcategory.autocomplete.name']}"
+                                                    emptyMessage="#{i18n['itc.catalogue.subcategory.autocomplete.empty']}">
+                                        <p:ajax update="@form" listener="#{viewBean.selectSubcategory}" event="itemSelect"
+                                                onstart="onSearchStart(); PF('blockSearch').show()"
+                                                oncomplete="pushCatalogueHistory('#{portnamesapace}'+':catalogueForm');refreshPrices(); PF('blockSearch').hide()"/>
+                                    </p:autoComplete>
+                                    <p:commandLink title="#{i18n['itc.catalogue.subcategory.reset']}"
+                                                   value="" styleClass="catalogue-cat-reset">
+                                        <p:ajax update="@form" listener="#{viewBean.resetSubcategory}" event="click"
+                                                onstart="onSearchStart(); PF('blockSearch').show()"
+                                                oncomplete="pushCatalogueHistory('#{portnamesapace}'+':catalogueForm');refreshPrices(); PF('blockSearch').hide()"/>
+                                    </p:commandLink>
+                                </p:outputPanel>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm-12 col-lg-6">
+                                <div class="form-group">
+                                    <p:autoComplete id="manufacturerSelector" dropdown="true" 
+                                                    value="#{viewBean.selectedManufacturer}" 
+                                                    var="man" itemLabel="#{man.name}" itemValue="#{man}"
+                                                    completeMethod="#{viewBean.completeManufacturer}" 
+                                                    converter="#{viewBean.manufacturerConverter}"
+                                                    styleClass="catalogue-cat-selector"
+                                                    placeholder="#{i18n['itc.catalogue.manufacturer.autocomplete.name']}"
+                                                    emptyMessage="#{i18n['itc.catalogue.manufacturer.autocomplete.empty']}">
+                                        <p:ajax update="@form" listener="#{viewBean.selectManufacturer}" event="itemSelect"
+                                                onstart="onSearchStart(); PF('blockSearch').show()"
+                                                oncomplete="pushCatalogueHistory('#{portnamesapace}'+':catalogueForm');refreshPrices(); PF('blockSearch').hide()"/>
+                                    </p:autoComplete>
+                                    <p:commandLink title="#{i18n['itc.catalogue.manufacturer.reset']}" 
+                                                   value="" styleClass="catalogue-cat-reset">
+                                        <p:ajax update="@form" listener="#{viewBean.resetManufacturer}" event="click"
+                                                onstart="onSearchStart(); PF('blockSearch').show()"
+                                                oncomplete="pushCatalogueHistory('#{portnamesapace}'+':catalogueForm');refreshPrices(); PF('blockSearch').hide()"/>
+                                    </p:commandLink>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h:inputHidden id="catId" value="#{viewBean.filters.selectedCategoryId}"/>
+                        <h:inputHidden id="catIdParamName" value="#{viewBean.selectedCategoryIdParamName}"/>
+                        <h:inputHidden id="subcatId" value="#{viewBean.filters.selectedSubcategoryId}"/>
+                        <h:inputHidden id="subcatIdParamName" value="#{viewBean.selectedSubcategoryIdParamName}"/>
+                        <h:inputHidden id="manId" value="#{viewBean.filters.selectedManufacturerId}"/>
+                        <h:inputHidden id="manIdParamName" value="#{viewBean.selectedManufacturerIdParamName}"/>
+                        <h:inputHidden id="searchQueryParamName" value="#{viewBean.searchQueryParamName}"/>
+                        <h:inputHidden id="searchQuery" value="#{viewBean.filters.searchQuery}"/>
+                        <h:inputHidden id="pnsParamName" value="#{viewBean.pnsParamName}"/>
+                        <h:inputHidden id="pns" value="#{viewBean.filters.partNumberSearch}"/>
+                        <h:inputHidden id="plRowsParamName" value="#{viewBean.plrowsParamName}"/>
+                        <h:inputHidden id="plPageParamName" value="#{viewBean.plpageParamName}"/>
+                        <h:inputHidden id="plPage" value="#{viewBean.currentTablePage}"/>
+                        <h:inputHidden id="plRows" value="#{viewBean.currentTableRows}"/>
+                        <h:inputHidden id="warehouseCode" value="#{viewBean.filters.selectedWarehouseCode}"/>
+                        <h:inputHidden id="warehouseCodeParamName" value="#{viewBean.warehouseParamName}"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+
+            <div>
+                *Ваши персональные цены выделены
+                <div class="special-price inline"> синим цветом </div>
+            </div>
+
+            <div class="row">
+            <div class="col-sm-12">
+            <p:dataTable value="#{viewBean.productLazyDataModel}" var="prod"
+                        id="listDataTable" rowIndexVar="rowIdx"
+                         emptyMessage="#{i18n['itc.catalogue.table.empty']}" styleClass="search-results-table"
+                         paginator="true" paginatorAlwaysVisible="false" rows="20"
+                         paginatorTemplate="{PageLinks}"
+                         lazy="true"
+            >
+                <!--@elvariable id="prod" type="com.tuneit.itc.catalogue.util.ProductRow"-->
+                <p:ajax event="page" process="@none" update="@none" oncomplete="loadPrices();"/>
+                <p:ajax event="page" listener="#{viewBean.pageEventListener}"
+                        update="@form:plPage @form:plRows @form:correctQueryMessage"
+                        oncomplete="pushCatalogueHistory('#{portnamesapace}'+':catalogueForm');" />
+
+                <p:column headerText="#{i18n['itc.catalogue.part-number']}" styleClass="search-result-vendor-code">
+                    <a href="#{viewBean.openProduct(prod.product)}" target="_blank">
+                        <h:outputText value="#{prod.product.vendorCode}"/>
+                        <h:outputText styleClass="additional-vendor-code"
+                                      rendered="#{!prod.product.secondVendorCode.blank}"
+                                      value="(#{prod.product.secondVendorCode})"/>
+
+                    </a>
+                </p:column>
+                <p:column headerText="#{i18n['itc.catalogue.image']}" styleClass="search-result-image">
+                    <a href="#{viewBean.openProduct(prod.product)}" target="_blank">
+                        <img src="#{viewBean.getProductPictureUrl(prod.product)}" alt="#{i18n['itc.catalogue.product-image']}"/>
+                    </a>
+                </p:column>
+
+                <p:column headerText="#{i18n['itc.catalogue.name']}" styleClass="search-result-name">
+                    <a href="#{viewBean.openProduct(prod.product)}" target="_blank">
+                        <h:outputText value="#{prod.product.displayName}"/>
+                    </a>
+                </p:column>
+
+                <p:column headerText="#{i18n['itc.catalogue.manufacturer']}" styleClass="search-result-vendor">
+                    <a href="#{viewBean.openProduct(prod.product)}" target="_blank">
+                        #{prod.product.manufacturer.name}
+                    </a>
+                </p:column>
+
+                <p:column headerText="#{i18n['itc.catalogue.price']}" styleClass="search-result-price">
+                    <h:panelGroup id="price" styleClass="price-container #{viewBean.getPrice(prod.product.code) eq null ? 'loading' : ''}">
+                        <div class="custom-shader price-shader">
+                            <div class="shader-loader"></div>
+                        </div>
+                        <h:outputText styleClass="price-value" rendered="#{viewBean.getPrice(prod.product.code) > 0.0 and !viewBean.hasSpecialPrice(prod.product.code)}"
+                                      value="#{viewBean.getPrice(prod.product.code)} #{viewBean.preferredCurrency.sign}"/>
+
+                        <h:outputText styleClass="price-value special-price" rendered="#{viewBean.getPrice(prod.product.code) > 0.0 and viewBean.hasSpecialPrice(prod.product.code)}"
+                                      value="#{viewBean.renderSpecialPrice(prod.product.code)}"
+                        />
+                        <h:outputText styleClass="price-value" rendered="#{viewBean.getPrice(prod.product.code) == 0.0}"
+                                      value="#{i18n['itc.catalogue.price-by-request']}"/>
+                    </h:panelGroup>
+                </p:column>
+                <p:column headerText="#{i18n['itc.catalogue.count']}" styleClass="search-result-counter">
+                    <h:panelGroup id="prodCountWrapper" layout="block">
+                        <p:spinner id="prodCount" value="#{prod.counter}" stepFactor="1" styleClass="itc-spinner" min="1"/>
+                        <p:defaultCommand target="addToCartBtn" scope="@parent"/>
+                    </h:panelGroup>
+                </p:column>
+                <p:column headerText="#{i18n['itc.catalogue.packing']}" styleClass="search-result-packing">
+                    <h:outputText value="#{prod.product.unit.name}"/>
+                </p:column>
+                <p:column styleClass="search-result-add">
+                    <p:commandLink
+                                   styleClass="action-container"
+                                   title="#{not viewBean.signedIn ? i18n['itc.catalogue.sign-in-required']
+                                        : (viewBean.isFavorite(prod) ? i18n['itc.product.card.remove-from-favorite']
+                                            : i18n['itc.product.card.add-to-favorite'])}"
+                                   action="#{viewBean.toggleFavorite(prod)}" process="@this"
+                                   update="@form:listDataTable:@row(#{rowIdx}) :messages">
+                        <h:outputText
+                                styleClass="action-icon icon #{viewBean.isFavorite(prod) ? 'icon-selected' : 'icon-unselected'}"
+                                value="#{viewBean.heartSvg}" escape="false"/>
+                    </p:commandLink>
+                    <p:commandLink
+                                    styleClass="action-container"
+                                    title="#{not viewBean.signedIn ? i18n['itc.catalogue.sign-in-required']
+                                            : (viewBean.isComparison(prod) ? i18n['itc.product.card.remove-from-comparison']
+                                                : i18n['itc.product.card.add-to-comparison'])}"
+                                    action="#{viewBean.toggleComparison(prod)}" process="@this"
+                                    update="@form:listDataTable:@row(#{rowIdx}) :messages">
+                        <h:outputText
+                                styleClass="action-icon icon #{viewBean.isComparison(prod) ? 'icon-selected' : 'icon-unselected'}"
+                                value="#{viewBean.compareSvg}" escape="false"/>
+                    </p:commandLink>
+                    <p:tooltip for="addToCartBtn" value="#{i18n['itc.catalogue.anonymous.add-to-cart']}"
+                               position="left" rendered="#{!(cartBean.contractorEmployee or cartBean.salesManager)}"/>
+                    <p:outputPanel id="addToCartBtn" style="display: inline-block">
+
+                        <p:commandLink class="btn btn-primary add-to-cart-btn"
+                                         action="#{viewBean.addToCart(prod)}"
+                                         process="@this prodCount" update="@form:listDataTable:@row(#{rowIdx}) :messages">
+                            <img src="#{resource['images/cart-wh.svg']}" alt="cart-icon"/>
+                        </p:commandLink>
+                    </p:outputPanel>
+
+                </p:column>
+            </p:dataTable>
+            </div>
+            </div>
+            <p:outputPanel id="correctQueryMessage">
+            <p:outputLabel
+                value="#{i18n['itc.catalogue.end-search-prompt']}"
+                rendered="#{viewBean.pageIsLast}"
+                />
+            </p:outputPanel>
+        </h:form>
+        <p:growl id="messages"/>
+        <script type="text/javascript">
+            refreshPrices();
+            searchUpdateWarehouse();
+    </script>
+    </h:body>
+</f:view>

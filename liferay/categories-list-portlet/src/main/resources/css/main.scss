@@ -1,0 +1,34 @@
+$corporate-blue: #0B5892;
+$corporate-dark-gray: #4d4d4d;
+
+.categories-portlet {
+  h2 {
+    margin-bottom: 2rem;
+    color: $corporate-dark-gray;
+  }
+
+  .category-section {
+    margin-bottom: 1.5rem;
+
+    .category-name {
+      color: $corporate-dark-gray;
+    }
+
+    .ui-separator {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    .items-container {
+      ul.items-list {
+        column-gap: 3rem;
+        color: $corporate-blue;
+        column-count: 3;
+      }
+    }
+  }
+}
+
+
+
+

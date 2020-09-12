@@ -1,0 +1,667 @@
+/* This file allows you to override default styles in one central 
+ * location for easier upgrade and maintenance. 
+*/
+
+@import "font_awesome";
+@import "roboto";
+@import "exo-2-font";
+
+@import "imports"; // bootstrap and other mixins
+
+@import "variables";
+@import "portlet-decorators";
+@import "owl.carousel.min";
+@import "owl.theme.default.min";
+@import "photoswipe";
+@import "photoswipe_default-skin";
+@import "magnific-popup";
+
+// COMMON STYLES
+
+html, body {
+    font-family: $default-font-family;
+    color: $default-font-color;
+    /*overflow: hidden;*/
+}
+
+.corporate-color {
+    color: $corporate-blue;
+}
+
+h2 {
+    font-size: 1.375rem;
+    font-weight: 500;
+    color: #131313;
+}
+
+h3 {
+    font-size: 1.125rem;
+    font-weight: bold;
+    color: #131313;
+}
+
+h4, .h4 {
+    font-size: 1.06125rem;
+    font-weight: bold;
+    color: #131313;
+}
+
+.portlet-content {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+
+// TOPBAR STYLES
+
+#topbar {
+    background-color: $topbar-color;
+    color: $topbar-font-color;
+    font-size: 0.8rem;
+    border-bottom: 1px solid #f1f2f5;
+    padding: .5rem 0;
+
+    a {
+        color: $topbar-font-color;
+        
+        &:hover {
+            text-decoration: none;
+            color: $corporate-blue;
+        }
+    }
+    
+    .portlet {
+        margin: 0;
+    }
+    
+    #topbar-currency-selector,
+    #topbar-warehouse-selector {
+        .ui-selectonemenu {
+            background-color: transparent;
+            border: none;
+            .ui-selectonemenu-trigger {
+                background-color: transparent;
+            }
+            .ui-selectonemenu-label {
+                padding: 0;
+            }
+
+        }
+    }
+    
+    #topbar-warehouse-selector {
+        .location {
+            margin-right: 0.5rem;
+            
+            i {
+                margin-right: 0.2rem;
+                color: $corporate-blue;
+            }
+        }
+    }
+    
+    #contact-phone-mob {
+        a {
+            color: $default-font-color;
+
+            i {
+                color: $corporate-blue;
+                margin-right: 0.5rem;
+            }
+        }
+    }
+}
+
+// HEADER STYLES
+
+#header {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    
+    .portlet {
+        margin: 0;
+    }
+    
+    #company-logo {
+        img {
+            height: 4rem;
+            width: auto;
+        }
+    }
+    
+    #company-desc {
+        font-size: 0.8rem;
+        color: $font-gray-color;
+    }
+    
+    #go-to-bom a {
+        display: block;
+        padding: 0.65rem 1.2rem;
+        background: $corporate-blue;
+        color: #fff;
+        font-size: .8rem;
+        border: 1px solid $corporate-blue;
+        border-left: 0 none;
+        border-radius: 4px;
+        text-transform: uppercase;
+    }
+    
+    #contact-phone {
+        a {
+            color: $default-font-color;
+            font-size: 1.1rem;
+
+            &:hover {
+                text-decoration: none;
+            }
+
+            i {
+                color: $corporate-blue;
+                margin-right: 0.5rem;
+            }
+        }
+    }
+
+    .navbar-toggler {
+        color: $corporate-blue;
+        .navbar-toggler-icon {
+            height: auto;
+            font-size: 1.75rem;
+        }
+    }
+}
+
+// NAVIGATION STYLES
+
+#navigation {
+    background: $navigation-color;
+    color: $navigation-font-color;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    position: relative;
+    
+    .portlet {
+        margin-bottom: 0;
+    }
+
+    .container {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        position: relative;
+    }
+
+    .navbar-nav {
+        .nav-link {
+            color: inherit;
+        }
+    }
+
+    .navbar-toggler {
+        padding: 0.5rem 0;
+        border: 0px none;
+            
+        .navbar-toggler-icon {
+            width: 1em;
+            height: 1em;
+            color: $navigation-font-color;
+        }
+    }
+    
+    #navigationCollapse {
+        font-size: 1rem;
+        padding-left: 0;
+        padding-right: 0;
+        flex-shrink: 1;
+
+        .portlet-navigation {
+            .portlet {
+                margin-bottom: 0px;
+
+                .portlet-content {
+                    border: 0 none;
+                }
+            }
+            .navbar-nav {
+                li {
+                    &.selected {
+                        a {
+                            position: relative;
+
+                            &:after {
+                                width: 70%;
+                            }
+                        }
+                    }
+
+                    a {
+                        padding: 1rem 0;
+                        margin-right: 2.5rem;
+                        color: inherit;
+                        //letter-spacing: 1px;
+                        font-family: "Exo 2";
+                        font-weight: 500;
+                        transition: background-color 0.5s ease-in-out;
+
+                        &:after {
+                            content: "";
+                            width: 0;
+                            position: absolute;
+                            bottom: 8px;
+                            left: 0;
+                            height: 4px;
+                            background: #fff4;
+                            border-radius: 4px;
+                            transition: width 0.5s ease-in-out;
+                        }
+
+                        &:hover {
+                            color: inherit;
+
+                            &:after {
+                                width: 70%;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            .navbar-site {
+                li:first-child {
+
+                    a {
+                        span {
+                            display: inline;
+                        }
+
+                        &:before {
+                            content: "\f0c9";
+                            font-family: "Font Awesome 5 Free";
+                            font-weight: 900;
+                            margin-right: 0.5rem;
+                        }
+
+                        &:after {
+                            left: 1.7rem;
+                        }
+
+                        &:hover {
+                            &:after {
+                                width: 50%;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #user-profile {
+        .nav-quick-link {
+            img {
+                height: 1.5rem;
+            }
+        }
+    }
+    
+    #shopping-cart {
+    }
+
+    #comparison {
+    }
+
+    #favorite {
+        .nav-quick-link {
+            img {
+                height: 1.7rem;
+            }
+        }
+    }
+
+    .nav-quick-link {
+        height: 2.2rem;
+        color: inherit;
+        padding: 0.2rem 0.5rem;
+        border-radius: 0.2rem;
+        transition: background 0.5s ease-in-out;
+        display: flex;
+        align-items: flex-end;
+
+        &:hover {
+            text-decoration: none;
+            background: #fff2;
+        }
+
+        img {
+            height: 1.8rem;
+        }
+    }
+
+
+    .catalog-nav.drop-down {
+        display: none;
+        position: absolute;
+        width: 24rem;
+        top: 100%;
+        left: 0;
+        border: 0 none;
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        background: #fff;
+        z-index: 10000;
+    }
+}
+
+#content {
+    min-height: 80vh;
+    position: relative;
+    flex: 1;
+
+    .portlet-journal-content {
+        .portlet-content {
+            border: 0 none;
+
+            dl dt {
+                display: none;
+            }
+        }
+    }
+    
+    #categories-menu {
+        background: #fff;
+        z-index: 100;
+    }
+
+    .shader {
+        position: absolute;
+        background-color: transparent;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transition-property: background-color;
+        transition-duration: 1s;
+    }
+    .shader.active {
+        background-color: #44444480;
+    }
+    
+    .web-content-header {
+        color: #4d4d4d;
+        margin: 4rem 0 3rem;
+        text-align: left;
+        font-size: 1.5rem;
+        font-weight: normal;
+        position: relative;
+        
+        span {
+            border-bottom: solid lightgray 1px;
+        }
+        
+        .go-to-all {
+            position: absolute;
+            right: 0;
+            font-size: 1rem;
+            color: #3561a6;
+            font-weight: normal;
+            vertical-align: middle;
+            
+            i {
+                margin-left: 0.5rem;
+                vertical-align: middle;
+            }
+            
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+// SIGN IN STYLES
+.modal-hidden.modal.yui3-widget-modal {
+    display: none;
+}
+
+
+// FOOTER STYLES
+
+#footer {
+    /*background-image: radial-gradient(circle at bottom right, $footer-gradient-from, $footer-gradient-to 18%);*/
+    background: $dark-blue;
+    border: none;
+    color: #fff;
+    margin: 0 !important;
+
+    h4 {
+        text-transform: uppercase;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        font-family: "Exo 2";
+        color: #fff;
+    }
+
+    
+    a {
+        color: #fff;
+        cursor: pointer;
+        display: block;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+    
+    .footer-column {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        
+        a {
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+
+            i {
+                width: 2rem;
+            }
+        }
+    }
+    
+    .footer-menu {
+        a {
+            display: inline-block;
+            position: relative;
+
+            &:after {
+                content: "";
+                width: 0;
+                position: absolute;
+                left: 0;
+                height: 4px;
+                background: #fff4;
+                border-radius: 4px;
+                transition: width 0.5s ease-in-out;
+                bottom: -0.3rem;
+            }
+
+            &:hover:after {
+                width: 70%;
+            }
+        }
+    }
+    
+    .contact-phone {
+        font-size: 1.1rem;
+    }
+
+    .social-icons {
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+
+        a {
+            background: #537FC4;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            margin: 1rem 1rem 1.5rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: #E7E7E7;
+            transition: background-color 0.2s ease-in-out;
+
+            &:hover {
+                background: #3561a6;
+            }
+        }
+    }
+
+    .report-feedback {
+        font-size: 0.8rem;
+    }
+
+    #footer-bottom {
+        margin-bottom: 0;
+        border-top: 1px solid #476ba5;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+        font-size: 0.8rem;
+    }
+}
+
+
+.custom-shader {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 500;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: none;
+    margin: -10px;
+    border-radius: 10px;
+    overflow: hidden;
+    
+    &.active {
+        display: block;
+    }
+    
+    .shader-loader {
+        width: 50px;
+        height: 50px;
+        border: solid 5px transparent;
+        border-right-color: $corporate-blue;
+        margin: auto;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 50px;
+        animation: loader-animation 2s linear infinite;
+    }
+
+    @keyframes loader-animation {
+        0% {
+            border-right-color: $corporate-blue;
+            transform: rotate(0deg);
+        }
+        50% {
+            border-right-color: $corporate-red;
+        }
+        100% {
+            border-right-color: $corporate-blue;
+            transform: rotate(360deg);
+        }
+    }
+}
+
+
+
+// FLEXIBLE LAYOUT
+
+@include media-breakpoint-down(lg) {
+    #navigation {
+        background: $corporate-blue;
+    }
+
+    #navigation {
+        #navigationCollapse {
+            
+            &.collapse:not(.show) {
+                display: none;
+            }
+                        
+            .navbar-nav {
+                flex: 1;
+                flex-direction: column;
+            }
+            
+            .navbar-site {
+                li {
+                    &:first-child {
+                        a:before {
+                            display: none;
+                        }
+                    }
+                    &.selected, &:hover {
+                        a:after {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+        
+        .catalog-nav.drop-down {
+            display: none !important;
+        }
+    }
+    
+    #content .web-content-header {
+        margin: 2rem 0 2rem;
+        font-size: 1.2rem;
+        
+        .go-to-all {
+            font-size: 0;
+            
+            i {
+                font-size: 1rem;
+            }
+        }
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .manufacturers-portlet .manufacturer-section .items-container ul.items-list {
+        column-count: 2;
+    }
+}
+@include media-breakpoint-down(xs) {
+    .manufacturers-portlet .manufacturer-section .items-container ul.items-list {
+        column-count: 1;
+    }
+}
+
+@include media-breakpoint-between(md, lg) {
+    #footer {
+        .contact-us {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+
+            h4 {
+                margin: 0;
+            }
+
+            a {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+        }
+    }
+}

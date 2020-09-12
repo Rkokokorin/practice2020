@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:message for="name"/>
+            <p:message for="email"/>
+            <p:message for="feedback"/>
+            <p:message for="emailFrom"/>
+            <p:message for="emailsTo"/>
+            <!--                    Uncomment, when customer stand will have a domain name-->
+            <ui:remove><p:message for="captcha"/></ui:remove>
+            <p:messages globalOnly="true" showDetail="true"/>
+            <p:outputPanel rendered="#{feedbackSenderBean.modeView}">
+                <div class="edit-icon-container">
+                    <p:commandLink actionListener="${feedbackSenderBean.setModeEdit()}"
+                                   rendered="#{feedbackSenderBean.modeView and feedbackSenderBean.admin}"
+                                   process="@this"
+                                   update="@form">
+                        <i class="fa fa-pen"/>
+                    </p:commandLink>
+                </div>
+                <p:outputPanel rendered="#{!feedbackSenderBean.preferencesLoaded}">
+                    <h:outputText value="#{i18n['feedback.misconfigured']}"/>
+                </p:outputPanel>
+                <p:outputPanel styleClass="feedback-container" rendered="#{feedbackSenderBean.preferencesLoaded}">
+                    <div class="form-group">
+                        <p:outputLabel for="name" value="#{i18n['feedback.name']}"/>
+                        <p:inputText id="name" value="#{feedbackSenderBean.name}" required="true" styleClass="form-control"
+                                     requiredMessage="#{i18n['feedback.name.required']}"/>
+                    </div>
+                    <div class="form-group">
+                        <p:outputLabel for="email" value="#{i18n['feedback.email']}"/>
+                        <p:inputText id="email" required="true" requiredMessage="#{i18n['feedback.email.required']}"
+                                     styleClass="form-control" value="#{feedbackSenderBean.email}"/>
+                    </div>
+                    <div class="form-group">
+                        <p:outputLabel for="feedback" value="#{i18n['feedback.text']}"/>
+                        <p:inputTextarea id="feedback" required="true" requiredMessage="#{i18n['feedback.text.required']}"
+                                         styleClass="form-control" value="#{feedbackSenderBean.text}" maxlength="2000"/>
+                    </div>
+                    <!--                    Uncomment, when customer stand will have a domain name-->
+                    <ui:remove><p:captcha id="captcha" rendered="#{feedbackSenderBean.anonymous}" requiredMessage="#{i18n['feedback.captcha.required']}"/></ui:remove>
+                    <div class="btn-group">
+                        <div class="btn-group-item">
+                            <p:commandButton value="#{i18n['feedback.send']}" action="#{feedbackSenderBean.sendFeedback}"
+                                             process="@form" styleClass="btn btn-primary"
+                                             update="@form"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+            </p:outputPanel>
+            <p:outputPanel rendered="#{feedbackSenderBean.modeEdit and feedbackSenderBean.admin}">
+                <div class="preferences-container">
+                    <div class="form-group">
+                        <p:outputLabel for="emailFrom" value="#{i18n['feedback.preferences.from.email']}"/>
+                        <p:inputText styleClass="form-control" id="emailFrom" value="#{feedbackSenderBean.emailFrom}" required="true"
+                                     requiredMessage="#{i18n['feedback.preferences.from.email.required']}"/>
+                    </div>
+                    <div class="form-group">
+                        <p:outputLabel for="emailsTo" value="#{i18n['feedback.preferences.to.email']}"/>
+                        <p:chips id="emailsTo" required="true" styleClass="form-control"
+                                 requiredMessage="#{i18n['feedback.preferences.to.email.required']}"
+                                 value="#{feedbackSenderBean.emailsTo}"/>
+                    </div>
+                    <div class="btn-group">
+                        <div class="btn-group-item">
+                            <p:commandButton value="#{i18n['feedback.preferences.save']}"
+                                             action="#{feedbackSenderBean.savePreferences}"
+                                             process="@form" styleClass="btn btn-primary"
+                                             update="@form"/>
+                        </div>
+                        <div class="btn-group-item">
+                            <p:commandButton value="#{i18n['feedback.preferences.cancel']}"
+                                             action="#{feedbackSenderBean.resetPreferences}"
+                                             process="@this" styleClass="btn btn-secondary"
+                                             update="@form"/>
+                        </div>
+                    </div>
+                </div>
+            </p:outputPanel>
+
+        </h:form>
+    </h:body>
+</f:view>

@@ -1,0 +1,35 @@
+server:
+  port: 8181
+info.app.version: @project.version@
+
+# Actuator endpoint path (/admin/info, /admin/health, ...)
+server.servlet-path: /
+management.context-path: /admin
+# ribbon.eureka.enabled: false
+#ribbon:
+#  ConnectTimeout: 120000
+#  ReadTimeout: 120000
+zuul:
+  ignoredPatterns: /login, /logout, /css/**, /**/admin/**, /error
+  host:
+    socket-timeout-millis: 120000
+logging:
+  level:
+    root: info
+spring:
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/rest_db
+    username: rest_user
+    password: rest_user
+  jpa:
+    show-sql: false
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true

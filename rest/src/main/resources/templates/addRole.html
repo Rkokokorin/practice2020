@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Добавить роль</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>Создание роли:</h1>
+
+<form th:action="@{/admin/addRole}"
+      th:object="${roleForm}" method="POST">
+    Название роли
+    <input type="text" th:field="${roleForm.name}"/>
+    <br/>
+    Активна:
+    <input type="checkbox"
+           th:field="${roleForm.enabled}"/>
+    <br/>
+    Список сервисов:
+    <table border="1">
+        <tr>
+            <th>Внешний URL</th>
+            <th>Внутренний полный URL</th>
+            <th>Активен</th>
+            <th>Выбран</th>
+        </tr>
+        <tr th:each="wrapper, itemStat : ${roleForm.routesWrappers}">
+            <input hidden th:name="|routesWrappers[${itemStat.index}].id|" th:value="${wrapper.getId()}"/>
+            <input hidden th:name="|routesWrappers[${itemStat.index}].path|" th:value="${wrapper.getPath()}"/>
+            <input hidden th:name="|routesWrappers[${itemStat.index}].outcomeUrl|"
+                   th:value="${wrapper.getOutcomeUrl()}"/>
+            <input hidden th:name="|routesWrappers[${itemStat.index}].enabled|" th:value="${wrapper.getEnabled()}"/>
+            <td th:utext="${wrapper.path}">...</td>
+            <td th:utext="${wrapper.outcomeUrl}">...</td>
+            <td><input type="checkbox" name="active" th:disabled="true" th:checked="${wrapper.enabled}"/></td>
+            <td><input type="checkbox" name="active" th:field="*{routesWrappers[__${itemStat.index}__].selected}"
+                       th:checked="${wrapper.selected}"/></td>
+        </tr>
+    </table>
+    <br/>
+
+    <input type="hidden" th:field="${roleForm.id}"/>
+    <button type="submit" name="action" value="save">Сохранить</button>
+    <button type="submit" name="action" value="cancel">Отменить</button>
+</form>
+
+<br/>
+
+<div th:if="${errorMessage}" th:utext="${errorMessage}"
+     style="color:red;font-style:italic;">
+    ...
+</div>
+
+</body>
+</html>

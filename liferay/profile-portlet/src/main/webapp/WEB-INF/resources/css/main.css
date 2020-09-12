@@ -1,0 +1,20 @@
+.profile-portlet {
+    margin-top: 3.5rem;
+}
+
+.profile-data-title {
+    margin-bottom: 1.375rem;
+}
+.user-data-label {
+    display: block;
+    font-size: 0.8125rem;
+    color: #131313;
+    margin-bottom: 0.2rem;
+}
+.user-data-value {
+    display: block;
+    font-size: 1rem;
+    color: #000000;
+    margin-bottom: 1.3125rem;
+    font-weight: bold;
+}

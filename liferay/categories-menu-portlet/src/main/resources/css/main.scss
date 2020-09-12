@@ -1,0 +1,120 @@
+$corporate-blue: #0B5892;
+$corporate-red: #DF212E;
+$font-gray: #4d4d4d;
+$background-color: #FFF;
+
+$categories-container-skew-width: 100px;
+
+.categories-menu-portlet {
+    position: relative;
+    z-index: 100;
+    background: $background-color;
+    
+    .portlet {
+       position: static;
+       
+       .portlet-content-editable {
+           border: 0px none;
+       }
+    }
+    
+    .categories-menu {
+        width: 100%;
+        position: static;
+        padding-top: 1rem;
+        
+        .ui-separator {
+            margin: 1rem 0;
+            border-bottom: 1px solid #ddd;
+            list-style: none;
+        }
+        
+        ul.ui-menu-list {
+            padding: 0 0rem 1rem 1rem;
+            margin: 0;
+            
+            li.ui-menuitem {
+                list-style: none;
+                position: static;
+                padding: 0.2rem 0.5rem 0.2rem 0;
+                display: flex;
+            }
+        }
+        
+        ul.ui-menu {
+            width: 100%;
+            
+            li.ui-menu-parent {
+                
+                a.ui-menuitem-link {
+                    width: 28rem;
+                }
+                
+                &:after {
+                    content: "\f054";
+                    font-family: "Font Awesome 5 Free";
+                    font-weight: 900;
+                    margin-left: 0.5rem;
+                    margin-right: 0.5rem;
+                    color: $font-gray;
+                }
+                
+                &:hover {
+                    .ui-submenu {
+                        display: block !important;
+                    }
+                }
+            }
+        }
+        
+        ul.ui-submenu {
+            position: absolute;
+            box-shadow: none;
+            border-radius: 0;
+            top: 0 !important;
+            left: 100% !important;
+            width: 30rem;
+            min-height: 100%;
+            background: $background-color;
+            border-left: 1px solid #ddd;
+        }
+        
+        a.ui-menuitem-link {
+            display: inline-block;
+            width: 16rem;
+            color: $font-gray;
+            font-size: 0.9rem;
+            line-height: 1.2rem;
+            padding: 0;
+            border: 0 none;
+            transition: color 0.5s ease-in-out;
+            text-decoration: underline;
+            text-decoration-color: #ccc;
+            
+            .count {
+                color: #083f66;
+                font-size: 0.8em;
+            }
+            
+            &:hover {
+                color: $corporate-blue;
+            }
+        }
+        
+        .all-cathegories {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+        
+        .ui-submenu-header {
+            margin: 1rem 0;
+            font-size: 1.2rem;
+            color: $font-gray;
+            
+            .count {
+                color: #b1b1b1;
+            }
+        }
+    }
+}

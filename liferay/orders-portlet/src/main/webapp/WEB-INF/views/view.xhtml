@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
+    <h:body>
+        <style>
+        .orders-portlet-container {
+                margin-top: 4.875rem;
+                position: relative;
+         }
+        .itc-table-header {
+            margin-bottom: 1rem;
+        }
+        .itc-table thead {
+            background-color: #f7f7f7;
+        }
+        .itc-table .search-result-image {
+            width: 100px;
+            text-align: center;
+        }
+        .ui-datatable.itc-table thead th.search-result-image {
+            text-align: center;
+        }
+
+        .orders-portlet-container .ui-datatable .ui-paginator.ui-paginator-top {
+            padding: 0;
+            position: absolute;
+            right: 0;
+            top: -0.25rem;
+        }
+        </style>
+        <h:form styleClass="orders-portlet-container">
+            <h3 class="itc-table-header">
+                <h:outputText value="#{i18n['profile.orders-table.label']}" styleClass="profile-section-label"/>
+            </h3>
+
+            <p:dataTable var="order" value="#{ordersBean.orders}"
+                         paginator="true" paginatorAlwaysVisible="false" rows="10"
+                         currentPageReportTemplate="{currentPage} #{i18n['profile.of']} {totalPages}"
+                         paginatorTemplate="{PageLinks}"
+                         rowsPerPageTemplate="10,20,30"
+                         sortBy="#{order.monthAndYear}"
+                         sortOrder="descending"
+                         expandableRowGroups="true"
+                         emptyMessage="#{i18n['profile.orders-table.empty']}"
+                         filteredValue="#{ordersBean.filteredOrders}"
+                         styleClass="itc-results-table"
+            >
+                <p:headerRow>
+                    <p:column colspan="5">
+                        <h4 class="orders-table-subheader">
+                            <h:outputText value="#{order.monthAndYear}">
+                                <f:convertDateTime pattern="LLLL yyyy"/>
+                            </h:outputText>
+                        </h4>
+                    </p:column>
+                </p:headerRow>
+                <p:column headerText="#{i18n['profile.orders-table.number']}"
+                          filterBy="#{order.number}" filterMatchMode="startsWith">
+                    <h:link outcome="#{ordersBean.openOrder(order)}">
+                        <h:outputText value="#{order.number}"/>
+                    </h:link>
+                </p:column>
+
+                <p:column headerText="#{i18n['profile.orders-table.date']}">
+                    <h:link outcome="#{ordersBean.openOrder(order)}">
+                        <h:outputText value="#{order.date}">
+                            <f:convertDateTime type="date" pattern="dd.MM.yyyy"/>
+                        </h:outputText>
+                    </h:link>
+                </p:column>
+
+                <p:column headerText="#{i18n['profile.orders-table.status']}"
+                          filterBy="#{order.status}" filterMatchMode="startsWith">
+                    <h:link outcome="#{ordersBean.openOrder(order)}">
+                        <h:outputText value="#{order.status}"/>
+                    </h:link>
+                </p:column>
+
+                <p:column headerText="#{i18n['profile.orders-table.payment']}"
+                          filterBy="#{order.payment}" filterMatchMode="startsWith">
+                    <h:link outcome="#{ordersBean.openOrder(order)}">
+                        <h:outputText value="#{order.payment}"/>
+                    </h:link>
+                </p:column>
+
+                <p:column headerText="#{i18n['profile.orders-table.price']}">
+                    <h:link outcome="#{ordersBean.openOrder(order)}">
+                        <h:outputText value="#{order.price} #{currencyService.getSignForCurrency(order.currency)}"/>
+                    </h:link>
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</f:view>

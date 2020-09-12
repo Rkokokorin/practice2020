@@ -1,0 +1,76 @@
+$corporate-blue: #3561a6;
+$corporate-red: #DF212E;
+$font-gray-color: #4d4d4d;
+
+$shortcuts-background-color: #E5E5E5;
+$shortcuts-text-color: #777;
+
+$manufacturer-background-color: #F7F7F7;
+
+.manufacturers-portlet {
+  h2 {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    color: $font-gray-color;
+    font-family: "Exo 2";
+  }
+
+  .shortcuts-container {
+    display: flex;
+    background: $shortcuts-background-color;
+    border-radius: 10rem;
+    margin-bottom: 2rem;
+  }
+
+  .shortcut-link {
+    display: inline-block;
+    margin: 0;
+    color: $shortcuts-text-color;
+    font-weight: normal;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    vertical-align: middle;
+    text-align: center;
+    transition: color 0.2s ease-in, background-color 0.2s ease-in;
+    
+    &:hover {
+        text-decoration: none;
+        //background: #A9A9A9;
+        background: $corporate-red;
+        color: #fff;
+    }
+  }
+
+  .manufacturer-section {
+    margin-bottom: 1.5rem;
+
+    .manufacturer-name {
+        color: $font-gray-color;
+        background: $manufacturer-background-color;
+        border-radius: 3px;
+        padding: 0.8rem 1rem;
+        margin-top: 2em;
+    }
+
+    .items-container {
+      ul.items-list {
+        color: $corporate-blue;
+        column-count: 3;
+        column-gap: 3rem;
+        list-style-type: none;
+        
+        a {
+            line-height: 2rem;
+            border-bottom: 1px dashed $corporate-blue;
+            padding-bottom: 0.1rem;
+        }
+      }
+    }
+  }
+}
+
+
+
+

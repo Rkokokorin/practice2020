@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
+    <h:body>
+        <nav class="navbar navbar-expand-sm navigation-bar mb-4">
+            <div class="navbar-collapse">
+                <div class="container shopping-cart-nav">
+                    <ul class="navbar-nav">
+                        <ui:repeat value="#{navigationBean.pages}" var="page">
+                            <li class="nav-item">
+                                <p:link outcome="#{page.viewId}" value="#{i18n[page.localizationKey]}"
+                                        styleClass="nav-link #{navigationBean.activePage eq page ? 'active' : ''}"/>
+                            </li>
+                        </ui:repeat>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+    </h:body>
+</f:view>

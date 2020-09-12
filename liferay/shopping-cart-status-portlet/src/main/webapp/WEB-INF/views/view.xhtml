@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:portlet="http://java.sun.com/portlet_2_0"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet name="main.css"/>
+    </h:head>
+
+    <f:metadata>
+        <f:viewAction type="preRenderView" action="#{cartStatusBean.init()}"/>
+    </f:metadata>
+
+    <h:body>
+        <script type="text/javascript">
+            Liferay.on('updateCurrency', function () {
+                try {
+                    updateCartStatusCurrency();
+                } catch (e) {
+
+                }
+            });
+            Liferay.on('updateWarehouse', function () {
+                try {
+                    updateCartStatusCurrency();
+                } catch (e) {
+
+                }
+            });
+        </script>
+        <p:outputPanel rendered="#{liferay.themeDisplay.signedIn}">
+            <script type="text/javascript">
+                function checkStatusAndUpdateCartSt() {
+                    if (! $('[id$="cartUpdateStatus"]')) {
+                        clearInterval(cartStatusTimer);
+                        return;
+                    }
+                    if (! $('[id$="cartUpdateStatus"]')[0]) {
+                        clearInterval(cartStatusTimer);
+                        return;
+                    }
+                    if ('true' === $('[id$="cartUpdateStatus"]')[0].value) {
+                        updateCartRemoteCommandSt();
+                    }
+                }
+                function fupdateCartStatusSt() {
+                    updateCartStatusRemoteCommandSt();
+                }
+                var cartStatusTimer = setInterval(fupdateCartStatusSt, 2000);
+            </script>
+        </p:outputPanel>
+        <h:form styleClass="cart-status-form">
+            <div class="custom-shader price-shader">
+                <div class="shader-loader"></div>
+            </div>
+            <p:remoteCommand actionListener="#{cartStatusBean.updateCurrency}" process="@this" update="@form"
+                             name="updateCartStatusCurrency" onstart="$('.cart-status-form .price-shader').show();"
+                             oncomplete="$('.cart-status-form .price-shader').hide();"/>
+            <p:inputText type="hidden" id="cartUpdateStatus"
+                         widgetVar="cartUpdateStatusVar"
+                         value="#{cartStatusBean.cartUpdateStatus}"
+                         />
+            <p:remoteCommand name="updateCartStatusRemoteCommandSt"
+                             update="cartUpdateStatus"
+                             process="@this" onerror="clearInterval(cartStatusTimer);"
+                             onsuccess="checkStatusAndUpdateCartSt();"
+                             action="#{cartStatusBean.reloadCart()}" />
+            <p:remoteCommand name="updateCartRemoteCommandSt"
+                             update="@form"
+                             process="@this"
+                             action="#{cartStatusBean.reloadCart()}" />
+            <div id="shopping-cart-status-form">
+                <a id="shopping-cart-link" href="/shopping-cart">
+                    <img src="#{resource['images/cart-wh.svg']}"/>
+                    <div class="cart-info d-none d-sm-flex">
+                        <span class="items-count">
+                        #{cartStatusBean.totalOrdersCount == 0 ? i18n['itc.cart.status.cart-is-empty'] : i18n['itc.cart.status.postions-in-cart'].concat(" ").concat(cartStatusBean.totalOrdersCount)}
+                        </span>
+                        <span class="total-price">#{cartStatusBean.totalPrice} #{cartStatusBean.userCurrency}</span>
+                    </div>
+                </a>
+            </div>
+        </h:form>
+    </h:body>
+</f:view>

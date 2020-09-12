@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+
+<f:view
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" 
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet name="main.css"/>
+    </h:head>
+    
+    <h:body>
+        
+        <h:form class="categories-menu">
+            
+            <ul class="ui-menu ui-menu-list">
+                
+                <ui:repeat value="#{categoriesMenuBean.categories.subList(0, (categoriesMenuBean.categories.size() gt categoriesMenuBean.totalCount) ? categoriesMenuBean.totalCount : categoriesMenuBean.categories.size())}" var="category">
+                    <li class="ui-menuitem ui-menu-parent">
+                        <a class="ui-menuitem-link" href="#{categoriesMenuBean.catalogueBaseUrl}?#{categoriesMenuBean.categoryParamName}=#{category.id}">
+                            #{category.name}
+                        </a>
+                        
+                        <ui:fragment rendered="#{category.hasItems}">
+                            <ul class="ui-submenu ui-menu-list" style="display: none">
+                                
+                                <h4 class="ui-submenu-header">
+                                    #{category.name} <span class="count">(#{category.associatedProducts})</span>
+                                </h4>
+                                
+                                <ui:repeat value="#{category.categoryItems.subList(0, (category.categoryItems.size() gt 15) ? 15 : category.categoryItems.size())}" var="subcategory">
+                                    <li class="ui-menuitem">
+                                        <a class="ui-menuitem-link" href="#{categoriesMenuBean.catalogueBaseUrl}?#{categoriesMenuBean.categoryParamName}=#{category.id}&amp;#{categoriesMenuBean.subcategoryParamName}=#{subcategory.id}">
+                                            #{subcategory.name} <span class="count">(#{subcategory.associatedProducts})</span>
+                                        </a>
+                                    </li>
+                                </ui:repeat>
+                                <h:outputLink rendered="#{category.categoryItems.size() gt 15}" class="all-cathegories" value="#{categoriesMenuBean.catalogueBaseUrl}" ><h:outputText value="#{i18n['itc.categories.list.all']}"/> </h:outputLink>
+                            </ul>
+                        </ui:fragment>
+                    </li>
+                </ui:repeat>
+                
+                <h:outputLink class="all-cathegories" value="#{categoriesMenuBean.categoriesBaseUrl}" ><h:outputText value="#{i18n['itc.categories.list.all']}"/></h:outputLink>
+            </ul>
+            
+            <ui:remove>
+                <p:tieredMenu model="#{categoriesMenuBean.menu}"/>
+            </ui:remove>
+            
+        </h:form>
+        
+        <script type="text/javascript">
+            $(".categories-menu").on("mouseover", function() {$('.shader').show().addClass('active')});
+            $(".categories-menu").on("mouseout",  function() {$('.shader').hide().removeClass('active')});
+            
+            // Untested code. TODO: test and fix
+//            $(".categories-menu").hover(
+//                function() {$('.shader').show().addClass('active')},
+//                function () {
+//                    let shader = $('.shader');
+//                    shader.removeClass('active');
+//                    setTimeout(() => shader.hide(), 1000);
+//                }
+//            );
+        </script>
+    </h:body>
+</f:view>

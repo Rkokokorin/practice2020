@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:portlet="http://java.sun.com/portlet_2_0"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet name="main.css"/>
+    </h:head>
+
+    <h:body>
+        <h:form>
+            <p:selectOneMenu value="#{warehouseManager.selectedWarehouse}" converter="#{warehouseManager.converter}">
+                <f:selectItems value="#{warehouseManager.warehouses}" var="war" itemLabel="#{war.name}"/>
+                <p:ajax process="@form" update="@form" listener="#{warehouseManager.updateWarehouse()}" oncomplete="Liferay.fire('updateWarehouse');"/>
+            </p:selectOneMenu>
+        </h:form>
+
+    </h:body>
+</f:view>

@@ -1,0 +1,145 @@
+<%--
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+--%>
+
+<style>
+    .news-section {
+        padding-bottom: 2rem;
+    }
+    .news-image {
+        display: inline-block;
+    }
+
+    .news-image img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 3px;
+    }
+
+    .news-date {
+        color: gray;
+        font-size: 0.8rem;
+    }
+    .head-news-content {
+        width: 50%;
+        display: inline-block;
+        vertical-align: top;
+        margin-left: 1rem;
+    }
+    .news-title a {
+        color: black;
+    }
+
+    .head-news-item {
+        border-right: solid lightgray 1px;
+    }
+
+    .remaining-items {
+        column-count: 2;
+        margin-left: 1rem;
+    }
+
+    .news-title {
+        font-size: 1.1rem;
+    }
+
+    .news-desc {
+        font-size: 0.8rem;
+    }
+
+    .news-item {
+        break-inside: avoid-column;
+        margin-bottom: 1.5rem;
+    }
+</style>
+
+<c:choose>
+    <c:when test="<%= results.isEmpty() %>">
+        <liferay-ui:message key="there-are-no-blogs" />
+
+        <br /><br />
+    </c:when>
+    <c:otherwise>
+        <%
+            List<BlogsEntry> viewResults = new ArrayList<>();
+            Date viewDate = new Date();
+            for (Object entryObj : results) {
+                BlogsEntry entry = (BlogsEntry)entryObj;
+                if (entry.getDisplayDate().before(viewDate)) {
+                    viewResults.add(entry);
+                } else {
+                    searchContainer.setTotal(searchContainer.getTotal() - 1);
+                }
+            }
+        %>
+        <c:choose>
+            <c:when test="<%=displayStyle.equals("news-view")%>">
+                <div class="news-section">
+                    <h1 class="web-content-header"><span><liferay-ui:message key="news-title" /></span></h1>
+                    <div class="news-section-wrapper row">
+                        <%@ include file="/blogs_aggregator/news_view.jsp" %>
+                    </div>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <%
+                    for (BlogsEntry entry : viewResults) {
+                %>
+                <%@ include file="/blogs_aggregator/view_entry_content.jspf" %>
+                <%
+                    }
+                %>
+            </c:otherwise>
+        </c:choose>
+    </c:otherwise>
+</c:choose>
+
+<c:if test="<%= enableRSS %>">
+
+    <%
+        String rssURLParams = null;
+
+        if (selectionMethod.equals("users")) {
+            if (organizationId > 0) {
+                rssURLParams = "&organizationId=" + organizationId;
+            }
+            else {
+                rssURLParams = "&companyId=" + company.getCompanyId();
+            }
+        }
+        else {
+            rssURLParams = "&groupId=" + themeDisplay.getScopeGroupId();
+        }
+    %>
+
+    <liferay-rss:rss
+            delta="<%= rssDelta %>"
+            displayStyle="<%= rssDisplayStyle %>"
+            feedType="<%= rssFeedType %>"
+            url='<%= themeDisplay.getPathMain() + "/blogs/rss?plid=" + plid + rssURLParams %>'
+    />
+</c:if>
+<c:choose>
+    <c:when test="<%=!displayStyle.equals("news-view")%>">
+        <c:if test="<%= !results.isEmpty() %>">
+            <div class="search-container">
+                <liferay-ui:search-paginator
+                        searchContainer="<%= searchContainer %>"
+                />
+            </div>
+        </c:if>
+    </c:when>
+</c:choose>

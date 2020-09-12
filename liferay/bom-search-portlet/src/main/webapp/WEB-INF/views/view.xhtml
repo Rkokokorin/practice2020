@@ -1,0 +1,237 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+        <script type="text/javascript">
+            const moveSearchButton = function () {
+                $('.search-by-current-table').appendTo($('.file-upload > div:first-child'))
+            };
+            Liferay.Portlet.ready(
+                function () {
+                    $('.search-by-current-table').appendTo($('.file-upload > div:first-child'))
+                }
+            );
+            Liferay.on('updateCurrency', function () {
+                try {
+                    reloadOffers();
+                } catch (e) {
+
+                }
+            });
+            Liferay.on('updateWarehouse', function () {
+                try {
+                    reloadOffers();
+                } catch (e) {
+
+                }
+            })
+        </script>
+    </h:head>
+    <h:body>
+        <p:blockUI widgetVar="blockSearch" styleClass="search-panel-shader"
+                   block="@parent" trigger="@widgetVar(bomUploadButton),@widgetVar(bomSearchButton)">
+            <div class="custom-shader search-form-shader">
+                <div class="shader-loader"></div>
+            </div>
+        </p:blockUI>
+        <h:form>
+            <div class="example-source">
+                <p:commandLink value="#{i18n['itc.bom.download-csv-example']}" ajax="false">
+                    <p:fileDownload value="#{bomSearchBean.csvExample}"/>
+                </p:commandLink>
+                <br/>
+                <p:commandLink value="#{i18n['itc.bom.download-xls-example']}" ajax="false">
+                    <p:fileDownload value="#{bomSearchBean.xlsExample}"/>
+                </p:commandLink>
+                <br/>
+                <p:commandLink value="#{i18n['itc.bom.download-xlsx-example']}" ajax="false">
+                    <p:fileDownload value="#{bomSearchBean.xlsxExample}"/>
+                </p:commandLink>
+            </div>
+        </h:form>
+
+        <h:form enctype="multipart/form-data" id="fileUploadForm">
+            <p:outputPanel id="bomSearchHeader" styleClass="bom-search-header">
+                <div class="form-group">
+                    <p:fileUpload label="#{i18n['itc.bom.upload']}" styleClass="file-upload" id="bomUploadButton"
+                                  fileUploadListener="#{bomSearchBean.upload}" auto="true"
+                                  onstart="$('.results-panel').hide();" process="@this" update="resultsPanel"
+                                  required="true" requiredMessage="#{i18n['itc.bom.select-file']}"
+                                  allowTypes="/(\.|\/)(xlsx?|csv)$/"
+                                  invalidFileMessage="#{i18n['itc.bom.invalid-file-format']}"
+                                  mode="advanced" skinSimple="true" widgetVar="bomUploadButton"/>
+                    <p:commandButton styleClass="btn btn-primary mr-2 search-by-current-table" action="#{bomSearchBean.searchByCurrentTable()}"
+                                     process="@this,bomSearchResults"
+                                     onstart="$('.results-panel').hide();"
+                                     update="resultsPanel"
+                                     id="bomSearchButton" widgetVar="bomSearchButton"
+                                     value="#{i18n['itc.bom.search-button']}" ajax="true"/>
+                </div>
+                <p:messages class="error-message-container"/>
+                <small class="text-muted"><h:outputText value="#{i18n['itc.bom.supported-files']}"/> </small>
+
+            </p:outputPanel>
+
+            <p:outputPanel id="resultsPanel" styleClass="results-panel" rendered="#{not empty bomSearchBean.bomSearchResponse}" style="position: relative;">
+                <div class="custom-shader search-result-shader">
+                    <div class="shader-loader"></div>
+                </div>
+                    <p:growl globalOnly="true"/>
+
+                    <p:remoteCommand name="reloadOffers" process="@this" onstart="$('.bom-price-shader, .offer-shader').show();"
+                                     partialSubmit="true" update="@form" actionListener="#{bomSearchBean.reloadOffersOnWarehouseOrCurrencyChange}"/>
+                    <p:dataTable rendered="#{not empty bomSearchBean.bomSearchResponse}" value="#{bomSearchBean.bomSearchResponse}" var="prod"
+                                 widgetVar="searchResultTable"
+                                 id="bomSearchResults" sortBy="#{prod.index}" expandableRowGroups="true" rowKey="#{prod.index}" rowIndexVar="rowIdx"
+                                 emptyMessage="#{i18n['itc.catalogue.table.empty']}" styleClass="bom-search-results-table"
+                    >
+                        <p:column styleClass="id-column" headerText="№">
+                            <h:panelGroup id="idColumn">
+                                <h:outputText value="#{prod.index + 1}"/>
+                            </h:panelGroup>
+                        </p:column>
+                        <p:column headerText="#{i18n['itc.bom.query']}" styleClass="query-column">
+                            <h:panelGroup id="rowSearchPanel" layout="block">
+                                <p:defaultCommand target="searchBtn" scope="rowSearchPanel" />
+                                <p:inputText id="articleInput" styleClass="form-control mb-2 mr-2 article-input" value="#{prod.queryRecord.article}"
+                                             placeholder="#{i18n['itc.bom.article-input']}"/>
+                                <p:inputText id="manufacturerInput" styleClass="form-control mb-2 mr-2 manufacturer-input" value="#{prod.queryRecord.manufacturer}"
+                                             placeholder="#{i18n['itc.bom.manufacturer-input']}"/>
+                                <p:inputText id="queryInput" styleClass="form-control mb-2 mr-2 query-input" value="#{prod.queryRecord.query}"
+                                             placeholder="#{i18n['itc.bom.query-input']}"/>
+                                <p:commandButton id="searchBtn" icon="fa fa-search" partialSubmit="true" process="queryInput manufacturerInput articleInput @this"
+                                                 onstart="$('.search-result-shader').show();"
+                                                 oncomplete="$('.search-result-shader').hide();moveSearchButton();"
+                                                 actionListener="#{bomSearchBean.updateQuery(prod)}" update="@form"/>
+                            </h:panelGroup>
+
+                        </p:column>
+                        <p:column styleClass="product-selector-column" headerText="#{i18n['itc.bom.results']}">
+                            <h:panelGroup id="productSelector">
+                                <p:outputPanel rendered="#{prod.response ne null and not empty prod.response}">
+                                    <div onclick="PF('productSelector#{rowIdx}').show();PF('productSelector#{rowIdx}').panel[0].getElementsByClassName('ui-selectonemenu-items-wrapper')[0].style.width = this.clientWidth + 'px';"
+                                         onfocus="PF('productSelector#{rowIdx}').focus();" class="product-selector">
+                                        <p:outputPanel id="selectedItem" styleClass="ui-selectonemenu ui-widget ui-state-default ui-corner-all">
+                                            <p:outputPanel styleClass="ui-selectonemenu-label ui-inputfield ui-corner-all">
+                                                <ui:include src="/WEB-INF/views/common/product-selector-item.xhtml">
+                                                    <ui:param name="viewProduct" value="#{prod.selectedProduct}"/>
+                                                    <ui:param name="queryRecord" value="#{prod.queryRecord}"/>
+                                                </ui:include>
+                                            </p:outputPanel>
+                                            <div class="ui-selectonemenu-trigger ui-state-default ui-corner-right"><span class="ui-icon fas fa-angle-down ui-c"/></div>
+                                        </p:outputPanel>
+                                        <p:selectOneMenu id="multipleResultsSelector" styleClass="product-variant-selector" widgetVar="productSelector#{rowIdx}"
+                                                         autoWidth="false" value="#{prod.selectedProduct}" var="pr" panelStyleClass="product-variant-selector-panel"
+                                                         converter="#{bomSearchBean.productResponseConverter}">
+                                            <p:ajax update="@form:bomSearchResults:@row(#{rowIdx})" listener="#{bomSearchBean.resetOffer(prod)}"/>
+                                            <f:selectItem itemValue="#{null}" itemLabel="#{prod.queryRecord}"/>
+                                            <f:selectItems value="#{prod.response}" var="resp"
+                                                           itemLabel="#{bomSearchBean.getDisplayName(resp)}" itemValue="#{resp}"/>
+                                            <p:column>
+                                                <ui:include src="/WEB-INF/views/common/product-selector-item.xhtml">
+                                                    <ui:param name="viewProduct" value="#{pr}"/>
+                                                    <ui:param name="queryRecord" value="#{prod.queryRecord}"/>
+                                                </ui:include>
+                                            </p:column>
+                                        </p:selectOneMenu>
+                                    </div>
+                                </p:outputPanel>
+                            </h:panelGroup>
+                        </p:column>
+
+                        <p:column styleClass="offer-column" headerText=
+                                "#{i18n['itc.bom.offer-column']} #{bomSearchBean.hasAllSpecialPrice()?i18n['itc.bom.offer-column-special-price']:''}">
+                            <h:panelGroup id="offerWrapper">
+                                <div class="custom-shader offer-shader">
+                                    <div class="shader-loader"></div>
+                                </div>
+                                <h:outputText value="N/A" rendered="#{prod.selectedProduct eq null}"/>
+                                <h:outputText value="#{i18n['itc.bom.no-offers']}" rendered="#{prod.selectedProduct ne null and empty prod.salesOffers}"/>
+                                <p:selectOneMenu value="#{prod.selectedOffer}" styleClass="offer-selector"
+                                                 converter="#{bomSearchBean.salesOfferConverter}"
+                                                 autoWidth="false" rendered="#{prod.selectedProduct ne null and not empty prod.salesOffers}">
+                                    <p:ajax process="@this" update="@form:bomSearchResults:@row(#{rowIdx}) @form:cartTotalContainer" onstart="$('.bom-price-shader-#{rowIdx}').show();"
+                                            partialSubmit="true"/>
+                                    <f:selectItems value="#{prod.salesOffers}" var="offer"
+                                                   itemLabel="#{offer.daysDuration} #{wordNumEnder.getEnding(offer.daysDuration,bomSearchBean.daysWords)} — #{offer.minimalOrder} #{offer.packingUnit.name} — #{bomSearchBean.convertStocksAmount(offer)} — #{bomSearchBean.currencyFormat(offer.price)} #{bomSearchBean.preferredCurrency.sign} #{bomSearchBean.hasSpecialPrice(offer)?bomSearchBean.renderSpecialPrice(offer):''}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                        </p:column>
+                        <p:column styleClass="amount-column">
+                            <h:panelGroup id="amountWrapper">
+                                <p:spinner styleClass="itc-spinner" value="#{prod.amount}" stepFactor="#{prod.step}" onkeypress="if(event.keyCode===13) return false;">
+                                    <p:ajax listener="#{prod.updateAmount()}" delay="100"
+                                            process="@this" update="@form:bomSearchResults:@row(#{rowIdx}) @form:cartTotalContainer" onstart="$('.bom-price-shader-#{rowIdx}').show();"
+                                            partialSubmit="true"/>
+                                </p:spinner>
+                            </h:panelGroup>
+                        </p:column>
+                        <p:column styleClass="total-column">
+                            <h:panelGroup id="totalWrapper">
+                                <div class="custom-shader bom-price-shader bom-price-shader-#{rowIdx}">
+                                    <div class="shader-loader"></div>
+                                </div>
+                                <h:outputText value="#{bomSearchBean.currencyFormat(prod.total)} #{bomSearchBean.preferredCurrency.sign}"/>
+                            </h:panelGroup>
+                        </p:column>
+                        <p:column styleClass="action-column">
+                            <p:commandButton icon="fas fa-times" process="@this" update="@form:bomSearchResults @form:cartTotalContainer" actionListener="#{bomSearchBean.removeRow(prod)}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                    <div class="row delivery-option">
+                        <div class="col-md-12 align-right middle-label">
+                            <p:outputLabel value="#{i18n['itc.bom.delivery-option']}"/>
+                            <div class="btn-group">
+                                <p:outputPanel class="btn-group-item">
+                                    <p:commandButton styleClass="btn btn-primary" value="#{i18n['itc.bom.delivery-option-fastest']}" action="#{bomSearchBean.selectFastestOffers}"
+                                                     process="@this" update="@form" oncomplete="moveSearchButton();"/>
+                                </p:outputPanel>
+                                <p:outputPanel class="btn-group-item">
+                                    <p:commandButton styleClass="btn btn-primary" value="#{i18n['itc.bom.delivery-option-cheapest']}" action="#{bomSearchBean.selectCheapestOffers}"
+                                                     process="@this" update="@form" oncomplete="moveSearchButton();"/>
+                                </p:outputPanel>
+                            </div>
+                            <p:commandButton icon="fas fa-plus" process="@this" update="@this"
+                                             oncomplete="PF('searchResultTable').addRow();"
+                                             action="#{bomSearchBean.addRow}"
+                                             styleClass="btn btn-primary add-row-btn"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 align-right middle-label">
+                            <h:panelGroup id="cartTotalContainer" layout="block">
+                                <strong style="margin: 1rem 0; display: inline-block;">
+                                    <h:outputText value="#{i18n['itc.bom.total']} "/>
+                                    <h:outputText rendered="#{bomSearchBean.maxDays ne null}"
+                                                  value="#{bomSearchBean.maxDays} #{wordNumEnder.getEnding(bomSearchBean.maxDays,bomSearchBean.daysWords)} "/>
+                                    <h:outputText
+                                            value="#{bomSearchBean.currencyFormat(bomSearchBean.totalPrice)} #{bomSearchBean.preferredCurrency.sign}"/>
+                                </strong>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 align-right middle-label">
+                            <div class="btn-group">
+                                <div class="btn-group-item">
+                                    <p:tooltip for="addToCartContainer" rendered="#{not bomSearchBean.hasCartAccess}" value="#{i18n['itc.bom.login-required']}"/>
+                                    <h:panelGroup id="addToCartContainer">
+                                        <p:commandButton id="addToCart" styleClass="btn btn-primary" disabled="#{not bomSearchBean.hasCartAccess}"
+                                                         process="@this" update="@form" value="#{i18n['itc.bom.add-results-to-cart']}" action="#{bomSearchBean.addToCart}"/>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </p:outputPanel>
+        </h:form>
+        <h:outputScript library="fileupload" name="fileupload.js" target="body"/>
+    </h:body>
+</f:view>

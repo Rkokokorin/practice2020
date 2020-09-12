@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <!--@elvariable id="cart" type="com.tuneit.itc.cart.model.CartWithProductsInfo"-->
+    <p:column headerText="Id" styleClass="cart-id-col">
+        <p:link outcome="#{views.cartView}">
+            <h:outputText value="#{cart.cart.cart.contractorLocalCartId}"/>
+            <f:param name="#{requestParams.cartIdParam}" value="#{cart.cart.cart.id}"/>
+        </p:link>
+    </p:column>
+    <p:column headerText="#{i18n['itc.cart.cart-name']}" styleClass="cart-name-col">
+        <p:link outcome="#{views.cartView}">
+            <h:outputText value="#{cart.cart.cart.cartName}"/>
+            <f:param name="#{requestParams.cartIdParam}" value="#{cart.cart.cart.id}"/>
+        </p:link>
+    </p:column>
+    <p:column headerText="#{i18n['itc.cart.cart-products']}" styleClass="cart-products-col">
+        <ul>
+            <ui:repeat value="#{cart.sources}" var="source">
+                <li>
+                    <h:outputText value="#{source.vendorCode} "/>
+                    <h:outputText value="(#{source.secondVendorCode}) " rendered="#{source.secondVendorCode ne null and not source.secondVendorCode.blank}"/>
+                    <h:outputText value="#{source.nomenclatureType.name}"/>
+                </li>
+            </ui:repeat>
+        </ul>
+    </p:column>
+    <p:column headerText="#{i18n['itc.carts.list.positions']}" styleClass="cart-positions-col">
+        <p:link outcome="#{views.cartView}">
+            <h:outputText value="#{cart.cart.positionsCount}"/>
+            <f:param name="#{requestParams.cartIdParam}" value="#{cart.cart.cart.id}"/>
+        </p:link>
+    </p:column>
+    <p:column headerText="#{i18n['itc.carts.list.total']}" styleClass="cart-total-col">
+        <p:link outcome="#{views.cartView}">
+            <h:outputText value="#{cart.cart.totalPositions}"/>
+            <f:param name="#{requestParams.cartIdParam}" value="#{cart.cart.cart.id}"/>
+        </p:link>
+    </p:column>
+    <p:column headerText="#{i18n['itc.carts.list.cost']}" styleClass="cart-cost-col">
+        <h:outputText value="#{cart.cart.cart.savedTotalPrice==null ? 0 :  cart.cart.cart.savedTotalPrice} #{currencyService.getSignForCurrencyId(cart.cart.cart.savedCurrencyId)}"/>
+    </p:column>
+    <p:column headerText="#{i18n['itc.carts.list.creation-date']}" styleClass="cart-creation-col">
+        <p:link outcome="#{views.cartView}">
+            <h:outputText value="#{cart.cart.cart.creationDate}">
+                <f:convertDateTime pattern="YYYY-MMM-dd" locale="#{liferay.themeDisplay.locale}"/>
+            </h:outputText>
+            <f:param name="#{requestParams.cartIdParam}" value="#{cart.cart.cart.id}"/>
+        </p:link>
+    </p:column>
+</f:view>

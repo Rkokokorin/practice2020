@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Список ролей</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>Список ролей</h1>
+<a href="/admin/addRole">Добавить роль</a>
+<br/>
+<a href="/admin/routes">К списку сервисов</a>
+<br/>
+<a href="/admin/users">К списку пользователей</a>
+<br/><br/>
+<div>
+    <div th:if="${errorMessage}" th:utext="${errorMessage}"
+         style="color:red;font-style:italic;">
+        ...
+    </div>
+    <div th:if="${errorMessage}" th:include="confirmRoleRemove :: confirm"></div>
+    <table border="1">
+        <tr>
+            <th>Название роли</th>
+            <th>Активна</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr th:each="role : ${roles}">
+            <td th:utext="${role.name}">...</td>
+            <td><input type="checkbox" name="active" th:disabled="true" th:checked="${role.enabled}"/></td>
+            <td><a th:href="@{'/admin/role/view/' + ${role.id}}">Посмотреть</a></td>
+            <td><a th:href="@{'/admin/role/edit/' + ${role.id}}">Изменить</a></td>
+            <td>
+                <form method="POST" th:action="@{/admin/role/remove(id=${role.id}, force=false)}">
+                    <button type="submit" name="action" value="remove" class="link-button">Удалить</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

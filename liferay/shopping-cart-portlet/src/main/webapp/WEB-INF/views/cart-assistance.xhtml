@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
+    <h:body>
+        <ui:include src="/WEB-INF/views/navigation.xhtml"/>
+        <p:outputPanel id="cartAssistanceContainer" rendered="#{cartAssistanceBean.salesManager}">
+            <p:outputPanel rendered="#{cartAssistanceBean.currentCart ne null}">
+                <h:form>
+                    <p:outputPanel>
+                        <h:outputText value="#{i18n['itc.cart.current-cart']}"/>
+                        <strong><h:outputText value="#{cartAssistanceBean.currentCart.contractorCode}-#{cartAssistanceBean.currentCart.contractorLocalCartId}"/></strong>
+                        <h:outputText value=" #{i18n['itc.cart.of-user']} "/>
+                        <h:outputText value="#{cartAssistanceBean.currentCartOwner.fullName} [#{cartAssistanceBean.currentCartOwner.emailAddress}]"/>
+                    </p:outputPanel>
+                    <div class="btn-group">
+                        <div class="btn-group-item">
+                            <p:commandButton styleClass="btn-primary" value="#{i18n['itc.cart.assistance.unassign']}"
+                                             action="#{cartAssistanceBean.unassignCurrent}" update=":cartAssistanceContainer"/>
+                        </div>
+                    </div>
+
+                </h:form>
+            </p:outputPanel>
+            <p:outputPanel rendered="#{cartAssistanceBean.currentCart eq null}">
+                <h:form>
+                    <div class="form-group">
+                        <p:outputLabel for="cartSearchInput" value="#{i18n['itc.cart.assistance.order-label']}"/>
+                        <div class="input-group">
+                            <p:inputText id="cartSearchInput" styleClass="form-control" value="#{cartAssistanceBean.orderNumber}"
+                                         validatorMessage="#{i18n['itc.cart.assistance.invalid-search-format']}">
+                                <f:validateRegex pattern="^.+-\d+$"/>
+                            </p:inputText>
+                            <div class="input-group-append">
+                                <p:commandButton styleClass="btn-primary" value="#{i18n['itc.cart.assistance.search']}"
+                                                 action="#{cartAssistanceBean.searchCart}" process="@form" update="@form"/>
+                            </div>
+                        </div>
+                    </div>
+                    <p:outputPanel rendered="#{cartAssistanceBean.foundCart ne null}">
+                        <p:outputPanel>
+                            <h:outputText value="#{i18n['itc.cart.cart-found']} "/>
+                            <strong><h:outputText value="#{cartAssistanceBean.foundCart.contractorCode}-#{cartAssistanceBean.foundCart.contractorLocalCartId}"/> </strong>
+                            <h:outputText value=" #{i18n['itc.cart.of-user']} #{cartAssistanceBean.foundCartOwner.fullName} [#{cartAssistanceBean.foundCartOwner.emailAddress}]"/>
+                        </p:outputPanel>
+                        <div class="btn-group">
+                            <div class="btn-group-item">
+                                <p:commandButton styleClass="btn-secondary" value="#{i18n['itc.cart.assistance.assign-cart']}" ajax="false"
+                                                 action="#{cartAssistanceBean.assignFoundCart}" process="@this" update=":cartAssistanceContainer"/>
+                            </div>
+                        </div>
+
+                    </p:outputPanel>
+                    <p:messages/>
+                </h:form>
+            </p:outputPanel>
+        </p:outputPanel>
+
+    </h:body>
+</f:view>

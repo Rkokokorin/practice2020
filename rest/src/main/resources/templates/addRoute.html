@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Добавить сервис</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>Создание сервиса:</h1>
+
+<form th:action="@{/admin/addRoute}"
+      th:object="${routeForm}" method="POST">
+    Внешний URL относительно корня(например /ping). Не может начинаться с /admin/:
+    <input type="text" th:field="${routeForm.path}" />
+    <br/>
+    Внутренний полный URL (например http://dev-host:8080/ping):
+    <input type="text" th:field="${routeForm.outcomeUrl}" />
+    <br/>
+    Активен:
+    <input type="checkbox"
+            th:field="${routeForm.enabled}"/>
+    <br/>
+    <input type="hidden" th:field="${routeForm.uuid}" />
+    <button type="submit" name="action" value="save">Сохранить</button>
+    <button type="submit" name="action" value="cancel">Отменить</button>
+</form>
+
+<br/>
+
+<div th:if="${errorMessage}" th:utext="${errorMessage}"
+     style="color:red;font-style:italic;">
+    ...
+</div>
+
+</body>
+</html>

@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+        <h:outputScript library="js" name="main.js"/>
+    </h:head>
+    <h:body>
+        <div class="container">
+            <header>
+                <h1 class="web-content-header"><h:outputText value="#{i18n['itc.stock.title']}"/> </h1>
+                <span class="go-to-all right-align">
+                    <a href="/catalogue"><h:outputText value="#{i18n['itc.stocks.all-new']}"/> <i class="fas fa-long-arrow-alt-right"/>
+                    </a>
+                </span>
+            </header>
+            <h:form>
+                <script type="text/javascript">
+                  Liferay.on('updateCurrency', function () {
+                    try {
+                      updateStocksCurrency();
+                    } catch (e) {
+
+                    }
+                  });
+                </script>
+                <p:remoteCommand actionListener="#{stocksViewBean.updateCurrency}" process="@this"
+                                 update="@(.price-icons-block)"
+                                 name="updateStocksCurrency" onstart="$('.stocks-container .price-shader').show();"
+                                 oncomplete="$('.stocks-container .price-shader').hide();"/>
+                <div class="edit-icon-container">
+                    <p:commandLink actionListener="${stocksViewBean.setModeEdit()}"
+                                   rendered="#{stocksViewBean.modeView and stocksViewBean.admin}"
+                                   process="@this"
+                                   update="@form">
+                        <i class="fa fa-pen"/>
+                    </p:commandLink>
+                </div>
+                <p:outputPanel rendered="#{stocksViewBean.modeView}">
+                    <div id="stocks-slider" style="margin-left: 20px; margin-right: 20px;">
+                        <div class="owl-carousel stocks-container">
+                            <ui:repeat value="#{stocksViewBean.products}" var="prod" varStatus="index">
+                                <a href="#{stocksViewBean.openProduct(prod.product)}" class="stock-item">
+                                    <div class="custom-shader price-shader">
+                                        <div class="shader-loader"></div>
+                                    </div>
+                                    <div class="stock-image"
+                                         style="background-image: url('#{stocksViewBean.getProductCodeImageUrl(prod.product)}')">
+                                    </div>
+                                    <p:outputPanel rendered="#{prod.description != null and !prod.description.blank}" class="left-align">
+                                        <span class="stock-value">#{prod.description}</span>
+                                    </p:outputPanel>
+                                    <div class="left-align manufacturer">#{prod.manufacturer.name}</div>
+                                    <p:outputPanel class="price-icons-block">
+                                        <p:outputPanel styleClass="price" rendered="#{prod.price > 0.0}">
+                                            <h:outputText value="#{prod.price}">
+                                                <f:convertNumber pattern="##,###.##" currencySymbol="" type="currency"/>
+                                            </h:outputText><h:outputText
+                                                value=" #{stocksViewBean.preferredCurrency == null ? '€' : stocksViewBean.preferredCurrency.sign}"/>
+                                        </p:outputPanel>
+                                        <p:outputPanel styleClass="price-not-found" rendered="#{prod.price == 0.0}">
+                                            <h:outputText value="#{i18n['itc.stocks.price-not-found']}"/>
+                                        </p:outputPanel>
+                                    </p:outputPanel>
+                                    <div class="left-align product-name">#{prod.nomenclatureType.name}</div>
+                                </a>
+                            </ui:repeat>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel rendered="#{stocksViewBean.modeEdit and stocksViewBean.admin}">
+                    <p:dataTable id="stocksTable" value="#{stocksViewBean.specialProducts}" var="specProd"
+                                 widgetVar="stocksTable"
+                                 editable="true" editMode="cell">
+                        <p:column headerText="#{i18n['itc.stocks.product-code']}">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText rendered="#{specProd.productCode==null or specProd.productCode.blank}"
+                                                  value="#{i18n['itc.stocks.product-code-input']}"/>
+                                    <h:outputText
+                                            rendered="#{specProd.productCode!=null and !specProd.productCode.blank}"
+                                            value="#{specProd.productCode}"/></f:facet>
+                                <f:facet name="input"><p:inputText value="#{specProd.productCode}"/></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="#{i18n['itc.stocks.stock-description']}">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText rendered="#{specProd.description==null or specProd.description.blank}"
+                                                  value="#{i18n['itc.stocks.stock-description-mes']}"/>
+                                    <h:outputText
+                                            rendered="#{specProd.description!=null and !specProd.description.blank}"
+                                            value="#{specProd.description}"/></f:facet>
+                                <f:facet name="input"><p:inputText value="#{specProd.description}"/></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column>
+                            <h:panelGroup id="removeContainer">
+                                <p:commandButton styleClass="btn btn-danger"
+                                                 action="#{stocksViewBean.removeItem(specProd)}" process="@this"
+                                                 update="@form"
+                                                 icon="fa fa-trash-alt">
+                                    <p:confirm header="#{i18n['stocks.preferences.remove-confirm-header']}"
+                                               message="#{i18n['stocks.preferences.remove-confirm-msg']}"/>
+                                </p:commandButton>
+                            </h:panelGroup>
+                        </p:column>
+                    </p:dataTable>
+                    <p:confirmDialog global="true">
+                        <p:commandButton value="#{i18n['stocks.preferences.confirm-yes']}" type="button"
+                                         styleClass="ui-confirmdialog-yes btn btn-danger"
+                                         icon="fa fa-check"/>
+                        <p:commandButton value="#{i18n['stocks.preferences.confirm-no']}" type="button"
+                                         styleClass="ui-confirmdialog-no btn btn-secondary"
+                                         icon="fa fa-times"/>
+                    </p:confirmDialog>
+                    <div class="btn-group" style="margin-top: 1rem">
+                        <div class="btn-group-item">
+                            <p:commandButton value="#{i18n['itc.stocks.add']}" styleClass="btn btn-primary" process="@this"
+                                             update="stocksTable"
+                                             action="#{stocksViewBean.onAddNew()}"/>
+                        </div>
+                        <div class="btn-group-item">
+                            <p:commandButton value="#{i18n['stocks.preferences.save']}"
+                                             action="#{stocksViewBean.savePreferences}"
+                                             process="@form" styleClass="btn btn-primary"
+                                             update="@form" oncomplete="initCarousel($);"/>
+                        </div>
+                        <div class="btn-group-item">
+                            <p:commandButton value="#{i18n['stocks.preferences.cancel']}"
+                                             action="#{stocksViewBean.resetPreferences}"
+                                             process="@this" styleClass="btn btn-secondary"
+                                             update="@form" oncomplete="initCarousel($);"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+
+            </h:form>
+        </div>
+    </h:body>
+</f:view>

@@ -1,0 +1,100 @@
+.orders-portlet {
+    margin-top: 3.5rem;
+}
+
+.edit-icon-container {
+    text-align: right;
+}
+
+.profile-label {
+    width: 110px;
+    display: inline-block;
+}
+
+.profile-section-label {
+    font-size: 1.1em;
+}
+
+.ui-panelgrid.form-group .ui-panelgrid-cell {
+  padding-left: 0px;
+  vertical-align: top;
+}
+.ui-panelgrid.form-group .ui-panelgrid-cell .label,
+.ui-panelgrid.form-group .ui-panelgrid-cell .profile-label{
+  padding: 0px;
+  border: 0px none;
+  font-size: inherit;
+  font-weight: bold;
+}
+
+.itc-table thead {
+    background-color: #f7f7f7;
+}
+.itc-table .search-result-image {
+    width: 100px;
+    text-align: center;
+}
+.ui-datatable.itc-table thead th.search-result-image {
+    text-align: center;
+}
+.search-result-table .search-result-image a {
+    display: inline-block;
+}
+.itc-table .search-result-name {
+    width: 30%;
+    min-width: 200px;
+}
+
+.itc-table .search-result-vendor-code {
+    width: 10%;
+    font-family: monospace;
+    min-width: 100px;
+}
+.itc-table .search-result-vendor-code .additional-vendor-code {
+    color: #A9A9A9;
+    display: block;
+}
+
+.itc-table .search-result-vendor {
+    width: 15%;
+    min-width: 100px;
+}
+
+.itc-table .search-result-price {
+    width: 10%;
+    min-width: 150px;
+}
+
+.itc-table .search-result-counter {
+    width: 120px;
+}
+
+.itc-table .search-result-packing {
+    width: 100px;
+    text-align: center;
+}
+
+.itc-table .search-result-add {
+    width: auto;
+    min-width: 160px;
+    text-align: right;
+}
+.itc-table .search-result-add .add-to-cart-btn {
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    position: relative;
+}
+.itc-table .search-result-add .add-to-cart-btn img {
+    position: absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    left: calc(50% - 1.5rem / 2 - 1px);
+    top: calc(50% - 1.5rem / 2);
+
+
+}
+
+.orders-table-subheader {
+    display: inline-block;
+}

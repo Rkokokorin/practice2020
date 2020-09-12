@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
+    <h:body>
+        <style>
+            .profile-user-info-container {
+                margin-top: 4.875rem;
+            }
+            .profile-data-title {
+                margin-bottom: 1.375rem;
+            }
+            .user-data-label {
+                display: block;
+                font-size: 0.8125rem;
+                color: #131313;
+                margin-bottom: 0.2rem;
+            }
+            .user-data-value {
+                display: block;
+                font-size: 1rem;
+                color: #000000;
+                margin-bottom: 1.3125rem;
+                font-weight: bold;
+            }
+        </style>
+        <p:outputPanel styleClass="profile-user-info-container">
+            <h3 class="profile-data-title">
+                <h:outputText value="#{i18n['profile.user.title']}"/>
+            </h3>
+
+            <h:outputLabel  for="name"  styleClass="user-data-label"
+                            value="#{i18n['profile.user.label.name']}"/>
+            <h:outputText   id="name"   styleClass="user-data-value"
+                            value="#{profileBean.name}"/>
+
+            <h:outputLabel  for="email" styleClass="user-data-label"
+                            value="#{i18n['profile.user.label.email']}"/>
+            <h:outputText   id="email"  styleClass="user-data-value"
+                            value='#{profileBean.email}'/>
+
+            <p:outputPanel style="margin-top: 2rem;" rendered="#{profileBean.hasContractor}">
+                <h3 class="profile-data-title">
+                    <h:outputText value="#{i18n['profile.contractor.title']}"/>
+                </h3>
+
+                <h:outputLabel  for="org-name"  styleClass="user-data-label"
+                                value="#{i18n['profile.user.label.org-name']}"/>
+                <h:outputText   id="org-name"   styleClass="user-data-value"
+                                value="#{profileBean.organizationName}"/>
+
+                <h:outputLabel  for="tin"   styleClass="user-data-label"
+                                value="#{i18n['profile.user.label.tin']}"/>
+                <h:outputText   id="tin"    styleClass="user-data-value"
+                                value='#{profileBean.contractorTin}'/>
+
+                <h:outputLabel  for="msrn"  styleClass="user-data-label"
+                                value="#{i18n['profile.user.label.msrn']}"/>
+                <h:outputText   id="msrn"   styleClass="user-data-value"
+                                value='#{profileBean.contractorMsrn}'/>
+            </p:outputPanel>
+        </p:outputPanel>
+    </h:body>
+</f:view>

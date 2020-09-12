@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
+    <h:body>
+        <ui:include src="/WEB-INF/views/navigation.xhtml"/>
+        <script type="text/javascript">
+            Liferay.on('updateCurrency', function () {
+                try {
+                    updateColleaguesCartsCurrency();
+                } catch (e) {
+
+                }
+            });
+        </script>
+        <h:form styleClass="carts-list-form">
+            <div class="custom-shader price-shader">
+                <div class="shader-loader"></div>
+            </div>
+            <p:remoteCommand actionListener="#{deletedCartsBean.cartsListBean.updateCurrency}" process="@this" update="@form"
+                             name="updateColleaguesCartsCurrency" onstart="$('.carts-list-form .price-shader').show();"
+                             oncomplete="$('.carts-list-form .price-shader').hide();"/>
+            <p:dataTable emptyMessage="#{i18n['itc.cart.colleagues-carts.empty']}" value="#{colleaguesCartListBean.colleaguesCarts}" var="colCart">
+                <p:columnGroup type="header">
+                    <p:column headerText="Id"/>
+                    <p:column headerText="#{i18n['itc.cart.cart-name']}"/>
+                    <p:column headerText="#{i18n['itc.cart.cart-products']}"/>
+                    <p:column headerText="#{i18n['itc.carts.list.positions']}"/>
+                    <p:column headerText="#{i18n['itc.carts.list.total']}"/>
+                    <p:column headerText="#{i18n['itc.carts.list.cost']}"/>
+                    <p:column headerText="#{i18n['itc.carts.list.creation-date']}"/>
+                </p:columnGroup>
+                <p:subTable value="#{colCart.carts}" var="cart" rendered="#{not empty colCart.carts}">
+                    <f:facet name="header">
+                        <p:outputPanel styleClass="align-center colleague-subtable-header">
+                            <h:outputText value="#{colCart.owner.fullName} [#{colCart.owner.emailAddress}]"/>
+                        </p:outputPanel>
+                    </f:facet>
+                    <ui:include src="/WEB-INF/views/cart-list-row.xhtml">
+                        <ui:param name="cart" value="#{cart}"/>
+                    </ui:include>
+                </p:subTable>
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</f:view>

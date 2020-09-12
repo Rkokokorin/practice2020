@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet name="main.css"/>
+    </h:head>
+
+    <h:body>
+        <div class="manufacturers-portlet">
+            <h2>#{i18n['manufacturers.list.header']}</h2>
+            <div class="shortcuts-container d-none d-md-flex">
+                <ui:repeat value="#{manufacturersListViewBean.manufacturersAsList}" var="manufacturer">
+                    <a href="##{manufacturer.key}" class="shortcut-link">#{manufacturer.key}</a>
+                </ui:repeat>
+            </div>
+            
+            <ui:repeat value="#{manufacturersListViewBean.manufacturersAsList}" var="manufacturer">
+                <div class="manufacturer-section">
+                    <h5 id="#{manufacturer.key}" class="manufacturer-name">#{manufacturer.key}</h5>
+                    <div class="items-container">
+                        <ul class="items-list">
+                            <ui:repeat value="#{manufacturer.value}" var="item">
+                                <li><a href="#{manufacturersListViewBean.catalogueBaseUrl}?#{manufacturersListViewBean.manIdParamName}=#{item.code}">#{item.name} (#{item.associatedProducts})</a></li>
+                            </ui:repeat>
+                        </ul>
+                    </div>
+                </div>
+            </ui:repeat>
+        </div>
+
+    </h:body>
+</f:view>

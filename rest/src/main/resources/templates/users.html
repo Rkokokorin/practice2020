@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Список сервисов</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>Список Пользователей</h1>
+<a href="/admin/addUser">Добавить пользователя</a>
+<br/>
+<a href="/admin/routes">К списку сервисов</a>
+<br/>
+<a href="/admin/roles">К списку ролей</a>
+<br/><br/>
+<div>
+    <div th:if="${errorMessage}" th:utext="${errorMessage}"
+         style="color:red;font-style:italic;">
+        ...
+    </div>
+    <div th:if="${errorMessage}" th:include="confirmUserRemove :: confirm"></div>
+    <table border="1">
+        <tr>
+            <th>Имя пользователя</th>
+            <th>Список ролей</th>
+            <th>Активен</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr th:each="user : ${users}">
+            <td th:utext="${user.username}">...</td>
+            <td>
+                <ul>
+                    <li th:each="role:${user.roles}" th:text="${role.name}"></li>
+                </ul>
+            </td>
+            <td><input type="checkbox" name="active" th:disabled="true" th:checked="${user.enabled}"/></td>
+            <td><a th:href="@{'/admin/user/edit/' + ${user.id}}">Изменить</a></td>
+            <td>
+                <form method="POST" th:action="@{/admin/user/remove(id=${user.id}, force=false)}">
+                    <button type="submit" name="action" value="remove" class="link-button">Удалить</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head/>
+    <h:body>
+        <ui:composition template="/WEB-INF/views/common/page-template.xhtml">
+            <ui:define name="content">
+                <h:form rendered="#{administrativeBean.canViewCreateContractorPage()}">
+                    <div class="form-group">
+                        <h:selectOneRadio id="legalEntity" value="#{contractorRegistrationBean.legalEntity}">
+                            <f:selectItem itemValue="#{true}" itemLabel="#{i18n['itc.admin.contractor.juridical-person']}"/>
+                            <f:selectItem itemValue="#{false}" itemLabel="#{i18n['itc.admin.contractor.private-person']}"/>
+                            <p:ajax event="change" process="legalEntity" update="@form"/>
+                        </h:selectOneRadio>
+                    </div>
+                    <h:panelGroup rendered="#{contractorRegistrationBean.legalEntity}">
+                        <div class="form-group">
+                            <p:outputLabel for="shortName" value="#{i18n['itc.admin.contractor.short-name']}"/>
+                            <p:inputText id="shortName" binding="#{contractorRegistrationBean.shortNameInput}"
+                                         styleClass="form-control" value="#{contractorRegistrationBean.shortName}"/>
+                            <p:message for="shortName"/>
+                        </div>
+                        <div class="form-group">
+                            <p:outputLabel value="#{i18n['itc.admin.contractor.full-name']}" for="fullName"/>
+                            <p:inputText id="fullName" binding="#{contractorRegistrationBean.fullNameInput}"
+                                         value="#{contractorRegistrationBean.name}" styleClass="form-control"/>
+                            <p:message for="fullName"/>
+                        </div>
+                        <div class="form-group">
+                            <p:outputLabel value="#{i18n['itc.admin.contractor.tin']}" for="tin"/>
+                            <p:inputText id="tin" binding="#{contractorRegistrationBean.tinInput}"
+                                         value="#{contractorRegistrationBean.tin}" styleClass="form-control"/>
+                            <p:message for="tin"/>
+                        </div>
+                        <div class="form-group">
+                            <p:outputLabel for="msrn" value="#{i18n['itc.admin.contractor.msrn']}"/>
+                            <p:inputText id="msrn" binding="#{contractorRegistrationBean.msrnInput}"
+                                         value="#{contractorRegistrationBean.msrn}" styleClass="form-control"/>
+                            <p:message for="msrn"/>
+                        </div>
+                    </h:panelGroup>
+                    <div class="form-group">
+                        <p:outputLabel for="backOfficeCode" value="#{i18n['itc.admin.contractor.back-office-code']}"/>
+                        <p:inputText id="backOfficeCode"
+				     binding="#{contractorRegistrationBean.backOfficeCodeInput}"
+                                     value="#{contractorRegistrationBean.backOfficeCode}" styleClass="form-control"/>
+                        <p:message for="backOfficeCode"/>
+                    </div>
+                    <div class="form-group">
+                        <p:selectBooleanCheckbox id="isProvider"
+                                                 itemLabel="#{i18n['itc.admin.contractor.is-provider']}"
+                                                 value="#{contractorRegistrationBean.provider}" styleClass="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <p:selectBooleanCheckbox id="isBuyer"
+                                                 itemLabel="#{i18n['itc.admin.contractor.is-buyer']}"
+                                                 value="#{contractorRegistrationBean.buyer}" styleClass="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <p:outputLabel for="adminSurname" value="#{i18n['itc.admin.contractor.admin-surname']}"/>
+                        <p:inputText id="adminSurname" value="#{contractorRegistrationBean.adminSurname}"
+                                     required="true" requiredMessage="#{i18n['itc.admin.contractor.required-field']}"
+                                     styleClass="form-control"/>
+                        <p:message for="adminSurname"/>
+                    </div>
+                    <div class="form-group">
+                        <p:outputLabel for="adminName" value="#{i18n['itc.admin.contractor.admin-name']}"/>
+                        <p:inputText id="adminName" value="#{contractorRegistrationBean.adminName}"
+                                     required="true" requiredMessage="#{i18n['itc.admin.contractor.required-field']}"
+                                     styleClass="form-control"/>
+                        <p:message for="adminName"/>
+                    </div>
+                    <div class="form-group">
+                        <p:outputLabel for="adminPatronymic" value="#{i18n['itc.admin.contractor.admin-patronymic']}"/>
+                        <p:inputText id="adminPatronymic" value="#{contractorRegistrationBean.adminPatronymic}" styleClass="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <p:outputLabel value="#{i18n['itc.admin.contractor.admin-email']}" for="adminEmail"/>
+                        <p:inputText id="adminEmail" value="#{contractorRegistrationBean.adminEmail}"
+                                     validatorMessage="#{i18n['itc.admin.contractor.admin-email-incorrect']}"
+                                     styleClass="form-control">
+                            <f:validateRegex pattern=".+@.+\..+" />
+                        </p:inputText>
+                        <p:message for="adminEmail"/>
+                    </div>
+                    <div class="form-group">
+                        <p:outputLabel value="#{i18n['itc.admin.contractor.contact-phone']}" for="contractorPhone"/>
+                        <p:inputText id="contractorPhone" value="#{contractorRegistrationBean.phone}"
+                                     required="true"
+                                     requiredMessage="#{i18n['itc.admin.contractor.required-field']}"
+                                     styleClass="form-control"/>
+                        <p:message for="contractorPhone"/>
+                    </div>
+                    <p:messages id="messages" globalOnly="true"/>
+                    <div class="form-group">
+                        <div class="btn-group">
+                            <div class="btn-group-item">
+                                <p:commandButton styleClass="btn btn-primary" value="#{i18n['itc.admin.contractor.add-contractor']}"
+                                                 action="#{contractorRegistrationBean.create}" update="@form"/>
+                            </div>
+                        </div>
+                    </div>
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</f:view>

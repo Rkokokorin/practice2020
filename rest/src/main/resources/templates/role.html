@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Просмотр роли</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>Просмотр роли:</h1>
+<br/><br/>
+Название роли: <strong><span th:text="${roleForm.name}">...</span></strong>
+<br/>
+Активна:
+<input type="checkbox"
+       th:disabled="true"
+       th:field="${roleForm.enabled}"/>
+<br/>
+Список сервисов:
+<table border="1">
+    <tr>
+        <th>Внешний URL</th>
+        <th>Внутренний полный URL</th>
+        <th>Активен</th>
+        <th>Выбран</th>
+    </tr>
+    <tr th:each="wrapper, itemStat : ${roleForm.routesWrappers}">
+        <td th:utext="${wrapper.path}">...</td>
+        <td th:utext="${wrapper.outcomeUrl}">...</td>
+        <td><input type="checkbox" name="active" th:disabled="true" th:checked="${wrapper.enabled}"/></td>
+        <td><input type="checkbox" name="active" th:disabled="true"
+                   th:field="${roleForm.routesWrappers[__${itemStat.index}__].selected}"
+                   th:checked="${wrapper.selected}"/></td>
+    </tr>
+</table>
+<br/>
+
+<input type="hidden" th:field="${roleForm.id}"/>
+<a th:href="@{'/admin/role/edit/' + ${roleForm.id}}">Изменить</a>
+<br/>
+<a th:href="@{'/admin/roles'}">Назад</a>
+
+
+<br/>
+
+<div th:if="${errorMessage}" th:utext="${errorMessage}"
+     style="color:red;font-style:italic;">
+    ...
+</div>
+
+</body>
+</html>

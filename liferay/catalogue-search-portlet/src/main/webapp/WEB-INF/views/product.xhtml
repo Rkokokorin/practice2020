@@ -1,0 +1,454 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:portlet="http://java.sun.com/portlet_2_0"
+>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+        <h:outputScript library="js" name="main.js"/>
+    </h:head>
+    <h:body>
+        <h:form id="hiddenForm">
+            <portlet:namespace var="portnamesapace"/>
+            <p:remoteCommand actionListener="#{productViewBean.updateCurrency()}" onstart="$('.price-shader').show();"
+                             name="updateProductView"
+                             update="@form @parent:@parent:productPage:priceForm @parent:@parent:productPage:packingInfo"
+                             oncomplete="pushPageParams('#{portnamesapace}'+':hiddenForm');
+                                         $('.price-shader').hide();"
+                             process="@this"/>
+            <h:inputHidden id="warehouseCode" value="#{productViewBean.selectedWarehouseCode}"/>
+            <h:inputHidden id="warehouseCodeParamName" value="#{productViewBean.warehouseParamName}"/>
+
+        </h:form>
+        <script type="application/javascript">
+          Liferay.on('updateCurrency', function () {
+            updateProductView();
+          });
+          Liferay.on('updateWarehouse', function () {
+              updateProductView();
+          });
+        </script>
+        <p:outputPanel id="productPage" class="product-page" rendered="#{productViewBean.product ne null}">
+            <ui:include src="/WEB-INF/views/bread-crackers.xhtml"/>
+
+            <section class="product-container row">
+                <section class="product-info-container col-xl-8 col-lg-7 col-sm-12">
+                    <header class="product-name">
+                        <h2>#{productViewBean.product.displayName}</h2>
+                    </header>
+                    <h:form >
+                        <p:messages id="actionContainerMessage"/>
+                        <div class="flex-container" style="margin: 1rem 0;">
+                            <div style="margin-right: 2rem">
+                                <h:outputLabel class="product-code-label" value="#{i18n['itc.product.part-number']}:"/>
+                                <h:outputText class="product-code-value"
+                                              value="#{productViewBean.product.vendorCode}"/>
+                            </div>
+                            <p:commandLink id="favButton"
+                                           title="#{not productViewBean.signedIn ? i18n['itc.catalogue.sign-in-required']
+                                                : (productViewBean.favorite ? i18n['itc.product.card.remove-from-favorite']
+                                                    : i18n['itc.product.card.add-to-favorite'])}"
+                                           styleClass="action-container"
+                                           action="#{productViewBean.toggleFavorite}" process="@this"
+                                           update="@form">
+                                <h:outputText
+                                        styleClass="action-icon icon #{productViewBean.favorite ? 'icon-selected' : 'icon-unselected'}"
+                                        value="#{productViewBean.heartSvg}" escape="false"/>
+                                <h:outputText styleClass="action-label" value="#{i18n['itc.product.add-to-favorites']}"/>
+                            </p:commandLink>
+                            <p:commandLink id="compareButton"
+                                           title="#{not productViewBean.signedIn ? i18n['itc.catalogue.sign-in-required']
+                                                : (productViewBean.comparison ? i18n['itc.product.card.remove-from-comparison']
+                                                    : i18n['itc.product.card.add-to-comparison'])}"
+                                           styleClass="action-container"
+                                           action="#{productViewBean.toggleComparison}" process="@this"
+                                           update="@form">
+                                <h:outputText
+                                        styleClass="action-icon icon #{productViewBean.comparison ? 'icon-selected' : 'icon-unselected'}"
+                                        value="#{productViewBean.compareSvg}" escape="false"/>
+                                <h:outputText styleClass="action-label" value="#{i18n['itc.product.to-comparison']}"/>
+                            </p:commandLink>
+                        </div>
+                    </h:form>
+                    <script>
+                        function initProductImageView() {
+                            let gallery = PF('productGalleria');
+                            gallery.stopSlideshow();
+                            let pswpElement = document.querySelectorAll('.product-gallery-pswp')[0];
+                            let galleryFrames = gallery.frames;
+                            let images = galleryFrames.find('img');
+                            let activeIdx = galleryFrames.index($('.ui-galleria-frame-active'));
+                            let items = [];
+                            for (let img of images) {
+                                items.push({ src: img.src, w: img.naturalWidth, h: img.naturalHeight });
+                            }
+
+                            let options = {
+                                // optionName: 'option value'
+                                // for example:
+                                index: activeIdx,
+                                shareEl: true,
+                                shareButtons: [
+                                    {id:'download', label:"#{i18n['itc.catalogue.download-image']}", url:'{{raw_image_url}}', download:true}
+                                ],
+                            };
+                            let pswp = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+                            pswp.listen('afterChange', function() {
+                                gallery.select(pswp.getCurrentIndex());
+                            });
+                            pswp.listen('close', function() {
+                                gallery.startSlideshow();
+                            });
+                            pswp.init();
+                        }
+                    </script>
+                    <section class="product-section product-summary-container row">
+                        <section class="image-gallery col-sm-12 col-lg-8 col-xl-4">
+                            <p:galleria value="#{productViewBean.productImagesUrl}" var="image" panelHeight="200"
+                                        panelWidth="300" widgetVar="productGalleria">
+                                <p:graphicImage url="#{image}" alt="Image Description for #{image}" title="#{image}" onclick="initProductImageView();"/>
+                            </p:galleria>
+                        </section>
+                        <section class="product-summary col-sm-12 col-lg-8">
+                            <main class="two-column-container">
+                                <div class="product-info-row">
+                                    <h:outputLabel class="product-info-label" value="#{i18n['itc.product.manufacturer']}:"/>
+                                    <h:outputLink class="product-info-value"
+                                                  rendered="#{productViewBean.product.manufacturer ne null and
+                                                   productViewBean.manufacturerSorted ge 0}"
+                                                  value="#{productViewBean.manufacturerProductsUrl}">
+                                        #{productViewBean.product.manufacturer.name}
+                                    </h:outputLink>
+                                    <h:outputText class="product-info-value"
+                                                  rendered="#{productViewBean.product.manufacturer ne null and
+                                                   productViewBean.manufacturerSorted lt 0}"
+                                                  value=" #{productViewBean.product.manufacturer.name}"/>
+                                </div>
+
+                                <p:outputPanel class="product-info-row"
+                                               rendered="#{!productViewBean.product.secondVendorCode.blank}">
+                                    <h:outputLabel class="product-info-label" value="#{i18n['itc.product.secondary-part-number']}:"/>
+                                    <h:outputText class="product-info-value"
+                                                  value="#{productViewBean.product.secondVendorCode}"/>
+                                </p:outputPanel>
+                                <p:outputPanel class="product-info-row"
+                                               rendered="#{productViewBean.product.outOfProduction}">
+                                    <h:outputLabel class="product-info-label" value="#{i18n['itc.product.out-of-order']}:"/>
+                                    <h:outputText class="product-info-value"
+                                                  value="#{productViewBean.product.outOfProductionDate}">
+                                        <f:convertDateTime pattern="YYYY-MM-dd"
+                                                           locale="#{liferay.themeDisplay.locale}"/>
+                                    </h:outputText>
+                                </p:outputPanel>
+                                <div class="product-info-row">
+                                    <h:outputLabel class="product-info-label" value="#{i18n['itc.product.category']}:"/>
+                                    <h:outputLink class="product-info-value"
+                                                  rendered="#{breadCrackersBean.subcategoryUrl ne null and
+                                                    not breadCrackersBean.subcategoryUrlHidden}"
+                                                  value="#{breadCrackersBean.subcategoryUrl}"
+                                    >
+                                        #{productViewBean.product.nomenclatureType.name}
+                                    </h:outputLink>
+                                    <h:outputText class="product-info-value"
+                                                  rendered="#{breadCrackersBean.subcategoryUrl ne null and
+                                                    breadCrackersBean.subcategoryUrlHidden}"
+                                                  value=" #{productViewBean.product.nomenclatureType.name}"/>
+                                </div>
+                                <p:outputPanel styleClass="product-info-row" rendered="#{productViewBean.product.series ne null and not productViewBean.product.series.blank}">
+                                    <h:outputLabel class="product-info-label" value="#{i18n['itc.product.series']}:"/>
+                                    <h:outputText class="product-info-value"
+                                                  value="#{productViewBean.product.series}"/>
+                                </p:outputPanel>
+                                <p:outputPanel id="packingInfo">
+                                    <p:outputPanel rendered="#{productViewBean.selectedOffer!=null}" class="product-info-row">
+                                        <h:outputLabel class="product-info-label" value="#{i18n['itc.product.packing']}:"/>
+                                        <h:outputText rendered="#{productViewBean.displayBasePacking()}" styleClass="product-info-value" value="1 #{productViewBean.selectedOffer.packingUnit.name} = #{productViewBean.selectedOffer.packingUnit.multiplier} #{productViewBean.selectedOffer.packingUnit.basePackingUnit.name}"/>
+                                        <h:outputText rendered="#{!productViewBean.displayBasePacking()}" styleClass="product-info-value" value="#{productViewBean.selectedOffer.packingUnit.multiplier} #{productViewBean.selectedOffer.packingUnit.basePackingUnit.name}"/>
+                                    </p:outputPanel>
+                                </p:outputPanel>
+                            </main>
+                        </section>
+                    </section>
+                    <p:outputPanel rendered="#{not empty productViewBean.product.description}">
+                        <div class="product-section">
+                            <h3 class="product-section-header"><h:outputText value="#{i18n['itc.catalogue.product.description']}"/> </h3>
+                            <h:outputText styleClass="product-description" value="#{productViewBean.product.description}"
+                                          escape="false"/>
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel rendered="#{productViewBean.product.hasCertificates()}">
+                        <div class="product-section" >
+                            <h3 class="product-section-header"><h:outputText value="#{i18n['itc.catalogue.product.certificates']}"/> </h3>
+                            <p:outputPanel>
+                                <ui:repeat value="#{productViewBean.product.certificates}" var="cert" varStatus="index">
+                                    <div class='feature-row product-feature'>
+                                        <h:outputLabel class="label" value="#{cert.number}"/>
+                                        <h:outputText class="value" rendered="#{!cert.perpetual}" value="#{i18n['itc.catalogue.product.certificates.before']} #{cert.formattedDate}"/>
+                                        <h:outputText class="value" rendered="#{cert.perpetual}" value="#{i18n['itc.catalogue.product.certificates.perpetual']}"/>
+                                    </div>
+                                </ui:repeat>
+                            </p:outputPanel>
+                        </div>
+                    </p:outputPanel>
+                    <p:outputPanel rendered="#{not empty productViewBean.productFeatures}">
+                        <section class="product-section product-features">
+                            <h3 class="product-section-header"><h:outputText value="#{i18n['itc.catalogue.product.characteristics']}"/></h3>
+                            <ui:repeat value="#{productViewBean.productFeatures}" var="feat" varStatus="index">
+                                <div class='feature-row product-feature'>
+                                    <h:outputLabel class="label" value="#{feat.name}:"/>
+                                    <h:outputText class="value" value="#{feat.valueWithUnit}"/>
+                                </div>
+                            </ui:repeat>
+                        </section>
+                    </p:outputPanel>
+                    <p:outputPanel rendered="#{not empty productViewBean.attachedFiles }">
+                        <section class="product-section product-files">
+                            <h3 class="product-section-header"><h:outputText value="#{i18n['itc.catalogue.product.files']}"/> </h3>
+                            <ui:repeat value="#{productViewBean.attachedFiles}" var="fileGroup">
+                                <p:outputPanel>
+                                    <h:panelGroup rendered="#{not fileGroup.groupName.blank}">
+                                        <h4><h:outputText value="#{fileGroup.groupName}"/></h4>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{fileGroup.groupName.blank}">
+                                        <h4><h:outputText value="#{i18n['itc.product.another-files']}"/></h4>
+                                    </h:panelGroup>
+                                </p:outputPanel>
+                                <ui:repeat value="#{fileGroup.files}" var="attachedFile">
+                                    <h:outputLink value="#{productViewBean.convertToUrl(attachedFile)}">
+                                        #{productViewBean.getFilename(attachedFile)}
+                                    </h:outputLink>
+                                </ui:repeat>
+
+                            </ui:repeat>
+                        </section>
+                    </p:outputPanel>
+                </section>
+                <div class="col-xl-4 col-lg-5 col-sm-12">
+                    <section class="product-section price-info ">
+                        <h2 class="product-section-header"><h:outputText value="#{i18n['itc.catalogue.product.pricing-and-order']}"/></h2>
+                        <h:form id="priceForm" style="position: relative;" onsubmit="return false;">
+                            <div class="custom-shader price-shader offers-shader">
+                                <div class="shader-loader"></div>
+                            </div>
+                            <div class="warehouse-info flex-container">
+                                <h:outputText value="#{productViewBean.warehouseSvg}" escape="false"
+                                              styleClass="warehouse-icon"/>
+                                <div class="flex-column">
+                                    <span class="price-information-message"><h:outputText value="#{i18n['itc.catalogue.product.pricing-info']}"/> </span>
+                                    <span class="warehouse-name">#{productViewBean.selectedWarehouse.name}</span>
+                                </div>
+                            </div>
+
+                            <p:outputPanel rendered="#{!productViewBean.salesOffers.isEmpty()}">
+
+                                <section class="offers">
+
+                                    <p:dataTable value="#{productViewBean.salesOffers}" var="offer" varStatus="index"
+                                                 selection="#{productViewBean.selectedOffer}"
+                                                 rowKey="#{offer.salesOfferId}">
+                                        <p:ajax listener="#{productViewBean.selectOffer()}" event="rowSelectRadio"
+                                                update="@form @form:@parent:packingInfo" process="@form"/>
+                                        <p:column selectionMode="single" style="width:16px;text-align:center"/>
+                                        <p:column headerText="#{i18n['itc.product.delivery-time']}">
+                                            <h:outputText
+                                                    value="#{productViewBean.getAsDays(offer.duration)} #{wordNumEnder.getEnding(productViewBean.getAsDays(offer.duration), productViewBean.daysWords)}"/>
+                                        </p:column>
+                                        <p:column headerText="#{i18n['itc.product.min-order']}">
+                                            <h:outputText class="align-right"
+                                                          value="#{offer.minimalOrder} #{offer.packingUnit.name}"/>
+                                        </p:column>
+                                        <p:column headerText="#{i18n['itc.product.in-stock']}">
+                                            <h:outputText rendered="#{offer.stockAmount > 0}" class="align-right"
+                                                          value="#{offer.stockAmount} #{offer.packingUnit.name}"/>
+                                            <h:outputText rendered="#{offer.stockAmount  == 0}" class="align-right"
+                                                          value="#{i18n['itc.product.many']}"/>
+                                        </p:column>
+                                        <p:column headerText="#{i18n['itc.product.price']}">
+                                            <h:outputText class="align-right"
+                                                          value="#{offer.price} #{productViewBean.userCurrencySign}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{i18n['itc.product.special-price']}"
+                                                  styleClass="your-price"
+                                                  rendered="#{productViewBean.renderAllSpecialPrice()}">
+                                            <h:outputText class="align-right"
+                                                          rendered="#{productViewBean.renderSpecialPrice(offer)}"
+                                                          value="#{offer.personalPrice} #{productViewBean.userCurrencySign}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </section>
+                                <section class="current-price-container">
+                                    <h:outputText styleClass="current-price-value"
+                                                  rendered="#{productViewBean.selectedOffer.price!=null}"
+                                                  value="${productViewBean.decimalFormat.format(productViewBean.selectedOffer.personalPrice > 0 ? productViewBean.selectedOffer.personalPrice : productViewBean.selectedOffer.price)}${productViewBean.userCurrencySign}"/>
+                                    <h:outputText value="#{i18n['itc.product.for']} 1 #{productViewBean.selectedOffer.packingUnit.name}"/>
+                                    <p:spinner value="#{cartBean.count}" styleClass="itc-spinner"
+                                               stepFactor="#{productViewBean.selectedOffer.multiplicity}">
+                                        <p:ajax process="@this"
+                                                partialSubmit="true" delay="500"
+                                                listener="#{productViewBean.countChanged}"
+                                                update="totalPriceContainer @this"/>
+                                    </p:spinner>
+                                    <h:outputText styleClass="spinner-step-label"
+                                                  value="#{i18n['itc.product.step']} #{productViewBean.selectedOffer.multiplicity} #{productViewBean.selectedOffer.packingUnit.name}"/>
+                                </section>
+                                <p:outputPanel id="totalPriceContainer" class="total-price-container">
+                                    <section class="total-price">
+                                        <h3><h:outputText value="#{i18n['itc.catalogue.product.total-cost']}"/> </h3>
+                                        <div class="flex-container">
+                                            <div class="flex-column" style="width: 33%">
+                                                <span style="font-weight: 700"><h:outputText value="#{i18n['itc.catalogue.product.delivery-time']}"/> </span>
+                                                <h:outputText style="font-weight: 300;"
+                                                              value="#{productViewBean.getAsDays(productViewBean.selectedOffer.duration)} #{wordNumEnder.getEnding(productViewBean.getAsDays(productViewBean.selectedOffer.duration), productViewBean.daysWords)}"/>
+                                            </div>
+                                            <div class="flex-column" style="width: 33%">
+                                                <span style="font-weight: 700"><h:outputText value="#{i18n['itc.catalogue.product.count']} #{productViewBean.selectedOffer.packingUnit.name}"/></span>
+                                                <h:outputText style="font-weight: 300;"
+                                                              value="#{cartBean.count}"/>
+                                            </div>
+                                            <p:outputPanel styleClass="flex-column" style="width: 34%" rendered="#{productViewBean.displayBasePacking()}">
+                                                <span style="font-weight: 700"><h:outputText value="#{i18n['itc.catalogue.product.count']} #{productViewBean.selectedOffer.packingUnit.basePackingUnit.name}"/></span>
+                                                <h:outputText style="font-weight: 300;"
+                                                              value="#{cartBean.count*productViewBean.selectedOffer.packingUnit.multiplier}"/>
+                                            </p:outputPanel>
+                                        </div>
+                                    </section>
+                                    <section class="flex-container total-footer">
+                                        <span class="price-value">${productViewBean.decimalFormat.format((productViewBean.selectedOffer.personalPrice > 0 ? productViewBean.selectedOffer.personalPrice : productViewBean.selectedOffer.price) * cartBean.count)}* ${productViewBean.userCurrencySign}</span>
+                                        <p:outputPanel id="addToCartBtn" style="width: 15rem; text-align: center">
+                                            <p:commandLink class="btn btn-primary"
+                                                           disabled="#{!(cartBean.contractorEmployee or cartBean.salesManager)}"
+                                                           action="#{cartBean.addToCart(productViewBean.product, productViewBean.selectedOffer, productViewBean.salesOffersResponse)}"
+                                                           process="@this" update="@this @parent:@parent:messages">
+                                                <h:outputText value="#{productViewBean.cartSvg}" escape="false"/>
+                                                <span><h:outputText value="#{i18n['itc.catalogue.product.add-to-cart']}"/> </span>
+                                            </p:commandLink>
+                                        </p:outputPanel>
+                                        <div>
+                                            *Цены указаны с учётом НДС
+                                        </div>
+                                    </section>
+                                </p:outputPanel>
+                            </p:outputPanel>
+                            <p:outputPanel rendered="#{productViewBean.salesOffers.isEmpty()}">
+                                <h:outputText value="#{i18n['itc.product.no-offers']}"/>
+                            </p:outputPanel>
+                            <p:messages id="messages"/>
+                        </h:form>
+                    </section>
+                </div>
+            </section>
+            <section class="product-section analogue-products">
+                <h3 class="product-section-header"><h:outputText value="#{i18n['itc.catalogue.product.analogues']}"/></h3>
+                <p:outputPanel rendered="#{productViewBean.hasAnalogs()}">
+                    <div class="owl-carousel replacements-container">
+                        <ui:repeat value="#{productViewBean.replacements}" var="prod" varStatus="index">
+                            <a href="#{productViewBean.openProduct(prod.product)}" class="replacement-item">
+                                <div class="custom-shader replacement-price-shader">
+                                    <div class="shader-loader"></div>
+                                </div>
+                                <div class="replacement-image"
+                                     style="background-image: url('#{productViewBean.getProductCodeImageUrl(prod.product)}')">
+                                </div>
+                                <div class="left-align manufacturer">#{prod.product.manufacturer.name}</div>
+                                <p:outputPanel class="price-icons-block">
+                                    <p:outputPanel styleClass="price" rendered="#{prod.price.viewPrice > 0.0}">
+                                        <h:outputText value="#{prod.price.viewPrice}">
+                                            <f:convertNumber pattern="##,###.##" currencySymbol="" type="currency"/>
+                                        </h:outputText><h:outputText
+                                            value=" #{productViewBean.userCurrency ne null ? '€' : productViewBean.userCurrency.sign}"/>
+                                    </p:outputPanel>
+                                    <p:outputPanel styleClass="price-not-found" rendered="#{prod.price.viewPrice == 0.0}">
+                                        <h:outputText value="#{i18n['itc.product.price-by-request']}"/>
+                                    </p:outputPanel>
+                                </p:outputPanel>
+                                <div class="left-align product-name">#{prod.product.nomenclatureType.name}</div>
+                            </a>
+                        </ui:repeat>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel rendered="#{not productViewBean.hasAnalogs()}">
+                    <h:outputText value="#{i18n['itc.product.card.empty-analogues']}" styleClass="empty-analogues"/>
+                </p:outputPanel>
+            </section>
+
+        </p:outputPanel>
+
+        <p:outputPanel rendered="#{productViewBean.product eq null}">
+            <h4 class="mt-2"><h:outputText value="#{i18n['itc.catalogue.product-not-found']}"/> </h4>
+            <h:link outcome="/WEB-INF/views/view.xhtml" value="#{i18n['itc.catalogue.back-to-catalogue']}"/>
+        </p:outputPanel>
+
+        <!-- Root element of PhotoSwipe. Must have class pswp. -->
+        <div class="pswp product-gallery-pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+            <!-- Background of PhotoSwipe.
+                 It's a separate element as animating opacity is faster than rgba(). -->
+            <div class="pswp__bg"></div>
+
+            <!-- Slides wrapper with overflow:hidden. -->
+            <div class="pswp__scroll-wrap">
+
+                <!-- Container that holds slides.
+                    PhotoSwipe keeps only 3 of them in the DOM to save memory.
+                    Don't modify these 3 pswp__item elements, data is added later on. -->
+                <div class="pswp__container">
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                </div>
+
+                <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+                <div class="pswp__ui pswp__ui--hidden">
+
+                    <div class="pswp__top-bar">
+
+                        <!--  Controls are self-explanatory. Order can be changed. -->
+
+                        <div class="pswp__counter"></div>
+
+                        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                        <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                        <div class="pswp__preloader">
+                            <div class="pswp__preloader__icn">
+                                <div class="pswp__preloader__cut">
+                                    <div class="pswp__preloader__donut"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                        <div class="pswp__share-tooltip"></div>
+                    </div>
+
+                    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+                    </button>
+
+                    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+                    </button>
+
+                    <div class="pswp__caption">
+                        <div class="pswp__caption__center"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <script>
+            updateProductView();
+        </script>
+    </h:body>
+</f:view>

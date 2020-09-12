@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Настройки сервиса</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>Настроки сервиса:</h1>
+
+<form th:action="@{/admin/settings/edit}"
+      th:object="${settingsForm}" method="POST">
+    HTTP заголовок для авторизации пользователя:
+    <input type="text" th:field="${settingsForm.authHeader}"/>
+    <br/>
+    <p>Авторизация внешних пользователей активна: <input type="checkbox" th:field="${settingsForm.authEnabled}"/></p>
+    <button type="submit" name="action" value="save">Сохранить</button>
+    <button type="submit" name="action" value="cancel">Отменить</button>
+</form>
+
+<br/>
+
+<!-- Check if errorMessage is not null and not empty -->
+
+<div th:if="${errorMessage}" th:utext="${errorMessage}"
+     style="color:red;font-style:italic;">
+    ...
+</div>
+
+</body>
+</html>

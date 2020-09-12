@@ -1,0 +1,38 @@
+$default-font-color: #0F0F0F;
+$corporate-blue: #3561a6;
+
+#shopping-cart-status-form {
+    
+    #shopping-cart-link {
+        display: flex;
+        align-items: center;
+        color: inherit;
+        padding: 0.2rem 0.5rem;
+        border-radius: 0.2rem;
+        transition: background 0.5s ease-in-out;
+
+        &:hover {
+            text-decoration: none;
+            background: #fff2;
+        }
+
+        img {
+            height: 1.8rem;
+            margin-right: 0.8rem;
+        }
+
+        .cart-info {
+            display: flex;
+            flex-direction: column;
+
+            .items-count {
+                font-size: 0.7rem;
+                line-height: 1em;
+            }
+            .total-price {
+                font-size: 0.9rem;
+            }
+        }
+    }
+}
+

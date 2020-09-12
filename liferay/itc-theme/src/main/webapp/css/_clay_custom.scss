@@ -1,0 +1,41 @@
+// CLAY customization here
+@import "primefaces_overrides";
+
+.columns-max .portlet-login {
+  @extend .container;
+}
+
+
+/* Customization for container width on small screens */
+
+@media(max-width:576px) {
+ .container,
+ .columns-max .portlet-login {
+  max-width: 100%;
+ }
+}
+@media(max-width:768px) {
+ .container,
+ .columns-max .portlet-login {
+  max-width: 100%;
+ }
+}
+@media(max-width:992px) {
+ .container,
+ .columns-max .portlet-login {
+  max-width: 100%;
+ }
+}
+@media (min-width: 1500px) {
+  .container {
+    max-width: 1440px;
+  }
+}
+
+.columns-1 {
+  @extend .container;
+}
+
+.columns-2 {
+  @extend .container;
+}

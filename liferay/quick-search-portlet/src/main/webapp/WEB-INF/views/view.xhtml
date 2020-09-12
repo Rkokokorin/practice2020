@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:portlet="http://java.sun.com/portlet_2_0"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head>
+        <h:outputStylesheet name="main.css"/>
+        <h:outputScript library="js" name="main.js"/>
+    </h:head>
+
+    <h:body>
+        <h:form id="quickSearchForm">
+
+            <div class="quick-search-portlet">
+                <p:inputText styleClass="search-field" value="#{viewBean.searchQuery}" placeholder="#{i18n['quick-search.search']}"
+                             onclick="if ($('.search-results-panel .hidden-state')[0].value !== 'none') {$('.search-results-panel').show()};">
+                    <p:ajax event="keyup" listener="#{viewBean.updateResult()}" process="@form"
+                            update=":quickSearchForm:searchResultPanel"
+                            onstart="$('.quick-search-portlet .lexicon-icon-search').hide();
+                                       $('.quick-search-portlet .loader').css('display', 'inline-block');"
+                            oncomplete="$('.quick-search-portlet .lexicon-icon-search').css('display', 'inline-block');
+                                          $('.quick-search-portlet .loader').hide();
+                                          $('.quick-search-portlet .search-results-panel').css('display', $('.search-results-panel .hidden-state')[0].value);"
+                            delay="300"/>
+                </p:inputText>
+                
+                <p:defaultCommand target="searchButton"/>
+
+                <p:commandLink id="searchButton" action="#{viewBean.goToCatalogue()}" class="search-button">
+                    <svg class="lexicon-icon lexicon-icon-search" focusable="false" role="presentation"
+                         viewBox="0 0 512 512">
+                        <path class="lexicon-icon-outline"
+                              d="M503.254 467.861l-133.645-133.645c27.671-35.13 44.344-79.327 44.344-127.415 0-113.784-92.578-206.362-206.362-206.362s-206.362 92.578-206.362 206.362 92.578 206.362 206.362 206.362c47.268 0 90.735-16.146 125.572-42.969l133.851 133.851c5.002 5.002 11.554 7.488 18.106 7.488s13.104-2.486 18.106-7.488c10.004-10.003 10.004-26.209 0.029-36.183zM52.446 206.801c0-85.558 69.616-155.173 155.173-155.173s155.174 69.616 155.174 155.173-69.616 155.173-155.173 155.173-155.173-69.616-155.173-155.173z"></path>
+                    </svg>
+                    <span class="loader"></span>
+                </p:commandLink>
+
+                <p:outputPanel id="searchResultPanel" class="search-results-panel">
+                    <p:inputText styleClass="ui-helper-hidden hidden-state" value="#{viewBean.searchDisplayState}"/>
+
+                    <p:outputPanel class="search-results-empty-message" rendered="#{viewBean.isAllResultsEmpty()}">
+                        #{i18n['quick-search.results.empty']}
+                    </p:outputPanel>
+
+                    <p:outputPanel id="products" rendered="#{viewBean.productRes.size() > 0}">
+                        <h4><h:outputText styleClass="group-header" value="#{i18n['quick-search.products']}"/></h4>
+                        <ul class="products-results-list">
+                            <ui:repeat value="#{viewBean.productRes}" var="pr">
+                                <li>
+                                    <a href="#{viewBean.catalogueBaseUrl}?#{viewBean.selectedProductIdParamName}=#{pr.id}">
+                                        <h:outputText value="#{pr.partNumber}"/>
+                                        <h:outputText value=" (#{pr.secondPartNumber})" rendered="#{pr.secondPartNumber ne null and not pr.secondPartNumber.blank}"/>
+                                        <span class="grey-color">, #{pr.typeName}, #{pr.manufacturer}</span>
+                                    </a>
+                                </li>
+                            </ui:repeat>
+                        </ul>
+                        <p:outputPanel styleClass="more-results-link-container"
+                                       rendered="#{viewBean.productRes.size() > 10}">
+                            <a class="more-results-link"
+                               href="#{viewBean.catalogueBaseUrl}?#{viewBean.searchQueryParamName}=#{viewBean.searchQuery}">
+                                #{i18n['quick-search.more-products']}
+                            </a>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <p:outputPanel id="productTypes" rendered="#{viewBean.productTypeRes.size() > 0}">
+                        <h4><h:outputText styleClass="group-header" value="#{i18n['quick-search.categories']}"/></h4>
+                        <ul class="results-list">
+                            <ui:repeat value="#{viewBean.productTypeRes}" var="ptr">
+                                <p:outputPanel rendered="#{ptr.group}">
+                                    <li>
+                                        <a href="#{viewBean.catalogueBaseUrl}?#{viewBean.selectedCategoryIdParamName}=#{ptr.id}">#{ptr.name}</a>
+                                    </li>
+                                </p:outputPanel>
+
+                                <p:outputPanel rendered="#{!ptr.group}">
+                                    <li>
+                                        <a href="#{viewBean.catalogueBaseUrl}?#{viewBean.selectedCategoryIdParamName}=#{ptr.parentId}&amp;#{viewBean.selectedSubcategoryIdParamName}=#{ptr.id}">#{ptr.name}</a>
+                                    </li>
+                                </p:outputPanel>
+                            </ui:repeat>
+                        </ul>
+                    </p:outputPanel>
+                </p:outputPanel>
+                <script type="text/javascript">
+                  (function () {
+                    hideOnClickOutside('.search-results-panel', ['.search-results-panel', '.quick-search-portlet .search-field']);
+                  })();
+
+                </script>
+            </div>
+        </h:form>
+    </h:body>
+</f:view>
