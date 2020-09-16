@@ -1,0 +1,24 @@
+.claim-card.ui-panelgrid .ui-panelgrid-cell {
+    border: none;
+}
+
+.claim-card .label-column, .contractor-card .label-column {
+    font-weight: bold;
+}
+
+
+.contractors-list .contractor-name {
+    width: 60%;
+}
+
+.contractors-list .contractor-tin {
+    width: 15%;
+}
+
+.contractors-list .contractor-1c {
+    width: 15%;
+}
+
+.contractors-list .contractor-employees-count {
+    width: 10%;
+}

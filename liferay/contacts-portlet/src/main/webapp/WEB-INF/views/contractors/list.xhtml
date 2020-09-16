@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head/>
+    <h:body>
+        <ui:composition template="/WEB-INF/views/common/page-template.xhtml">
+            <ui:define name="content">
+                <p:outputPanel>
+                    <h:form>
+                        <p:dataTable value="#{contractorsListBean.organizations}"
+                                     var="contractor" styleClass="contractors-list"
+                                     paginator="true" paginatorAlwaysVisible="false"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,20,30"
+                                     rendered="#{contractorViewBean.selectedContractor eq null and contractorsListBean.canViewList()}">
+                            <p:column headerText="#{i18n['itc.admin.contractor.list.name']}" styleClass="contractor-name">
+                                <p:commandLink
+                                        actionListener="#{contractorViewBean.selectContractor(contractor.organization.organization)}"
+                                        update="@form">
+                                    <h:outputText value="#{contractor.organization.organization.name}"/>
+                                </p:commandLink>
+                            </p:column>
+                            <p:column headerText="#{i18n['itc.admin.contractor.tin']}" filterBy="#{contractor.organization.tin}" filterMatchMode="contains"
+                                      styleClass="contractor-tin">
+                                <h:outputText value="#{contractor.organization.tin}"/>
+                            </p:column>
+                            <p:column headerText="#{i18n['itc.admin.contractor.back-office-code']}" filterBy="#{contractor.organization.backOfficeCode}"
+                                      styleClass="contractor-1c"
+                                      filterMatchMode="contains">
+                                <h:outputText value="#{contractor.organization.backOfficeCode}"/>
+                            </p:column>
+                            <p:column styleClass="contractor-employees-count"
+                                    headerText="#{i18n['itc.admin.contractor.list.employees']}">
+                                <h:outputText value="#{contractor.userCount}"/>
+                            </p:column>
+                        </p:dataTable>
+
+                        <p:outputPanel rendered="#{contractorViewBean.viewMode}">
+                            <ui:include src="/WEB-INF/views/contractors/view.xhtml"/>
+                        </p:outputPanel>
+
+                        <p:outputPanel rendered="#{contractorViewBean.editMode}">
+                            <ui:include src="/WEB-INF/views/contractors/edit-contractor.xhtml"/>
+                        </p:outputPanel>
+
+                    </h:form>
+                </p:outputPanel>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</f:view>

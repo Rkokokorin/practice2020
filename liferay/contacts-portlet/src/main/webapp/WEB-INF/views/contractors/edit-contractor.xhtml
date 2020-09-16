@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+
+<f:view
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    >
+    <h:head/>
+    <h:body>
+        <h:panelGroup rendered="#{contractorViewBean.selectedContractor.juridicalPerson and contractorsListBean.canViewList()}">
+            <div class="form-group">
+                <p:outputLabel for="edit-shortName" value="#{i18n['itc.admin.contractor.short-name']}"/>
+                <p:inputText id="edit-shortName" binding="#{contractorRegistrationBean.shortNameInput}"
+                             styleClass="form-control" value="#{contractorRegistrationBean.shortName}"/>
+                <p:message for="edit-shortName"/>
+            </div>
+            <div class="form-group">
+                <p:outputLabel value="#{i18n['itc.admin.contractor.full-name']}" for="edit-fullName"/>
+                <p:inputText id="edit-fullName" binding="#{contractorRegistrationBean.fullNameInput}"
+                             value="#{contractorRegistrationBean.name}" styleClass="form-control"/>
+                <p:message for="edit-fullName"/>
+            </div>
+            <div class="form-group">
+                <p:outputLabel value="#{i18n['itc.admin.contractor.tin']}" for="edit-tin"/>
+                <p:inputText id="edit-tin" binding="#{contractorRegistrationBean.tinInput}"
+                             value="#{contractorRegistrationBean.tin}" styleClass="form-control"/>
+                <p:message for="edit-tin"/>
+            </div>
+            <div class="form-group">
+                <p:outputLabel for="edit-msrn" value="#{i18n['itc.admin.contractor.msrn']}"/>
+                <p:inputText id="edit-msrn" binding="#{contractorRegistrationBean.msrnInput}"
+                             value="#{contractorRegistrationBean.msrn}" styleClass="form-control"/>
+                <p:message for="edit-msrn"/>
+            </div>
+        </h:panelGroup>
+
+        <div class="form-group">
+            <p:outputLabel for="edit-backOfficeCode" value="#{i18n['itc.admin.contractor.back-office-code']}"/>
+            <p:inputText id="edit-backOfficeCode"
+                         binding="#{contractorRegistrationBean.backOfficeCodeInput}"
+                         value="#{contractorRegistrationBean.backOfficeCode}" styleClass="form-control"/>
+            <p:message for="edit-backOfficeCode"/>
+        </div>
+
+        <div class="form-group">
+            <p:outputLabel for="edit-phone" value="#{i18n['itc.admin.contractor.contact-phone']}"/>
+            <p:inputText id="edit-phone"
+                         required="true"
+                         requiredMessage="#{i18n['itc.admin.contractor.required-field']}"
+                         value="#{contractorRegistrationBean.phone}" styleClass="form-control"/>
+            <p:message for="edit-phone"/>
+        </div>
+
+        <p:messages id="edit-messages" globalOnly="true"/>
+        <div class="form-group">
+            <div class="btn-group">
+                <div class="btn-group-item">
+                    <p:commandButton styleClass="btn btn-primary"
+                                     value="#{i18n['itc.admin.contractor.update-contractor']}"
+                                     action="#{contractorViewBean.updateSelectedContractor}"
+                                     ajax="false"
+                                     />
+                </div>
+            </div>
+            <div class="btn-group">
+                <div class="btn-group">
+                    <div class="btn-group-item">
+                        <p:commandButton class="btn btn-secondary" type="reset"
+                                         value="#{i18n['itc.admin.contractor.edit.reset']}"/>
+                    </div>
+                </div>
+                <div class="btn-group-item">
+		    <p:commandButton styleClass="btn btn-secondary"
+				     rendered="#{contractorsListBean.canViewList()}"
+				     value="#{i18n['itc.admin.contractor.view.go-back']}"
+				     process="@this"
+				     action="#{contractorsListBean.returnToList()}" update="@form"/>
+                </div>
+            </div>
+        </div>
+
+    </h:body>
+</f:view>

@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <h:head/>
+    <h:body>
+        <p:importEnum type="com.tuneit.itc.admin.claims.ClaimsViewBean$ViewMode" var="modes"/>
+        <p:importEnum type="com.tuneit.itc.admin.claims.ClaimsViewBean$AssigneeFilter" var="assignees"/>
+        <ui:composition template="/WEB-INF/views/common/page-template.xhtml">
+            <ui:define name="content">
+                <p:outputPanel id="contentWrapper" rendered="#{administrativeBean.canViewClaimsListPage()}">
+                    <p:outputPanel id="claimsList" rendered="#{claimsViewBean.selectedClaim eq null}">
+                        <h:form>
+                            <h:selectOneRadio value="#{claimsViewBean.viewMode}">
+                                <f:selectItem itemValue="#{modes.ACTIVE}" itemLabel="#{i18n['itc.admin.claims.filter.active']}"/>
+                                <f:selectItem itemValue="#{modes.ALL}" itemLabel="#{i18n['itc.admin.claims.filter.all']}"/>
+                                <f:selectItem itemValue="#{modes.CLOSED}" itemLabel="#{i18n['itc.admin.claims.filter.close']}"/>
+                                <p:ajax process="@this" update="@form" listener="#{claimsViewBean.modeChange}"/>
+                            </h:selectOneRadio>
+                            <h:selectOneRadio value="#{claimsViewBean.assigneeFilter}">
+                                <f:selectItem itemValue="#{assignees.MINE}" itemLabel="#{i18n['itc.admin.claims.filter.mine']}"/>
+                                <f:selectItem itemValue="#{assignees.UNASSIGNED}" itemLabel="#{i18n['itc.admin.claims.filter.unassigned']}"/>
+                                <f:selectItem itemValue="#{assignees.ALL}" itemLabel="#{i18n['itc.admin.claims.filter.all']}"/>
+                                <p:ajax process="@this" update="@form" listener="#{claimsViewBean.assigneeFilterChange()}"/>
+                            </h:selectOneRadio>
+                            <p:dataTable emptyMessage="#{i18n['itc.admin.claims.table.empty']}" value="#{claimsViewBean.claims}" var="claim" selectionMode="single" selection="#{claimsViewBean.selectedClaim}" rowKey="#{claim.id}">
+                                <p:ajax event="rowSelect" update=":contentWrapper" listener="#{claimsViewBean.onSelectClaim}"/>
+                                <p:column headerText="Id" filterBy="#{claim.id}" filterMatchMode="exact" sortBy="#{claim.id}">
+                                    <h:outputText value="#{claim.id}"/>
+                                </p:column>
+                                <p:column headerText="#{i18n['itc.admin.claims.filter.company-name']}"
+                                          filterBy="#{claim.companyFullName}" filterMatchMode="contains"
+                                          sortBy="#{claim.companyFullName}">
+                                    <h:outputText value="#{claim.companyFullName}"/>
+                                </p:column>
+                                <p:column headerText="#{i18n['itc.admin.claims.filter.full-name']}" filterBy="#{claim.fullName}" filterMatchMode="contains">
+                                    <h:outputText value="#{claim.fullName}"/>
+                                </p:column>
+                                <p:column headerText="#{i18n['itc.admin.claims.filter.contacts']}">
+                                    <h:panelGroup layout="block">
+                                        <h:outputText value="Email:" styleClass="mr-1"/>
+                                        <h:outputText value="#{claim.email}"/>
+                                        <br/>
+                                    </h:panelGroup>
+                                    <h:panelGroup layout="block" rendered="#{not empty claim.phone}">
+                                        <h:outputText value="#{i18n['itc.admin.contractor.contact-phone']}: " styleClass="mr-1"/>
+                                        <h:outputText value="#{claim.phone}"/>
+                                    </h:panelGroup>
+                                </p:column>
+                                <p:column headerText="#{i18n['itc.admin.claims.filter.assignee']}" filterMatchMode="contains">
+                                    <ui:fragment rendered="#{claimsViewBean.claimAssignedUser(claim) ne null}">
+                                        <h:outputText value="#{claimsViewBean.claimAssignedUser(claim).getFullName()} [ #{claimsViewBean.claimAssignedUser(claim).emailAddress} ]"/>
+                                    </ui:fragment>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </p:outputPanel>
+                    <p:outputPanel id="singleClaim" rendered="#{claimsViewBean.selectedClaim ne null}">
+                        <ui:include src="claim-view.xhtml"/>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</f:view>

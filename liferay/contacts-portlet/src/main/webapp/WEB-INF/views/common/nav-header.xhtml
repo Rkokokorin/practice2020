@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<f:view
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+    <p:importEnum type="com.tuneit.itc.admin.NavBean$Page" var="pages"/>
+    <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
+    <h:body>
+        <p:outputPanel styleClass="navigation-header btn-toolbar">
+            <p:outputPanel styleClass="navigation-buttons btn-group">
+                <p:repeat value="#{navBean.pages}" var="page">
+                    <p:commandLink styleClass="nav-item btn btn-secondary #{navBean.currentPage eq page ? 'active' : ''}" value="#{i18n[page.localizationKey]}" ajax="false" action="#{navBean.redirectToPage(page)}"/>
+                </p:repeat>
+            </p:outputPanel>
+
+        </p:outputPanel>
+
+    </h:body>
+</f:view>

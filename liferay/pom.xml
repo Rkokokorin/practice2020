@@ -35,6 +35,7 @@
         <module>categories-list-portlet</module>
         <module>categories-menu-portlet</module>
         <module>commons</module>
+        <module>contacts-portlet</module>
         <module>currency-selector-portlet</module>
         <module>favorites-portlet</module>
         <module>feedback-portlet</module>
