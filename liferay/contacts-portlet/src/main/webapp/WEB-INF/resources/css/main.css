@@ -1,3 +1,23 @@
+.fa, .far {
+    color: #3561a5;
+}
+
+.icon {
+    margin-right: 0.5%;
+}
+
+.phone_label {
+    color: darkgray;
+}
+
+.weekends_wh {
+    color: red;
+}
+
+.fa-blank {
+    visibility:hidden;
+}
+
 .claim-card.ui-panelgrid .ui-panelgrid-cell {
     border: none;
 }

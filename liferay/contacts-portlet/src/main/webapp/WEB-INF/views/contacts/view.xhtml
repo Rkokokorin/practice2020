@@ -6,48 +6,47 @@
         xmlns:p="http://primefaces.org/ui"
         xmlns:ui="http://java.sun.com/jsf/facelets"
 >
-    <h:head/>
+    <h:head>
+        <h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/all.min-jsf.css" />
+        <h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/v4-shims.min-jsf.css" />
+    </h:head>
+
     <h:body>
         <ui:composition template="/WEB-INF/views/common/page-template.xhtml">
             <ui:define name="content">
                 <p:outputPanel>
-                    <h1>Здесь будут контакты...</h1>
+                    <h3>Липецк, Главный офис</h3>
+                    <!--#{contractorViewBean.selectedContractor.phone}-->
 
-                    <p:panelGrid columns="2" styleClass="form-group ui-noborder contractor-card" columnClasses="label-column,value-colum">
-                                 <!--rendered="#{contractorViewBean.selectedContractor.juridicalPerson}"-->
-                        <p:outputLabel for="city"
-                                       value="Новосибирск, Главный офис"
-                                       styleClass="profile-label"/>
-                        <h:outputText id="city"
-                                      value="#{contractorViewBean.selectedContractor.phone}"/>
+                    <br/>
+                    <i class="fa fa-fw fa-flip-horizontal fa-phone icon"></i>
+                    <h:outputLink id="phone" value="tel:74742567859">
+                        <h:outputText value="+7 4742 567 859" />
+                    </h:outputLink>
+                    <h:outputText styleClass="phone_label" value=" - бесплатно с любых телефонов, круглосуточно"/>
 
-                        <h:outputText id="phone"
-                                      value="беспл. с любых телеф, 24/7"/> <!--#{contractorViewBean.selectedContractor.phone}-->
-                        <p:outputLabel for="phone"
-                                       value="#{i18n['itc.admin.contractor.contact-phone']}"
-                                       styleClass="profile-label"/>
+                    <br/><br/>
+                    <i class="fa fa-fw fa-envelope icon"></i>
+                    <h:outputLink id="email" value="mailto:rkoko@prosvet.ru">
+                    </h:outputLink>
+                    <h:outputText value="rkoko@prosvet.ru" />
 
-                        <p:outputLabel for="msrn"
-                                       value="#{i18n['itc.admin.contractor.msrn']}"
-                                       styleClass="profile-label"/>
-                        <h:outputText id="msrn"
-                                      value="#{contractorViewBean.selectedContractor.msrn}"/>
+                    <br/><br/>
+                    <i class="fa fa-fw fa-map-marker icon"></i>
+                    <h:outputText id="location" value="г. Липецк, ул. Яна Берзина, дом 37, этаж 77770, офис 0"/>
 
+                    <br/><br/>
+                    <i class="far fa-fw fa-clock icon"></i>
+                    <h:outputText styleClass="weekdays_wh" value="пн.-пт.: "/>
+                    <h:outputText id="weekdays_working_hours" value="10:00-20:30"/>
+                    <br/>
+                    <i class="fa fa-fw fa-blank fa-clock icon"></i>
+                    <h:outputText styleClass="weekends_wh" value="сб.-вс.: "/>
+                    <h:outputText id="weekends_working_hours" styleClass="weekends_wh" value="выходной"/>
 
-                        <p:outputPanel id="contactor-flags" styleClass="form-group">
-                            <p:outputPanel styleClass="form-group"
-                                           rendered="#{contractorViewBean.selectedContractor.provider}">
-                                <h:outputText value="#{i18n['itc.admin.contractor.is-provider']}"/>
-                            </p:outputPanel>
-                            <h:outputText value="#{i18n['itc.admin.contractor.is-buyer']}"
-                                          rendered="#{contractorViewBean.selectedContractor.buyer}"/>
-                        </p:outputPanel>
-
-                        <p:outputLabel value="#{i18n['itc.admin.contractor.back-office-code']}"
-                                       for="contractor-code" rendered="#{contractorsListBean.canViewList()}"/>
-                        <h:outputText id="contractor-code" value="#{contractorViewBean.selectedContractor.backOfficeCode}"
-                                      rendered="#{contractorsListBean.canViewList()}"/>
-                    </p:panelGrid>
+                    <!--#{user.phone}-->
+                    <!--styleClass="profile-label"/>--> <!--#{i18n['itc.admin.contractor.contact-phone']}-->
+                    <!--#{contractorViewBean.selectedContractor.phone}-->
 
                 </p:outputPanel>
             </ui:define>
