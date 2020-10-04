@@ -2,6 +2,7 @@ package com.tuneit.itc.contacts.contractors;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -32,6 +33,8 @@ public class ContractorViewBean implements Serializable {
     private boolean editMode = false;
     private List<User> users;
     private Log log = LogFactoryUtil.getLog(this.getClass());
+
+    private String tmp = "skadl";
 
     @ManagedProperty("#{contractorRegistrationBean}")
     private ContractorRegistrationBean contractorRegistrationBean;

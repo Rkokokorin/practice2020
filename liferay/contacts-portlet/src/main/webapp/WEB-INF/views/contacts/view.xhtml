@@ -15,38 +15,35 @@
         <ui:composition template="/WEB-INF/views/common/page-template.xhtml">
             <ui:define name="content">
                 <p:outputPanel>
-                    <h3>Липецк, Главный офис</h3>
-                    <!--#{contractorViewBean.selectedContractor.phone}-->
+                    <h3>#{contactsViewBean.contactInfo.city}, #{contactsViewBean.contactInfo.name}</h3>
 
                     <br/>
                     <i class="fa fa-fw fa-flip-horizontal fa-phone icon"></i>
-                    <h:outputLink id="phone" value="tel:74742567859">
-                        <h:outputText value="+7 4742 567 859" />
+                    <h:outputLink id="phone" value="tel:#{contactsViewBean.contactInfo.phone}">
+                        <h:outputText value="#{contactsViewBean.contactInfo.phone}" converter="phoneConverter"/>
                     </h:outputLink>
                     <h:outputText styleClass="phone_label" value=" - бесплатно с любых телефонов, круглосуточно"/>
 
                     <br/><br/>
                     <i class="fa fa-fw fa-envelope icon"></i>
-                    <h:outputLink id="email" value="mailto:rkoko@prosvet.ru">
+                    <h:outputLink id="email" value="mailto:#{contactsViewBean.contactInfo.email}">
+                        <h:outputText value="#{contactsViewBean.contactInfo.email}"/>
                     </h:outputLink>
-                    <h:outputText value="rkoko@prosvet.ru" />
 
                     <br/><br/>
                     <i class="fa fa-fw fa-map-marker icon"></i>
-                    <h:outputText id="location" value="г. Липецк, ул. Яна Берзина, дом 37, этаж 77770, офис 0"/>
+                    <h:outputText id="location" value="#{contactsViewBean.contactInfo.address}"/>
 
                     <br/><br/>
                     <i class="far fa-fw fa-clock icon"></i>
                     <h:outputText styleClass="weekdays_wh" value="пн.-пт.: "/>
-                    <h:outputText id="weekdays_working_hours" value="10:00-20:30"/>
+                    <h:outputText id="weekdays_working_hours" value="#{contactsViewBean.contactInfo.weekdays_working_hours}"/>
                     <br/>
                     <i class="fa fa-fw fa-blank fa-clock icon"></i>
                     <h:outputText styleClass="weekends_wh" value="сб.-вс.: "/>
-                    <h:outputText id="weekends_working_hours" styleClass="weekends_wh" value="выходной"/>
+                    <h:outputText id="weekends_working_hours" styleClass="weekends_wh" value="#{contactsViewBean.contactInfo.weekends_working_hours}"/>
 
-                    <!--#{user.phone}-->
                     <!--styleClass="profile-label"/>--> <!--#{i18n['itc.admin.contractor.contact-phone']}-->
-                    <!--#{contractorViewBean.selectedContractor.phone}-->
 
                 </p:outputPanel>
             </ui:define>
