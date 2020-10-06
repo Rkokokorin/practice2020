@@ -1,52 +1,80 @@
 <?xml version="1.0"?>
 
-<f:view
+<ui:composition
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
         xmlns:p="http://primefaces.org/ui"
-        xmlns:ui="http://java.sun.com/jsf/facelets"
->
-    <h:head>
-        <h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/all.min-jsf.css" />
-        <h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/v4-shims.min-jsf.css" />
-    </h:head>
+        xmlns:ui="http://java.sun.com/jsf/facelets">
 
-    <h:body>
-        <ui:composition template="/WEB-INF/views/common/page-template.xhtml">
-            <ui:define name="content">
-                <p:outputPanel>
-                    <h3>#{contactsViewBean.contactInfo.city}, #{contactsViewBean.contactInfo.name}</h3>
+<!--    <h:head>-->
+<!--        <h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/all.min-jsf.css" />-->
+<!--        <h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/v4-shims.min-jsf.css" />-->
+<!--    </h:head>-->
 
-                    <br/>
-                    <i class="fa fa-fw fa-flip-horizontal fa-phone icon"></i>
-                    <h:outputLink id="phone" value="tel:#{contactsViewBean.contactInfo.phone}">
-                        <h:outputText value="#{contactsViewBean.contactInfo.phone}" converter="phoneConverter"/>
-                    </h:outputLink>
-                    <h:outputText styleClass="phone_label" value=" - бесплатно с любых телефонов, круглосуточно"/>
+    <p:outputPanel rendered="#{contactsViewBean.modeView}">
+        <h3>#{contactsViewBean.contactInfo.city}, #{contactsViewBean.contactInfo.name}</h3>
 
-                    <br/><br/>
-                    <i class="fa fa-fw fa-envelope icon"></i>
-                    <h:outputLink id="email" value="mailto:#{contactsViewBean.contactInfo.email}">
-                        <h:outputText value="#{contactsViewBean.contactInfo.email}"/>
-                    </h:outputLink>
+        <div class="add-icon-container">
+            <p:commandLink actionListener="${contactsViewBean.setModeEdit()}"
+                           rendered="#{contactsViewBean.modeView and contactsViewBean.admin}"
+                           process="@this"
+                           update="@form">
+                <i class="fa fa-fw fa-plus"/>
+            </p:commandLink>
+        </div>
 
-                    <br/><br/>
-                    <i class="fa fa-fw fa-map-marker icon"></i>
-                    <h:outputText id="location" value="#{contactsViewBean.contactInfo.address}"/>
+        <br/>
+        <i class="fa fa-fw fa-flip-horizontal fa-phone icon"/>
+        <h:outputLink id="phone" value="tel:#{contactsViewBean.contactInfo.phone}">
+            <h:outputText value="#{contactsViewBean.contactInfo.phone}" converter="phoneConverter"/>
+        </h:outputLink>
+        <h:outputText styleClass="phone_label" value="#{i18n['itc.contacts.phone-availability24/7']}"/>
 
-                    <br/><br/>
-                    <i class="far fa-fw fa-clock icon"></i>
-                    <h:outputText styleClass="weekdays_wh" value="пн.-пт.: "/>
-                    <h:outputText id="weekdays_working_hours" value="#{contactsViewBean.contactInfo.weekdays_working_hours}"/>
-                    <br/>
-                    <i class="fa fa-fw fa-blank fa-clock icon"></i>
-                    <h:outputText styleClass="weekends_wh" value="сб.-вс.: "/>
-                    <h:outputText id="weekends_working_hours" styleClass="weekends_wh" value="#{contactsViewBean.contactInfo.weekends_working_hours}"/>
+        <br/><br/>
+        <i class="fa fa-fw fa-envelope icon"/>
+        <h:outputLink id="email" value="mailto:#{contactsViewBean.contactInfo.email}">
+            <h:outputText value="#{contactsViewBean.contactInfo.email}"/>
+        </h:outputLink>
 
-                    <!--styleClass="profile-label"/>--> <!--#{i18n['itc.admin.contractor.contact-phone']}-->
+        <br/><br/>
+        <i class="fa fa-fw fa-map-marker icon"/>
+        <h:outputText id="location" value="#{contactsViewBean.contactInfo.address}"/>
 
-                </p:outputPanel>
-            </ui:define>
-        </ui:composition>
-    </h:body>
-</f:view>
+        <br/><br/>
+        <i class="far fa-fw fa-clock icon"/>
+        <h:outputText styleClass="weekdays_wh" value="#{i18n['itc.contacts.weekdays-working-hours']}"/>
+        <h:outputText id="weekdays_working_hours" value=" #{contactsViewBean.contactInfo.weekdays_working_hours}"/>
+        <br/>
+        <i class="fa fa-fw fa-blank fa-clock icon"/>
+        <h:outputText styleClass="weekends_wh" value="#{i18n['itc.contacts.weekends-working-hours']}"/>
+        <h:outputText id="weekends_working_hours" styleClass="weekends_wh" value=" #{contactsViewBean.contactInfo.weekends_working_hours}"/>
+
+        <!--styleClass="profile-label"/>--> <!--#{i18n['itc.admin.contractor.contact-phone']}-->
+    </p:outputPanel>
+
+    <p:outputPanel rendered="#{contactsViewBean.modeEdit and contactsViewBean.admin}">
+        <div class="ui-g">
+            <div class="ui-g-6 ui-md-12">
+                <p:inputText id="city" value="#{contactsViewBean.contactInfo.city}" />
+                <p:outputLabel for="@previous" value="#{i18n['itc.admin.contacts.city']}"/>
+            </div>
+            <div class="ui-g-6 ui-md-12">
+                <p:inputText id="officeName" value="#{contactsViewBean.contactInfo.name}" />
+                <p:outputLabel for="@previous" value="#{i18n['itc.admin.contacts.office-name']}"/>
+            </div>
+        </div>
+
+
+        <p:commandButton value="#{i18n['itc.admin.contacts.save']}" action="#{contactsViewBean.updateShownCity(contactsViewBean.contactInfo.city)}"
+                         process="@this" styleClass="btn btn-primary"
+                         update="@form"/>
+    </p:outputPanel>
+
+<!--    <h:body>-->
+<!--        <ui:composition template="/WEB-INF/views/common/page-template.xhtml">-->
+<!--            <ui:define name="info-content">-->
+<!--                -->
+<!--            </ui:define>-->
+<!--        </ui:composition>-->
+<!--    </h:body>-->
+</ui:composition>

@@ -3,19 +3,33 @@
 <f:view
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:p="http://primefaces.org/ui"
         xmlns:ui="http://java.sun.com/jsf/facelets"
 >
     <f:metadata>
-        <f:viewAction type="preRenderView" action="#{navBean.redirectToDefaultPage()}"/>
+<!--        <f:viewAction type="preRenderView" action="#{navBean.redirectToDefaultPage()}"/>-->
+<!--        template="/WEB-INF/views/common/page-template.xhtml"-->
     </f:metadata>
     <h:head>
+        <h:outputStylesheet library="css" name="main.css"/>
+        <h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/all.min-jsf.css" />
+        <h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/v4-shims.min-jsf.css" />
     </h:head>
+
     <h:body>
-        <ui:composition template="/WEB-INF/views/common/page-template.xhtml">
-            <ui:define name="content">
-                MAIN PAGE
-            </ui:define>
-        </ui:composition>
+        <h:form>
+            <div class="ui-g">
+                <div class="ui-g-8">
+                    <ui:include src="/WEB-INF/views/map/view.xhtml"/>
+                </div>
+                <div class="ui-g-4">
+                    <ui:include src="/WEB-INF/views/contacts/view.xhtml"/>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    
+                </div>
+            </div>
+        </h:form>
     </h:body>
 </f:view>
