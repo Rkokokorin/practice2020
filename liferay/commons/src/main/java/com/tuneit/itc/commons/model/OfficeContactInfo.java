@@ -37,11 +37,11 @@ public class OfficeContactInfo implements BaseEntity<Long>, Serializable {
     @NotBlank
     private String address;
 
-    @Column(length = 11)
+    @Column(name = "weekdays_working_hours", length = 11)
     @NotBlank
-    private String weekdays_working_hours;
+    private String weekdaysWorkingHours;
 
-    @Column(length = 11)
+    @Column(name = "weekends_working_hours", length = 11)
     @NotBlank
-    private String weekends_working_hours;
+    private String weekendsWorkingHours;
 }

@@ -1,16 +1,5 @@
-h3 {
-    display: inline;
-}
-
-.add-icon-container {
-    display: block;
-}
-
-.fa, .far {
-    color: #3561a5;
-}
-
 .icon {
+    color: #3561a5;
     margin-right: 0.5%;
 }
 
