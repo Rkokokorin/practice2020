@@ -11,6 +11,7 @@
         <class>com.tuneit.itc.commons.model.cart.CurrentCart</class>
         <class>com.tuneit.itc.commons.model.PortletPreference</class>
         <class>com.tuneit.itc.commons.model.OfficeContactInfo</class>
+        <class>com.tuneit.itc.commons.model.StafferContactInfo</class>
         <class>com.tuneit.itc.commons.model.OrganizationRegistrationClaim</class>
         <class>com.tuneit.itc.commons.model.FavoriteProduct</class>
         <class>com.tuneit.itc.commons.model.ComparisonProduct</class>

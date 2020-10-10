@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <p:outputPanel rendered="#{officeContactInfoBean.modeView}">
+        <div class="ui-g">
+            <div class="ui-g-10">
+                <h3>#{officeContactInfoBean.contactInfo.city}#{officeContactInfoBean.contactInfo.name.equals("")? "" : ","} #{officeContactInfoBean.contactInfo.name}</h3>
+            </div>
+            <div class="ui-g-1">
+                <p:commandLink actionListener="${officeContactInfoBean.setModeUpdate}"
+                               rendered="#{officeContactInfoBean.modeView and officeContactInfoBean.admin}"
+                               process="@this"
+                               update="@form">
+                    <i class="far fa-fw fa-edit"/>
+                </p:commandLink>
+            </div>
+            <div class="ui-g-1">
+                <p:commandLink actionListener="${officeContactInfoBean.setModeCreate}"
+                               rendered="#{officeContactInfoBean.modeView and officeContactInfoBean.admin}"
+                               process="@this"
+                               update="@form">
+                    <i class="far fa-fw fa-plus-square"/>
+                </p:commandLink>
+            </div>
+        </div>
+
+        <br/>
+        <i class="fa fa-fw fa-flip-horizontal fa-phone icon"/>
+        <h:outputLink id="phone" value="tel:#{officeContactInfoBean.contactInfo.phone}">
+            <h:outputText value="#{officeContactInfoBean.contactInfo.phone} " converter="phoneConverter"/>
+        </h:outputLink>
+        <h:outputText styleClass="phone_label" value="#{i18n['itc.contacts.phone-availability24/7']}"/>
+
+        <br/><br/>
+        <i class="fa fa-fw fa-envelope icon"/>
+        <h:outputLink id="email" value="mailto:#{officeContactInfoBean.contactInfo.email}">
+            <h:outputText value="#{officeContactInfoBean.contactInfo.email}"/>
+        </h:outputLink>
+
+        <br/><br/>
+        <i class="fa fa-fw fa-map-marker icon"/>
+        <h:outputText id="address" value="#{officeContactInfoBean.contactInfo.address}"/>
+
+        <br/><br/>
+        <i class="far fa-fw fa-clock icon"/>
+        <h:outputText styleClass="weekdays_wh" value="#{i18n['itc.contacts.weekdays-working-hours']}"/>
+        <h:outputText id="weekdaysWorkingHours" value=" #{officeContactInfoBean.contactInfo.weekdaysWorkingHours}"/>
+        <br/>
+        <i class="fa fa-fw fa-blank fa-clock icon"/>
+        <h:outputText styleClass="weekends_wh" value="#{i18n['itc.contacts.weekends-working-hours']}"/>
+        <h:outputText id="weekendsWorkingHours" styleClass="weekends_wh" value=" #{officeContactInfoBean.contactInfo.weekendsWorkingHours}"/>
+    </p:outputPanel>
+
+    <p:outputPanel rendered="#{officeContactInfoBean.modeCreate and officeContactInfoBean.admin}">
+        <div class="ui-g">
+            <div class="ui-g-11">
+                <h3>#{i18n['itc.admin.contacts.add-info-title']}</h3>
+            </div>
+            <div class="ui-g-1">
+                <p:commandLink actionListener="${officeContactInfoBean.setModeView}"
+                               process="@this"
+                               update="@form">
+                    <i class="far fa-fw fa-window-close"/>
+                </p:commandLink>
+            </div>
+        </div>
+
+        <p:messages severity="error" id="msgs" binding="#{officeContactInfoBean.errorMessagesCreateMode}"/>
+
+        <div class="ui-g">
+            <div class="ui-g-12 ui-md-6 ui-lg-6">
+                <p:inputText id="cityInput" value="#{officeContactInfoBean.newContactInfo.city}"
+                             required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.city']}"
+                             placeholder="#{i18n['itc.admin.contacts.city']}">
+                </p:inputText>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-6">
+                <p:inputText id="officeNameInput" value="#{officeContactInfoBean.newContactInfo.name}" placeholder="#{i18n['itc.admin.contacts.office-name']}"/>
+            </div>
+        </div>
+
+        <i class="fa fa-fw fa-flip-horizontal fa-phone icon"/>
+        <p:inputText id="phoneInput" value="#{officeContactInfoBean.newContactInfo.phone}"
+                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.phone']}"
+                     validatorMessage="#{i18n['itc.admin.contacts.validator-message.phone']}"
+                     placeholder="#{i18n['itc.admin.contacts.phone']}">
+            <f:validateRegex pattern="\+[\d]{11}"/>
+        </p:inputText>
+
+        <br/><br/>
+        <i class="fa fa-fw fa-envelope icon"/>
+        <p:inputText id="emailInput" value="#{officeContactInfoBean.newContactInfo.email}"
+                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.email']}"
+                     validatorMessage="#{i18n['itc.admin.contacts.validator-message.email']}"
+                     placeholder="#{i18n['itc.admin.contacts.email']}">
+            <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+        </p:inputText>
+
+        <br/><br/>
+        <i class="fa fa-fw fa-map-marker icon"/>
+        <p:inputText id="addressInput" value="#{officeContactInfoBean.newContactInfo.address}"
+                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.address']}"
+                     placeholder="#{i18n['itc.admin.contacts.address']}"/>
+
+        <br/><br/>
+        <i class="far fa-fw fa-clock icon"/>
+        <p:outputLabel for="weekdaysWorkingHoursInput" styleClass="weekdays_wh" value="#{i18n['itc.contacts.weekdays-working-hours']}"/>
+        <p:inputText id="weekdaysWorkingHoursInput" value="#{officeContactInfoBean.newContactInfo.weekdaysWorkingHours}"
+                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.weekdays']}"
+                     validatorMessage="#{i18n['itc.admin.contacts.validator-message.weekdays']}"
+                     placeholder="#{i18n['itc.admin.contacts.weekdays-placeholder']}">
+            <f:validateRegex pattern="([01][0-9]|2[0-3]):[0-5][0-9]-([01][0-9]|2[0-3]):[0-5][0-9]"/>
+        </p:inputText>
+
+        <br/>
+        <i class="fa fa-fw fa-blank fa-clock icon"/>
+        <p:outputLabel for="weekendsWorkingHoursInput" styleClass="weekends_wh" value="#{i18n['itc.contacts.weekends-working-hours']}"/>
+        <p:inputText id="weekendsWorkingHoursInput" value="#{officeContactInfoBean.newContactInfo.weekendsWorkingHours}"
+                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.weekends']}"
+                     validatorMessage="#{i18n['itc.admin.contacts.validator-message.weekends']}"
+                     placeholder="#{i18n['itc.admin.contacts.weekends-placeholder']}">
+            <f:validateRegex pattern="(([01][0-9]|2[0-3]):[0-5][0-9]-([01][0-9]|2[0-3]):[0-5][0-9])|(выходной)"/>
+        </p:inputText>
+
+        <br/><br/>
+        <p:commandButton value="#{i18n['itc.admin.contacts.create']}" actionListener="#{officeContactInfoBean.createCity}"
+                         partialSubmit="true"
+                         process="@parent"
+                         update="@form"
+                         styleClass="btn btn-primary"/>
+    </p:outputPanel>
+
+    <p:outputPanel rendered="#{officeContactInfoBean.modeUpdate and officeContactInfoBean.admin}">
+        <div class="ui-g">
+            <div class="ui-g-11">
+                <h3>#{i18n['itc.admin.contacts.add-info-title']}</h3>
+            </div>
+            <div class="ui-g-1">
+                <p:commandLink actionListener="${officeContactInfoBean.setModeView}"
+                               process="@this"
+                               update="@form">
+                    <i class="far fa-fw fa-window-close"/>
+                </p:commandLink>
+            </div>
+        </div>
+
+        <p:messages severity="error" id="msgsUM" binding="#{officeContactInfoBean.errorMessagesUpdateMode}"/>
+
+        <div class="ui-g">
+            <div class="ui-g-12 ui-md-6 ui-lg-6">
+                <p:inputText id="cityInputUM" value="#{officeContactInfoBean.contactInfo.city}"
+                             required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.city']}"
+                             placeholder="#{i18n['itc.admin.contacts.city']}"/>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-6">
+                <p:inputText id="officeNameInputUM" value="#{officeContactInfoBean.contactInfo.name}" placeholder="#{i18n['itc.admin.contacts.office-name']}"/>
+            </div>
+        </div>
+
+        <i class="fa fa-fw fa-flip-horizontal fa-phone icon"/>
+        <p:inputText id="phoneInputUM" value="#{officeContactInfoBean.contactInfo.phone}"
+                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.phone']}"
+                     validatorMessage="#{i18n['itc.admin.contacts.validator-message.phone']}"
+                     placeholder="#{i18n['itc.admin.contacts.phone']}">
+            <f:validateRegex pattern="\+[\d]{11}"/>
+        </p:inputText>
+
+        <br/><br/>
+        <i class="fa fa-fw fa-envelope icon"/>
+        <p:inputText id="emailInputUM" value="#{officeContactInfoBean.contactInfo.email}"
+                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.email']}"
+                     validatorMessage="#{i18n['itc.admin.contacts.validator-message.email']}"
+                     placeholder="#{i18n['itc.admin.contacts.email']}">
+            <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+        </p:inputText>
+
+        <br/><br/>
+        <i class="fa fa-fw fa-map-marker icon"/>
+        <p:inputText id="addressInputUM" value="#{officeContactInfoBean.contactInfo.address}"
+                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.address']}"
+                     placeholder="#{i18n['itc.admin.contacts.address']}"/>
+
+        <br/><br/>
+        <i class="far fa-fw fa-clock icon"/>
+        <p:outputLabel for="weekdaysWorkingHoursInput" styleClass="weekdays_wh" value="#{i18n['itc.contacts.weekdays-working-hours']}"/>
+        <p:inputText id="weekdaysWorkingHoursInputUM" value="#{officeContactInfoBean.contactInfo.weekdaysWorkingHours}"
+                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.weekdays']}"
+                     validatorMessage="#{i18n['itc.admin.contacts.validator-message.weekdays']}"
+                     placeholder="#{i18n['itc.admin.contacts.weekdays-placeholder']}">
+            <f:validateRegex pattern="([01][0-9]|2[0-3]):[0-5][0-9]-([01][0-9]|2[0-3]):[0-5][0-9]"/>
+        </p:inputText>
+
+        <br/>
+        <i class="fa fa-fw fa-blank fa-clock icon"/>
+        <p:outputLabel for="weekendsWorkingHoursInput" styleClass="weekends_wh" value="#{i18n['itc.contacts.weekends-working-hours']}"/>
+        <p:inputText id="weekendsWorkingHoursInputUM" value="#{officeContactInfoBean.contactInfo.weekendsWorkingHours}"
+                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.weekends']}"
+                     validatorMessage="#{i18n['itc.admin.contacts.validator-message.weekends']}"
+                     placeholder="#{i18n['itc.admin.contacts.weekends-placeholder']}">
+            <f:validateRegex pattern="(([01][0-9]|2[0-3]):[0-5][0-9]-([01][0-9]|2[0-3]):[0-5][0-9])|(выходной)"/>
+        </p:inputText>
+
+        <br/><br/>
+        <p:commandButton value="#{i18n['itc.admin.contacts.save']}" actionListener="#{officeContactInfoBean.updateCity}"
+                         partialSubmit="true"
+                         process="@parent"
+                         update="@form"
+                         styleClass="btn btn-primary"/>
+    </p:outputPanel>
+</ui:composition>

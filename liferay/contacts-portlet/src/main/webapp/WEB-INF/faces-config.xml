@@ -8,4 +8,11 @@
 	<lifecycle>
 		<phase-listener>com.liferay.faces.util.lifecycle.DebugPhaseListener</phase-listener>
 	</lifecycle>
+
+	<application>
+		<resource-bundle>
+			<base-name>cities</base-name>
+			<var>cities</var>
+		</resource-bundle>
+	</application>
 </faces-config>

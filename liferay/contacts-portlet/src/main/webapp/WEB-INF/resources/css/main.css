@@ -7,6 +7,10 @@
     color: darkgray;
 }
 
+.weekends_wh, .weekdays_wh {
+    font-weight: normal;
+}
+
 .weekends_wh {
     color: red;
 }

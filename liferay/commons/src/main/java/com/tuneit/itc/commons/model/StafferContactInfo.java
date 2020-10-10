@@ -11,36 +11,32 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "itc_portal_office_contact_info")
-public class OfficeContactInfo implements BaseEntity<Long>, Serializable {
+@Table(name = "itc_portal_staffer_contact_info")
+public class StafferContactInfo implements BaseEntity<Long>, Serializable {
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(length = 50, unique = true)
-    @NotBlank
-    private String city;
+    @ManyToOne
+    @JoinColumn(name = "city_id", nullable = false)
+    private OfficeContactInfo officeContactInfo;
 
     @Column(length = 50)
+    @NotBlank
     private String name;
 
+    @Column(length = 50)
+    @NotBlank
+    private String position;
+
     @Column(length = 12)
+    @NotBlank
     @Pattern(regexp = "^([+]?[\\d]{11})$")
     private String phone;
 
     @Column
+    @NotBlank
     @Email
     private String email;
-
-    @Column(length = 300)
-    @NotBlank
-    private String address;
-
-    @Column(name = "weekdays_working_hours", length = 11)
-    @NotBlank
-    private String weekdaysWorkingHours;
-
-    @Column(name = "weekends_working_hours", length = 11)
-    @NotBlank
-    private String weekendsWorkingHours;
 }
+
