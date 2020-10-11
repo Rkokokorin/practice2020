@@ -59,7 +59,7 @@
     <p:outputPanel rendered="#{officeContactInfoBean.modeCreate and officeContactInfoBean.admin}">
         <div class="ui-g">
             <div class="ui-g-11">
-                <h3>#{i18n['itc.admin.contacts.add-info-title']}</h3>
+                <h3>#{i18n['itc.admin.contacts.add-city.title']}</h3>
             </div>
             <div class="ui-g-1">
                 <p:commandLink actionListener="${officeContactInfoBean.setModeView}"
@@ -76,11 +76,11 @@
             <div class="ui-g-12 ui-md-6 ui-lg-6">
                 <p:inputText id="cityInput" value="#{officeContactInfoBean.newContactInfo.city}"
                              required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.city']}"
-                             placeholder="#{i18n['itc.admin.contacts.city']}">
+                             placeholder="#{i18n['itc.admin.contacts.city']}" size="12">
                 </p:inputText>
             </div>
             <div class="ui-g-12 ui-md-6 ui-lg-6">
-                <p:inputText id="officeNameInput" value="#{officeContactInfoBean.newContactInfo.name}" placeholder="#{i18n['itc.admin.contacts.office-name']}"/>
+                <p:inputText id="officeNameInput" value="#{officeContactInfoBean.newContactInfo.name}" placeholder="#{i18n['itc.admin.contacts.office-name']}" size="12"/>
             </div>
         </div>
 
@@ -138,7 +138,7 @@
     <p:outputPanel rendered="#{officeContactInfoBean.modeUpdate and officeContactInfoBean.admin}">
         <div class="ui-g">
             <div class="ui-g-11">
-                <h3>#{i18n['itc.admin.contacts.add-info-title']}</h3>
+                <h3>#{i18n['itc.admin.contacts.update-city.title']}</h3>
             </div>
             <div class="ui-g-1">
                 <p:commandLink actionListener="${officeContactInfoBean.setModeView}"
@@ -155,10 +155,10 @@
             <div class="ui-g-12 ui-md-6 ui-lg-6">
                 <p:inputText id="cityInputUM" value="#{officeContactInfoBean.contactInfo.city}"
                              required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.city']}"
-                             placeholder="#{i18n['itc.admin.contacts.city']}"/>
+                             placeholder="#{i18n['itc.admin.contacts.city']}" size="12"/>
             </div>
             <div class="ui-g-12 ui-md-6 ui-lg-6">
-                <p:inputText id="officeNameInputUM" value="#{officeContactInfoBean.contactInfo.name}" placeholder="#{i18n['itc.admin.contacts.office-name']}"/>
+                <p:inputText id="officeNameInputUM" value="#{officeContactInfoBean.contactInfo.name}" placeholder="#{i18n['itc.admin.contacts.office-name']}" size="12"/>
             </div>
         </div>
 
