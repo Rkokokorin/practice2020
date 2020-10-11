@@ -6,7 +6,7 @@
         xmlns:p="http://primefaces.org/ui"
         xmlns:ui="http://java.sun.com/jsf/facelets">
 
-    <p:outputPanel rendered="#{officeContactInfoBean.modeView}">
+    <p:outputPanel id="officeView" rendered="#{officeContactInfoBean.modeView}">
         <div class="ui-g">
             <div class="ui-g-10">
                 <h3>#{officeContactInfoBean.contactInfo.city}#{officeContactInfoBean.contactInfo.name.equals("")? "" : ","} #{officeContactInfoBean.contactInfo.name}</h3>
@@ -131,7 +131,7 @@
         <p:commandButton value="#{i18n['itc.admin.contacts.create']}" actionListener="#{officeContactInfoBean.createCity}"
                          partialSubmit="true"
                          process="@parent"
-                         update="@form"
+                         update="@form mapView"
                          styleClass="btn btn-primary"/>
     </p:outputPanel>
 

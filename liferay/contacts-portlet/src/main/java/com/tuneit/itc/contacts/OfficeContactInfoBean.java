@@ -1,5 +1,6 @@
 package com.tuneit.itc.contacts;
 
+import com.google.gson.Gson;
 import com.liferay.faces.portal.el.internal.Liferay;
 import com.liferay.faces.util.logging.Logger;
 import com.liferay.faces.util.logging.LoggerFactory;
@@ -57,13 +58,15 @@ public class OfficeContactInfoBean {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         String city = externalContext.getRequestParameterMap().get("city");
         contactInfo = officeContactInfoService.findByCity(city);
-        setModeView();
+        log.info(contactInfo.getEmail());
+
     }
 
     public void createCity() {
         if (!existingCities.contains(newContactInfo.getCity()) && possibleCities.contains("%"+newContactInfo.getCity()+"%")) {
             officeContactInfoService.save(newContactInfo);
             contactInfo = newContactInfo;
+            existingCities.add(contactInfo.getCity());
             setModeView();
         } else {
             FacesContext context = FacesContext.getCurrentInstance();
@@ -90,6 +93,10 @@ public class OfficeContactInfoBean {
             context.addMessage(errorMessagesUpdateMode.getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR, notValidCityMessage, ""));
             contactInfo.setCity(officeContactInfoService.find(contactInfo.getId()).orElse(null).getCity());
         }
+    }
+
+    public String getExistingCitiesAsJson() {
+        return new Gson().toJson(existingCities);
     }
 
     public boolean isAdmin() {
