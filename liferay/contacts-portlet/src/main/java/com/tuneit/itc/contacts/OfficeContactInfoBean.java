@@ -1,5 +1,6 @@
 package com.tuneit.itc.contacts;
 
+import com.google.gson.Gson;
 import com.liferay.faces.portal.el.internal.Liferay;
 import com.liferay.faces.util.logging.Logger;
 import com.liferay.faces.util.logging.LoggerFactory;
@@ -91,6 +92,10 @@ public class OfficeContactInfoBean {
             context.addMessage(errorMessagesUpdateMode.getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR, notValidCityMessage, ""));
             contactInfo.setCity(officeContactInfoService.find(contactInfo.getId()).orElse(null).getCity());
         }
+    }
+
+    public String getExistingCitiesAsJson() {
+        return new Gson().toJson(existingCities);
     }
 
     public boolean isAdmin() {
