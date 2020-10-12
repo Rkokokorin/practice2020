@@ -67,18 +67,18 @@
 						top: 0px;
 						left: 0px;
 						z-index: 1;
-						background-color: rgba(220,220,220,.9);
-						border: 2px solid #00008B;
+						background-color: rgba(220,220,220,.7);
+						border: 1.5px solid #00008B;
 						border-radius: 5px;
-						padding: 5px;
+						padding: 3px;
+						font-size: 10pt;
 						font-family: arial;
 					}
 				</style>
 				<body>
-					<div>
+					<div id = "parent">
 					<div id="info-box"></div>
-					<div id="selectCity"></div>
-					<div id = "coor"/>			
+					<div id="selectCity"></div>			
 					<svg
 					  xmlns:amcharts="http://amcharts.com/ammap"
 					  xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -734,6 +734,7 @@
 				<script id="rendered-js">
 					//<![CDATA[
 						var selectCity= document.getElementById("selectCity");
+						// var rect = e.target.getBoundingClientRect();
 						//Create array of options to be added
 						//Create and append select list
 						var selectList = document.createElement("select");
@@ -780,8 +781,10 @@
 							$('#info-box').css('display','none');
 						});
 						$(document).mousemove(function(e) {
-							$('#info-box').css('top',event.pageY-230);
-							$('#info-box').css('left',event.pageX-290);
+							$('#info-box').css('top',event.pageY-$('#parent').offset().top+66);
+							$('#info-box').css('left',event.pageX-$('#parent').offset().left+23);
+							// $('#info-box').css('top',event.pageY-rect.top);
+							// $('#info-box').css('left',event.pageX-rect.left);
 						}).mouseover();
 										// var clickLand = $(".land");
 										//clickLand.on("click", function () {
