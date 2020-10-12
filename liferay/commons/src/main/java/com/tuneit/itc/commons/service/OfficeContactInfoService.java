@@ -33,6 +33,6 @@ public class OfficeContactInfoService implements Serializable, BaseService<Long,
     }
 
     public List<String> getNamesOfAllCities() {
-        return em.createQuery("SELECT t.city FROM OfficeContactInfo AS t", String.class).getResultList();
+        return em.createQuery("SELECT t.city FROM OfficeContactInfo t", String.class).getResultList();
     }
 }

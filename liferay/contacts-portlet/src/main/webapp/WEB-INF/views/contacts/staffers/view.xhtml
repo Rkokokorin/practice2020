@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <p:outputPanel id="staffersView" class="ui-g">
+        <ui:repeat value="#{staffersContactInfoBean.departments}" var="department">
+            <p:outputPanel styleClass="ui-g-12">
+                <h3>#{department}</h3>
+            </p:outputPanel>
+            <ui:repeat value="#{staffersContactInfoBean.staffers}" var="staffer">
+                <p:outputPanel class="ui-g-12 ui-md-4 ui-lg-4"  rendered="#{staffer.department.equals(department)}">
+                    <h:outputText value="#{staffer.name}"/>
+                    <br/>
+                    <h:outputText styleClass="position" value="#{staffer.position}"/>
+
+                    <br/><br/>
+                    <i class="fa fa-fw fa-flip-horizontal fa-phone icon"/>
+                    <h:outputLink id="stafferPhone" value="tel:#{staffer.phone}">
+                        <h:outputText value="#{staffer.phone} " converter="phoneConverter"/>
+                    </h:outputLink>
+                    <br/>
+                    <i class="fa fa-fw fa-envelope icon"/>
+                    <h:outputLink id="stafferEmail" value="mailto:#{staffer.email}">
+                        <h:outputText value="#{staffer.email}"/>
+                    </h:outputLink>
+                </p:outputPanel>
+            </ui:repeat>
+        </ui:repeat>
+
+        <p:outputPanel id="addStafferPanel" class="ui-g-12 ui-md-4 ui-lg-4" rendered="#{staffersContactInfoBean.admin}">
+            <p:commandLink actionListener="${staffersContactInfoBean.setModeCreate}"
+                           rendered="#{staffersContactInfoBean.modeView}"
+                           process="@this"
+                           update="@parent">
+                <i class="far fa-fw fa-7x fa-plus-square"/>
+            </p:commandLink>
+
+            <p:outputPanel rendered="#{staffersContactInfoBean.modeCreate}">
+                <p:outputPanel class="ui-g">
+                    <p:outputPanel class="ui-g-10">
+                        <h3>#{i18n['itc.admin.contacts.add-staffer.title']}</h3>
+                    </p:outputPanel>
+                    <p:outputPanel class="ui-g-2">
+                        <p:commandLink actionListener="${staffersContactInfoBean.setModeView}"
+                                       process="@this"
+                                       update="addStafferPanel">
+                            <i class="far fa-fw fa-window-close"/>
+                        </p:commandLink>
+                    </p:outputPanel>
+                </p:outputPanel>
+
+                <p:growl severity="error" id="msgsST"/>
+
+                <p:inputText id="stafferNameInput" value="#{staffersContactInfoBean.newContactInfo.name}"
+                             required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.name']}"
+                             placeholder="#{i18n['itc.admin.contacts.staffer-name']}"/>
+                <br/>
+                <p:inputText id="stafferPositionInput" value="#{staffersContactInfoBean.newContactInfo.position}"
+                             required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.position']}"
+                             placeholder="#{i18n['itc.admin.contacts.staffer-position']}">
+                </p:inputText>
+                <br/>
+                <p:inputText id="stafferDepartmentInput" value="#{staffersContactInfoBean.newContactInfo.department}"
+                             required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.department']}"
+                             placeholder="#{i18n['itc.admin.contacts.staffer-department']}">
+                </p:inputText>
+
+                <br/><br/>
+                <i class="fa fa-fw fa-flip-horizontal fa-phone icon"/>
+                <p:inputText id="stafferPhoneInput" value="#{staffersContactInfoBean.newContactInfo.phone}"
+                             required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.phone']}"
+                             validatorMessage="#{i18n['itc.admin.contacts.validator-message.phone']}"
+                             placeholder="#{i18n['itc.admin.contacts.phone']}">
+                    <f:validateRegex pattern="\+[\d]{11}"/>
+                </p:inputText>
+                <br/>
+                <i class="fa fa-fw fa-envelope icon"/>
+                <p:inputText id="stafferEmailInput" value="#{staffersContactInfoBean.newContactInfo.email}"
+                             required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.email']}"
+                             validatorMessage="#{i18n['itc.admin.contacts.validator-message.email']}"
+                             placeholder="#{i18n['itc.admin.contacts.email']}">
+                    <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                </p:inputText>
+
+                <br/><br/>
+                <p:commandButton value="#{i18n['itc.admin.contacts.create']}" actionListener="#{staffersContactInfoBean.addStaffer}"
+                                 partialSubmit="true"
+                                 process="@parent"
+                                 update="staffersView"
+                                 styleClass="btn btn-primary"/>
+            </p:outputPanel>
+        </p:outputPanel>
+    </p:outputPanel>
+
+</ui:composition>

@@ -2,6 +2,8 @@ package com.tuneit.itc.commons.model;
 
 import com.tuneit.itc.commons.service.BaseEntity;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -18,8 +20,13 @@ public class StafferContactInfo implements BaseEntity<Long>, Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "city_id", nullable = false)
+    @JoinColumn(name = "office_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private OfficeContactInfo officeContactInfo;
+
+    @Column(length = 50)
+    @NotBlank
+    private String department;
 
     @Column(length = 50)
     @NotBlank

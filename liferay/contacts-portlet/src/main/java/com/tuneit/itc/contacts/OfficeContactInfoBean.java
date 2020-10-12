@@ -23,7 +23,7 @@ import java.util.List;
 public class OfficeContactInfoBean {
     Logger log = LoggerFactory.getLogger(OfficeContactInfoBean.class);
 
-    private static final String DEFAULT_CITY = "Санкт-Петербург";
+    private static final String DEFAULT_CITY = "Новосибирск";
 
     private List<String> existingCities;
     @ManagedProperty("#{cities['names']}")
@@ -57,13 +57,13 @@ public class OfficeContactInfoBean {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         String city = externalContext.getRequestParameterMap().get("city");
         contactInfo = officeContactInfoService.findByCity(city);
-        setModeView();
     }
 
     public void createCity() {
         if (!existingCities.contains(newContactInfo.getCity()) && possibleCities.contains("%"+newContactInfo.getCity()+"%")) {
             officeContactInfoService.save(newContactInfo);
             contactInfo = newContactInfo;
+            existingCities.add(contactInfo.getCity());
             setModeView();
         } else {
             FacesContext context = FacesContext.getCurrentInstance();

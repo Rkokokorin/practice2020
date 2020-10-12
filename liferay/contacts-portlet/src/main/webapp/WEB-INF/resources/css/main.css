@@ -1,9 +1,9 @@
 .icon {
-    color: #3561a5;
+    color: #1839ff;
     margin-right: 0.5%;
 }
 
-.phone_label {
+.phone_label, .position {
     color: darkgray;
 }
 
