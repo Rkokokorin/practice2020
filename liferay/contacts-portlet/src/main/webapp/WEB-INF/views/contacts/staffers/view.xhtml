@@ -44,61 +44,6 @@
                             </p:outputPanel>
                         </p:outputPanel>
                     </p:outputPanel>
-
-                    <p:outputPanel styleClass="ui-g" rendered="#{staffersContactInfoBean.modeUpdate}">
-                        <p:outputPanel styleClass="ui-g-4 img-panel">
-                            <img class="img-update" src="data:image/jpg;base64,#{staffer.photo}" alt="#{i18n['itc.admin.contacts.staffer-profile-pic']}"/>
-                            <p:fileUpload styleClass="img-upload" fileUploadListener="#{staffersContactInfoBean.handlePictureUpload}" auto="true"
-                                          mode="advanced" dragDropSupport="true" fileLimit="1" update="msgsST"
-                                          sizeLimit="2000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
-                        </p:outputPanel>
-
-                        <p:outputPanel styleClass="ui-g-8">
-                            <p:outputPanel styleClass="ui-g">
-                                <p:outputPanel styleClass="ui-g-11">
-                                    <h3>#{i18n['itc.admin.contacts.update-staffer.title']}</h3>
-                                </p:outputPanel>
-                                <p:outputPanel styleClass="ui-g-1">
-                                    <p:commandLink actionListener="${staffersContactInfoBean.setModeView}"
-                                                   process="@this"
-                                                   update="stafferView">
-                                        <i class="far fa-fw fa-window-close"/>
-                                    </p:commandLink>
-                                </p:outputPanel>
-                            </p:outputPanel>
-
-                            <p:inputText id="stafferNameInputUP" value="#{staffer.name}"
-                                         required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.name']}"
-                                         placeholder="#{i18n['itc.admin.contacts.staffer-name']}"/>
-                            <br/>
-                            <p:inputText id="stafferPositionInputUP" value="#{staffer.position}"
-                                         required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.position']}"
-                                         placeholder="#{i18n['itc.admin.contacts.staffer-position']}">
-                            </p:inputText>
-                            <br/>
-                            <p:inputText id="stafferDepartmentInputUP" value="#{staffer.department}"
-                                         required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.department']}"
-                                         placeholder="#{i18n['itc.admin.contacts.staffer-department']}">
-                            </p:inputText>
-
-                            <br/><br/>
-                            <i class="fa fa-fw fa-flip-horizontal fa-phone icon"/>
-                            <p:inputText id="stafferPhoneInputUP" value="#{staffer.phone}"
-                                         required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.phone']}"
-                                         validatorMessage="#{i18n['itc.admin.contacts.validator-message.phone']}"
-                                         placeholder="#{i18n['itc.admin.contacts.phone']}">
-                                <f:validateRegex pattern="\+[\d]{11}"/>
-                            </p:inputText>
-                            <br/>
-                            <i class="fa fa-fw fa-envelope icon"/>
-                            <p:inputText id="stafferEmailInputUP" value="#{staffer.email}"
-                                         required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.email']}"
-                                         validatorMessage="#{i18n['itc.admin.contacts.validator-message.email']}"
-                                         placeholder="#{i18n['itc.admin.contacts.email']}">
-                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
-                            </p:inputText>
-                        </p:outputPanel>
-                    </p:outputPanel>
                 </p:outputPanel>
             </ui:repeat>
         </ui:repeat>
@@ -164,7 +109,8 @@
                                      placeholder="#{i18n['itc.admin.contacts.email']}">
                             <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                         </p:inputText>
-                        <br/>
+
+                        <br/><br/>
                         <p:commandButton value="#{i18n['itc.admin.contacts.create']}" actionListener="#{staffersContactInfoBean.addStaffer}"
                                          partialSubmit="true"
                                          process="@parent"
