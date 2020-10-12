@@ -13,7 +13,7 @@
                 <h4>#{department}</h4>
             </p:outputPanel>
             <ui:repeat value="#{staffersContactInfoBean.staffers}" var="staffer">
-                <p:outputPanel id="stafferView" class="ui-g-12 ui-lg-4"  rendered="#{staffer.department.equals(department)}">
+                <p:outputPanel id="stafferView" class="ui-g-12 ui-lg-4" rendered="#{staffer.department.equals(department)}">
                     <p:outputPanel styleClass="ui-g" rendered="#{staffersContactInfoBean.modeView}">
                         <p:outputPanel styleClass="ui-g-4 img-panel">
                             <img src="data:image/jpg;base64,#{staffer.photo}" alt="#{i18n['itc.admin.contacts.staffer-profile-pic']}"/>
@@ -24,7 +24,7 @@
                                 <p:commandLink styleClass="ui-g-1" actionListener="${staffersContactInfoBean.removeStaffer(staffer)}"
                                                rendered="#{staffersContactInfoBean.modeView and staffersContactInfoBean.admin}"
                                                process="@this"
-                                               update="stafferView">
+                                               update="staffersView">
                                     <i class="far fa-trash-alt"/>
                                 </p:commandLink>
                             </p:outputPanel>

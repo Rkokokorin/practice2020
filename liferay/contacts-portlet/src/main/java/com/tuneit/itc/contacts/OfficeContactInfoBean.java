@@ -45,6 +45,9 @@ public class OfficeContactInfoBean {
     @ManagedProperty("#{liferay}")
     private Liferay liferay;
 
+    @ManagedProperty("#{staffersContactInfoBean}")
+    private StaffersContactInfoBean staffersContactInfoBean;
+
     private Mode mode;
 
     @PostConstruct
@@ -58,6 +61,7 @@ public class OfficeContactInfoBean {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         String city = externalContext.getRequestParameterMap().get("city");
         contactInfo = officeContactInfoService.findByCity(city);
+        staffersContactInfoBean.updateShownStaffers(contactInfo);
     }
 
     public void createCity() {
