@@ -7,18 +7,22 @@ import com.tuneit.itc.commons.model.OfficeContactInfo;
 import com.tuneit.itc.commons.model.StafferContactInfo;
 import com.tuneit.itc.commons.service.StafferContactInfoService;
 import lombok.Data;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.shaded.commons.io.IOUtils;
+import org.primefaces.util.FileUploadUtils;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import java.io.IOException;
 import java.util.*;
 
 @Data
 @ViewScoped
 @ManagedBean
 public class StaffersContactInfoBean {
-    Logger log = LoggerFactory.getLogger(OfficeContactInfoBean.class);
+    Logger log = LoggerFactory.getLogger(StaffersContactInfoBean.class);
 
     @ManagedProperty("#{officeContactInfoBean.contactInfo}")
     private OfficeContactInfo currentOffice;
@@ -49,8 +53,18 @@ public class StaffersContactInfoBean {
         newContactInfo.setOfficeContactInfo(currentOffice);
         stafferContactInfoService.save(newContactInfo);
         staffers.add(newContactInfo);
-        departments.add(newContactInfo.getDepartment());
+        if (!departments.contains(newContactInfo.getDepartment()))
+            departments.add(newContactInfo.getDepartment());
         setModeView();
+    }
+
+    public void removeStaffer(StafferContactInfo staffer) {
+        stafferContactInfoService.delete(staffer);
+        staffers.remove(staffer);
+    }
+
+    public void handlePictureUpload(FileUploadEvent event) throws IOException {
+        newContactInfo.setPhoto(Base64.getEncoder().encodeToString(event.getFile().getContents()));
     }
 
     public boolean isAdmin() {

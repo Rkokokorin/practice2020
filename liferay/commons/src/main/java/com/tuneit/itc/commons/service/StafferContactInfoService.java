@@ -27,6 +27,11 @@ public class StafferContactInfoService implements Serializable, BaseService<Long
         return em;
     }
 
+    @Override
+    public void delete(StafferContactInfo entity) {
+        doInTransaction(em -> em.remove(em.contains(entity) ? entity : em.merge(entity)));
+    }
+
     public List<StafferContactInfo> getAllOfficeStaffers(Long officeId) {
         return em.createQuery("SELECT t FROM StafferContactInfo t WHERE t.officeContactInfo.id = :value1", StafferContactInfo.class)
                 .setParameter("value1", officeId).getResultList();

@@ -2,8 +2,10 @@ package com.tuneit.itc.commons.model;
 
 import com.tuneit.itc.commons.service.BaseEntity;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -45,5 +47,8 @@ public class StafferContactInfo implements BaseEntity<Long>, Serializable {
     @NotBlank
     @Email
     private String email;
+
+    @Column(name="photo", columnDefinition = "TEXT")
+    private String photo;
 }
 
