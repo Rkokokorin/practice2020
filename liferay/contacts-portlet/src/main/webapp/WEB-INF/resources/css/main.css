@@ -1,9 +1,16 @@
+.ui-widget {
+    font-size: 90%;
+}
+.ui-widget .ui-widget {
+    font-size: 100%;
+}
+
 .icon {
     color: #3561a5;
     margin-right: 0.5%;
 }
 
-.phone_label {
+.phone_label, .position {
     color: darkgray;
 }
 
@@ -19,16 +26,25 @@
     visibility:hidden;
 }
 
-.info-column {
-    width: 35%;
+.img-panel {
+    position: relative;
 }
 
-.map-column {
-    width: 65%;
+img {
+    position: absolute;
+    max-height: 100%;
+    max-width: 100%;
+    border-radius: 50%;
+    display: block;
 }
 
-.top-alignment {
-    vertical-align: top;
+.img-update {
+    opacity: 0.5;
+}
+
+.img-upload {
+    position: absolute;
+    float: inside;
 }
 
 .claim-card.ui-panelgrid .ui-panelgrid-cell {

@@ -58,8 +58,6 @@ public class OfficeContactInfoBean {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         String city = externalContext.getRequestParameterMap().get("city");
         contactInfo = officeContactInfoService.findByCity(city);
-        log.info(contactInfo.getEmail());
-
     }
 
     public void createCity() {

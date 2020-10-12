@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <p:outputPanel id="staffersView" class="ui-g">
+        <p:growl id="msgsST" severity="error, info"/>
+        <ui:repeat value="#{staffersContactInfoBean.departments}" var="department">
+            <p:outputPanel styleClass="ui-g-12">
+                <h4>#{department}</h4>
+            </p:outputPanel>
+            <ui:repeat value="#{staffersContactInfoBean.staffers}" var="staffer">
+                <p:outputPanel id="stafferView" class="ui-g-12 ui-lg-4"  rendered="#{staffer.department.equals(department)}">
+                    <p:outputPanel styleClass="ui-g" rendered="#{staffersContactInfoBean.modeView}">
+                        <p:outputPanel styleClass="ui-g-4 img-panel">
+                            <img src="data:image/jpg;base64,#{staffer.photo}" alt="#{i18n['itc.admin.contacts.staffer-profile-pic']}"/>
+                        </p:outputPanel>
+                        <p:outputPanel styleClass="ui-g-8">
+                            <p:outputPanel styleClass="ui-g">
+                                <h:outputText styleClass="ui-g-11" value="#{staffer.name}"/>
+                                <p:commandLink styleClass="ui-g-1" actionListener="${staffersContactInfoBean.removeStaffer(staffer)}"
+                                               rendered="#{staffersContactInfoBean.modeView and staffersContactInfoBean.admin}"
+                                               process="@this"
+                                               update="stafferView">
+                                    <i class="far fa-trash-alt"/>
+                                </p:commandLink>
+                            </p:outputPanel>
+                            <p:outputPanel>
+                                <h:outputText styleClass="position" value="#{staffer.position}"/>
+
+                                <br/><br/>
+                                <i class="fa fa-fw fa-flip-horizontal fa-phone icon"/>
+                                <h:outputLink id="stafferPhone" value="tel:#{staffer.phone}">
+                                    <h:outputText value="#{staffer.phone} " converter="phoneConverter"/>
+                                </h:outputLink>
+                                <br/><br/>
+                                <i class="fa fa-fw fa-envelope icon"/>
+                                <h:outputLink id="stafferEmail" value="mailto:#{staffer.email}">
+                                    <h:outputText value="#{staffer.email}"/>
+                                </h:outputLink>
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </ui:repeat>
+        </ui:repeat>
+
+        <p:outputPanel id="addStafferPanel" class="ui-g-12 ui-lg-4" rendered="#{staffersContactInfoBean.admin}">
+            <p:commandLink actionListener="${staffersContactInfoBean.setModeCreate}"
+                           rendered="#{staffersContactInfoBean.modeView}"
+                           process="@this"
+                           update="@parent">
+                <i class="far fa-fw fa-7x fa-plus-square"/>
+            </p:commandLink>
+
+            <p:outputPanel rendered="#{staffersContactInfoBean.modeCreate}">
+                <p:outputPanel class="ui-g">
+                    <p:outputPanel styleClass="ui-g-4 img-panel">
+                        <img class="img-update" src="data:image/jpg;base64,#{staffer.photo}" alt="#{i18n['itc.admin.contacts.staffer-profile-pic']}"/>
+                        <p:fileUpload styleClass="img-upload" fileUploadListener="#{staffersContactInfoBean.handlePictureUpload}" auto="true"
+                                      mode="advanced" dragDropSupport="true" fileLimit="1" update="msgsST"
+                                      sizeLimit="2000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                    </p:outputPanel>
+
+                    <p:outputPanel styleClass="ui-g-8">
+                        <p:outputPanel styleClass="ui-g">
+                            <p:outputPanel class="ui-g-11">
+                                <h5>#{i18n['itc.admin.contacts.add-staffer.title']}</h5>
+                            </p:outputPanel>
+                            <p:outputPanel class="ui-g-1">
+                                <p:commandLink actionListener="${staffersContactInfoBean.setModeView}"
+                                               process="@this"
+                                               update="addStafferPanel">
+                                    <i class="far fa-fw fa-window-close"/>
+                                </p:commandLink>
+                            </p:outputPanel>
+                        </p:outputPanel>
+
+                        <p:inputText id="stafferNameInput" value="#{staffersContactInfoBean.newContactInfo.name}"
+                                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.name']}"
+                                     placeholder="#{i18n['itc.admin.contacts.staffer-name']}"/>
+                        <br/>
+                        <p:inputText id="stafferPositionInput" value="#{staffersContactInfoBean.newContactInfo.position}"
+                                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.position']}"
+                                     placeholder="#{i18n['itc.admin.contacts.staffer-position']}">
+                        </p:inputText>
+                        <br/>
+                        <p:inputText id="stafferDepartmentInput" value="#{staffersContactInfoBean.newContactInfo.department}"
+                                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.department']}"
+                                     placeholder="#{i18n['itc.admin.contacts.staffer-department']}">
+                        </p:inputText>
+
+                        <br/><br/>
+                        <i class="fa fa-fw fa-flip-horizontal fa-phone icon"/>
+                        <p:inputText id="stafferPhoneInput" value="#{staffersContactInfoBean.newContactInfo.phone}"
+                                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.phone']}"
+                                     validatorMessage="#{i18n['itc.admin.contacts.validator-message.phone']}"
+                                     placeholder="#{i18n['itc.admin.contacts.phone']}">
+                            <f:validateRegex pattern="\+[\d]{11}"/>
+                        </p:inputText>
+                        <br/>
+                        <i class="fa fa-fw fa-envelope icon"/>
+                        <p:inputText id="stafferEmailInput" value="#{staffersContactInfoBean.newContactInfo.email}"
+                                     required="true" requiredMessage="#{i18n['itc.admin.contacts.required-message.email']}"
+                                     validatorMessage="#{i18n['itc.admin.contacts.validator-message.email']}"
+                                     placeholder="#{i18n['itc.admin.contacts.email']}">
+                            <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                        </p:inputText>
+
+                        <br/><br/>
+                        <p:commandButton value="#{i18n['itc.admin.contacts.create']}" actionListener="#{staffersContactInfoBean.addStaffer}"
+                                         partialSubmit="true"
+                                         process="@parent"
+                                         update="staffersView"
+                                         styleClass="btn btn-primary"/>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </p:outputPanel>
+        </p:outputPanel>
+    </p:outputPanel>
+</ui:composition>

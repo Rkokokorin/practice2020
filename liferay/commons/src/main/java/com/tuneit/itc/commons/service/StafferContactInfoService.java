@@ -11,11 +11,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
+import java.util.List;
 
 @ManagedBean
 @ApplicationScoped
 public class StafferContactInfoService implements Serializable, BaseService<Long, StafferContactInfo> {
-    private static final Log log = LogFactoryUtil.getLog(OfficeContactInfoService.class);
+    private static final Log log = LogFactoryUtil.getLog(StafferContactInfoService.class);
     @Getter
     @Setter
     @ManagedProperty("#{emf.em}")
@@ -24,5 +25,15 @@ public class StafferContactInfoService implements Serializable, BaseService<Long
     @Override
     public EntityManager getOrCreateEntityManager() {
         return em;
+    }
+
+    @Override
+    public void delete(StafferContactInfo entity) {
+        doInTransaction(em -> em.remove(em.contains(entity) ? entity : em.merge(entity)));
+    }
+
+    public List<StafferContactInfo> getAllOfficeStaffers(Long officeId) {
+        return em.createQuery("SELECT t FROM StafferContactInfo t WHERE t.officeContactInfo.id = :value1", StafferContactInfo.class)
+                .setParameter("value1", officeId).getResultList();
     }
 }
