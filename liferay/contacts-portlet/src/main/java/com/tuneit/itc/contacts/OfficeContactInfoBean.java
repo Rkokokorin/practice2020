@@ -48,6 +48,7 @@ public class OfficeContactInfoBean {
 
     @PostConstruct
     public void init() {
+        log.info("OFFICE INIT");
         existingCities = officeContactInfoService.getNamesOfAllCities();
         contactInfo = officeContactInfoService.findByCity(DEFAULT_CITY);
         setModeView();

@@ -40,6 +40,7 @@ public class StaffersContactInfoBean {
 
     @PostConstruct
     public void init() {
+        log.info("STAFFERS INIT");
         staffers = stafferContactInfoService.getAllOfficeStaffers(currentOffice.getId());
         departments = new ArrayList<>();
         for (StafferContactInfo staffer : staffers) {

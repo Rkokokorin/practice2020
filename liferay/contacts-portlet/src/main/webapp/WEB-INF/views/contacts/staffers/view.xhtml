@@ -59,8 +59,8 @@
             <p:outputPanel rendered="#{staffersContactInfoBean.modeCreate}">
                 <p:outputPanel class="ui-g">
                     <p:outputPanel styleClass="ui-g-4 img-panel">
-                        <img class="img-update" src="data:image/jpg;base64,#{staffer.photo}" alt="#{i18n['itc.admin.contacts.staffer-profile-pic']}"/>
-                        <p:fileUpload styleClass="img-upload" fileUploadListener="#{staffersContactInfoBean.handlePictureUpload}" auto="true"
+                        <img src="data:image/jpg;base64,#{staffer.photo}" alt="#{i18n['itc.admin.contacts.staffer-profile-pic']}"/>
+                        <p:fileUpload fileUploadListener="#{staffersContactInfoBean.handlePictureUpload}" auto="true"
                                       mode="advanced" dragDropSupport="true" fileLimit="1" update="msgsST"
                                       sizeLimit="2000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
                     </p:outputPanel>
