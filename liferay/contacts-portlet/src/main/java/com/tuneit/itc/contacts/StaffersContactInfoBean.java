@@ -24,11 +24,12 @@ import java.util.*;
 public class StaffersContactInfoBean {
     Logger log = LoggerFactory.getLogger(StaffersContactInfoBean.class);
 
+    @ManagedProperty("#{officeContactInfoBean.contactInfo}")
+    private OfficeContactInfo currentOffice;
+
     private List<StafferContactInfo> staffers;
     private List<String> departments;
     private StafferContactInfo newContactInfo;
-
-    private OfficeContactInfo currentOffice;
 
     @ManagedProperty("#{stafferContactInfoService}")
     private StafferContactInfoService stafferContactInfoService;
@@ -37,8 +38,9 @@ public class StaffersContactInfoBean {
 
     private Mode mode;
 
-    public void updateShownStaffers(OfficeContactInfo currentOffice) {
-        this.currentOffice = currentOffice;
+    @PostConstruct
+    public void init() {
+        log.info("STAFFERS INIT");
         staffers = stafferContactInfoService.getAllOfficeStaffers(currentOffice.getId());
         departments = new ArrayList<>();
         for (StafferContactInfo staffer : staffers) {
