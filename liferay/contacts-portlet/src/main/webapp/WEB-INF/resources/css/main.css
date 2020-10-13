@@ -26,25 +26,11 @@
     visibility:hidden;
 }
 
-.img-panel {
-    position: relative;
-}
-
 img {
-    position: absolute;
     max-height: 100%;
     max-width: 100%;
     border-radius: 50%;
     display: block;
-}
-
-.img-update {
-    opacity: 0.5;
-}
-
-.img-upload {
-    position: absolute;
-    float: inside;
 }
 
 .claim-card.ui-panelgrid .ui-panelgrid-cell {

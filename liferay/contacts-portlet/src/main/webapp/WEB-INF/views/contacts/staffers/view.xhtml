@@ -13,7 +13,7 @@
                 <h4>#{department}</h4>
             </p:outputPanel>
             <ui:repeat value="#{staffersContactInfoBean.staffers}" var="staffer">
-                <p:outputPanel id="stafferView" class="ui-g-12 ui-lg-4"  rendered="#{staffer.department.equals(department)}">
+                <p:outputPanel id="stafferView" class="ui-g-12 ui-lg-4" rendered="#{staffer.department.equals(department)}">
                     <p:outputPanel styleClass="ui-g" rendered="#{staffersContactInfoBean.modeView}">
                         <p:outputPanel styleClass="ui-g-4 img-panel">
                             <img src="data:image/jpg;base64,#{staffer.photo}" alt="#{i18n['itc.admin.contacts.staffer-profile-pic']}"/>
@@ -59,8 +59,8 @@
             <p:outputPanel rendered="#{staffersContactInfoBean.modeCreate}">
                 <p:outputPanel class="ui-g">
                     <p:outputPanel styleClass="ui-g-4 img-panel">
-                        <img class="img-update" src="data:image/jpg;base64,#{staffer.photo}" alt="#{i18n['itc.admin.contacts.staffer-profile-pic']}"/>
-                        <p:fileUpload styleClass="img-upload" fileUploadListener="#{staffersContactInfoBean.handlePictureUpload}" auto="true"
+                        <img src="data:image/jpg;base64,#{staffer.photo}" alt="#{i18n['itc.admin.contacts.staffer-profile-pic']}"/>
+                        <p:fileUpload fileUploadListener="#{staffersContactInfoBean.handlePictureUpload}" auto="true"
                                       mode="advanced" dragDropSupport="true" fileLimit="1" update="msgsST"
                                       sizeLimit="2000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
                     </p:outputPanel>

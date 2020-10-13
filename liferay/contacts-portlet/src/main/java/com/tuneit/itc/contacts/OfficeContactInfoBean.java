@@ -49,15 +49,15 @@ public class OfficeContactInfoBean {
 
     @PostConstruct
     public void init() {
+        log.info("OFFICE INIT");
         existingCities = officeContactInfoService.getNamesOfAllCities();
         contactInfo = officeContactInfoService.findByCity(DEFAULT_CITY);
         setModeView();
     }
 
-    public void updateShownCity() {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        String city = externalContext.getRequestParameterMap().get("city");
+    public OfficeContactInfo updateShownCity(String city) {
         contactInfo = officeContactInfoService.findByCity(city);
+        return contactInfo;
     }
 
     public void createCity() {

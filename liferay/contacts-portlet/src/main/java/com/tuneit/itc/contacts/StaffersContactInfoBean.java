@@ -15,6 +15,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import java.io.IOException;
 import java.util.*;
 
@@ -24,7 +26,8 @@ import java.util.*;
 public class StaffersContactInfoBean {
     Logger log = LoggerFactory.getLogger(StaffersContactInfoBean.class);
 
-    @ManagedProperty("#{officeContactInfoBean.contactInfo}")
+    @ManagedProperty("#{officeContactInfoBean}")
+    private OfficeContactInfoBean officeContactInfoBean;
     private OfficeContactInfo currentOffice;
 
     private List<StafferContactInfo> staffers;
@@ -40,6 +43,8 @@ public class StaffersContactInfoBean {
 
     @PostConstruct
     public void init() {
+        log.info("STAFFERS INIT");
+        currentOffice = officeContactInfoBean.getContactInfo();
         staffers = stafferContactInfoService.getAllOfficeStaffers(currentOffice.getId());
         departments = new ArrayList<>();
         for (StafferContactInfo staffer : staffers) {
@@ -47,6 +52,18 @@ public class StaffersContactInfoBean {
                 departments.add(staffer.getDepartment());
         }
         setModeView();
+    }
+
+    public void updateShownStaffers() {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        String city = externalContext.getRequestParameterMap().get("city");
+        currentOffice = officeContactInfoBean.updateShownCity(city);
+        staffers = stafferContactInfoService.getAllOfficeStaffers(currentOffice.getId());
+        departments = new ArrayList<>();
+        for (StafferContactInfo staffer : staffers) {
+            if (!departments.contains(staffer.getDepartment()))
+                departments.add(staffer.getDepartment());
+        }
     }
 
     public void addStaffer() {
