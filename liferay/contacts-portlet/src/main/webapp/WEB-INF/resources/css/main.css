@@ -27,10 +27,14 @@
 }
 
 img {
-    max-height: 100%;
-    max-width: 100%;
+	margin-left:-20px;
+	margin-top:20px;
+    height: 120px;
+    width: 120px;
     border-radius: 50%;
     display: block;
+    object-fit: cover;
+
 }
 
 .claim-card.ui-panelgrid .ui-panelgrid-cell {
@@ -56,3 +60,68 @@ img {
 .contractors-list .contractor-employees-count {
     width: 10%;
 }
+#selectCity {
+					   margin-right:auto;
+					   margin-left: 5%;
+					}
+					.select {
+						background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%2308298A' fill-rule='evenodd' class='cls-1' d='M8,0L4.141,6.993,0.012,0.156Z'/%3E%3C/svg%3E%0A");
+						background-repeat: no-repeat;
+						background-color: #fff;
+						background-position: right 13px center;
+						border-radius: 3px;
+						max-width:350px;
+						min-width:150px;
+						display: block;
+						width: 35%;
+						border: 1px solid #a7a7a7;
+						color: #32353a;
+						font: normal 14px/1.4 Arial, sans-serif;
+						padding: 7px 10px 7px 10px;
+						height: 36px;
+						vertical-align: top;
+						outline: 0;
+						-webkit-appearance: none;
+						-moz-appearance: none;
+						-ms-appearance: none;
+						appearance: none !important;
+					}
+					.select::-ms-expand {
+						display: none; }
+						#my-map{
+						width: 100%;
+						height: 100%;
+						display: block;
+						position: relative;
+						top: 0;
+						left: 0;
+						}
+					.on {
+						transition: opacity .2s ease;
+						opacity: .7;
+						stroke-width: 2;
+					}
+					.part{
+						fill: #08298A;
+					}
+					.land{
+						fill: #1839AA;
+					}
+					.part:hover {
+						transition: opacity .2s ease;
+						opacity: .7;
+						cursor: pointer;
+					}
+					#info-box {
+						display: none;
+						position: absolute;
+						top: 0px;
+						left: 0px;
+						z-index: 1;
+						background-color: rgba(220,220,220,.6);
+						border: 1.5px solid #00008B;
+						border-radius: 5px;
+						padding: 3px;
+						font-size: 11pt;
+						font-family: arial;
+					}
