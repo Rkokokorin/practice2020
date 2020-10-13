@@ -40,6 +40,9 @@ public class OfficeContactInfoBean {
     private OfficeContactInfo contactInfo;
     private OfficeContactInfo newContactInfo;
 
+    @ManagedProperty("#{staffersContactInfoBean}")
+    StaffersContactInfoBean staffersContactInfoBean;
+
     @ManagedProperty("#{officeContactInfoService}")
     private OfficeContactInfoService officeContactInfoService;
     @ManagedProperty("#{liferay}")
@@ -49,15 +52,17 @@ public class OfficeContactInfoBean {
 
     @PostConstruct
     public void init() {
-        log.info("OFFICE INIT");
         existingCities = officeContactInfoService.getNamesOfAllCities();
         contactInfo = officeContactInfoService.findByCity(DEFAULT_CITY);
+        staffersContactInfoBean.updateShownStaffers(contactInfo);
         setModeView();
     }
 
-    public OfficeContactInfo updateShownCity(String city) {
+    public void updateShownCity() {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        String city = externalContext.getRequestParameterMap().get("city");
         contactInfo = officeContactInfoService.findByCity(city);
-        return contactInfo;
+        staffersContactInfoBean.updateShownStaffers(contactInfo);
     }
 
     public void createCity() {
@@ -65,6 +70,7 @@ public class OfficeContactInfoBean {
             officeContactInfoService.save(newContactInfo);
             contactInfo = newContactInfo;
             existingCities.add(contactInfo.getCity());
+            staffersContactInfoBean.updateShownStaffers(contactInfo);
             setModeView();
         } else {
             FacesContext context = FacesContext.getCurrentInstance();
