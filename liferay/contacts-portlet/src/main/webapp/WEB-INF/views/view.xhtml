@@ -3,7 +3,8 @@
 <f:view
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:ui="http://java.sun.com/jsf/facelets">
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui">
     <f:metadata>
     </f:metadata>
     <h:head>
@@ -14,16 +15,18 @@
 
     <h:body>
         <h:form>
-            <div class="ui-g">
-                <div class="ui-g-12 ui-md-12 ui-lg-8">
+            <p:outputPanel styleClass="ui-g">
+                <p:outputPanel styleClass="ui-g-12 ui-md-12 ui-lg-8">
                     <ui:include src="/WEB-INF/views/map/view.xhtml"/>
-                </div>
-                <div class="ui-g-12 ui-md-12 ui-lg-4">
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-12 ui-md-12 ui-lg-4">
                     <ui:include src="/WEB-INF/views/contacts/office/view.xhtml"/>
-                </div>
-            </div>
+                </p:outputPanel>
+            </p:outputPanel>
             <br/><br/>
-            <ui:include src="/WEB-INF/views/contacts/staffers/view.xhtml"/>
+            <p:panel widgetVar="staffersWidget">
+                <ui:include src="/WEB-INF/views/contacts/staffers/view.xhtml"/>
+            </p:panel>
         </h:form>
     </h:body>
 </f:view>

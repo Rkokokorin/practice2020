@@ -6,7 +6,7 @@
         xmlns:p="http://primefaces.org/ui"
         xmlns:ui="http://java.sun.com/jsf/facelets">
 
-    <p:outputPanel id="staffersView" class="ui-g">
+    <p:outputPanel id="staffersView"  class="ui-g">
         <ui:repeat value="#{staffersContactInfoBean.departments}" var="department">
             <p:outputPanel styleClass="ui-g-12">
                 <h4>#{department}</h4>
@@ -23,7 +23,7 @@
                                 <p:commandLink styleClass="ui-g-1" actionListener="${staffersContactInfoBean.removeStaffer(staffer)}"
                                                rendered="#{staffersContactInfoBean.modeView and staffersContactInfoBean.admin}"
                                                process="@this"
-                                               update="stafferView">
+                                               update="@widgetVar(staffersWidget)">
                                     <i class="far fa-trash-alt"/>
                                 </p:commandLink>
                             </p:outputPanel>
