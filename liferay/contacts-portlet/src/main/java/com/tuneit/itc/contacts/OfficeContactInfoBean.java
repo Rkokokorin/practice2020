@@ -53,8 +53,10 @@ public class OfficeContactInfoBean {
     @PostConstruct
     public void init() {
         existingCities = officeContactInfoService.getNamesOfAllCities();
-        contactInfo = officeContactInfoService.findByCity(DEFAULT_CITY);
-        staffersContactInfoBean.updateShownStaffers(contactInfo);
+        if (!noCitiesExist()) {
+            contactInfo = officeContactInfoService.findByCity(DEFAULT_CITY);
+            staffersContactInfoBean.updateShownStaffers(contactInfo);
+        }
         setModeView();
     }
 
@@ -97,6 +99,10 @@ public class OfficeContactInfoBean {
             context.addMessage(errorMessagesUpdateMode.getClientId(context), new FacesMessage(FacesMessage.SEVERITY_ERROR, notValidCityMessage, ""));
             contactInfo.setCity(officeContactInfoService.find(contactInfo.getId()).orElse(null).getCity());
         }
+    }
+
+    public boolean noCitiesExist() {
+        return existingCities.isEmpty();
     }
 
     public String getExistingCitiesAsJson() {

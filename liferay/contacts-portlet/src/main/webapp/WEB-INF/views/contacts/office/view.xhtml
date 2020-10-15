@@ -6,7 +6,17 @@
         xmlns:p="http://primefaces.org/ui"
         xmlns:ui="http://java.sun.com/jsf/facelets">
 
-    <p:outputPanel id="officeView" rendered="#{officeContactInfoBean.modeView}">
+    <p:outputPanel rendered="#{officeContactInfoBean.modeView and officeContactInfoBean.noCitiesExist()}">
+        <h3>"#{i18n['itc.contacts.no-cities-exist']}</h3>
+        <p:commandLink actionListener="${officeContactInfoBean.setModeCreate}"
+                       rendered="#{officeContactInfoBean.admin}"
+                       process="@this"
+                       update="@form">
+            <i class="far fa-fw fa-7x fa-plus-square"/>
+        </p:commandLink>
+    </p:outputPanel>
+
+    <p:outputPanel id="officeView" rendered="#{officeContactInfoBean.modeView and !officeContactInfoBean.noCitiesExist()}">
         <div class="ui-g">
             <div class="ui-g-10">
                 <h3>#{officeContactInfoBean.contactInfo.city}#{officeContactInfoBean.contactInfo.name.equals("")? "" : ","} #{officeContactInfoBean.contactInfo.name}</h3>
