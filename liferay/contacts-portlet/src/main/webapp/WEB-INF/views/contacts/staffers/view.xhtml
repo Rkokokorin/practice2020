@@ -18,7 +18,7 @@
                             <img src="data:image/jpg;base64,#{staffer.photo}" alt="#{i18n['itc.admin.contacts.staffer-profile-pic']}"/>
                         </p:outputPanel>
                         <p:outputPanel styleClass="ui-g-8">
-                            <p:outputPanel styleClass="ui-g">
+                            <p:outputPanel styleClass="ui-g namePanel">
                                 <h:outputText styleClass="ui-g-11" value="#{staffer.name}"/>
                                 <p:commandLink styleClass="ui-g-1" actionListener="${staffersContactInfoBean.removeStaffer(staffer)}"
                                                rendered="#{staffersContactInfoBean.modeView and staffersContactInfoBean.admin}"
@@ -48,7 +48,7 @@
         </ui:repeat>
 
         <p:outputPanel id="addStafferPanel" class="ui-g-12 ui-lg-4" rendered="#{staffersContactInfoBean.admin}">
-            <p:commandLink actionListener="${staffersContactInfoBean.setModeCreate}"
+            <p:commandLink styleClass="buttonAdd" actionListener="${staffersContactInfoBean.setModeCreate}"
                            rendered="#{staffersContactInfoBean.modeView}"
                            process="@this"
                            update="@parent">
